@@ -1,4 +1,4 @@
-# HOME TOOLS — OSINT Launcher
+# HOME TOOLS OSINT Launcher
 
 A self-installing, self-updating OSINT toolkit launcher for Windows. Double-click and everything installs automatically.
 
