@@ -1,6 +1,6 @@
 @echo off
 :: ============================================================
-::  HOME TOOLS  |  OSINT Launcher  |  v3.3
+::  HOME TOOLS  |  OSINT Launcher  |  v3.4
 ::  A self-installing OSINT toolkit launcher for Windows.
 ::
 ::  Tools clone and install automatically on first launch.
@@ -11,15 +11,15 @@
 ::  Install locations: C:\OSINT\   and   C:\Tools\exiftool\
 ::  Made with love by vortexdq.com
 :: ============================================================
-:: HOMETOOLS_VERSION:3.3
+:: HOMETOOLS_VERSION:3.4
 if "%~1"=="-k" goto :INIT
-start "HOME TOOLS" cmd.exe /k %~f0 -k
+start "HOME TOOLS" cmd.exe /k "%~f0" -k
 exit /b
 :INIT
 
 setlocal enabledelayedexpansion
 chcp 65001 >nul 2>&1
-title HOME TOOLS v3.3
+title HOME TOOLS v3.4
 
 :: ============================================================
 ::  ANSI COLORS
@@ -44,7 +44,7 @@ set "ORB=%E%[1;33m"
 :: ============================================================
 ::  VERSION
 :: ============================================================
-set "HT_VERSION=3.3"
+set "HT_VERSION=3.4"
 
 :: ============================================================
 ::  TOOL PATHS
@@ -82,7 +82,7 @@ goto STARTUP
 cls
 echo.
 echo  %CB%  =======================================================%R%
-echo  %CB%           HOME TOOLS v3.3  -  First Launch             %R%
+echo  %CB%           HOME TOOLS v3.4  -  First Launch             %R%
 echo  %CB%       Self-installing OSINT Toolkit for Windows         %R%
 echo  %CB%  =======================================================%R%
 echo.
@@ -183,7 +183,7 @@ if "!HAS_PY!"=="0"  echo  %RD%  [WARN] Python not found - Python tools cannot in
 if "!HAS_NET!"=="0" echo  %YW%  [WARN] No internet - installs and updates skipped.%R%
 
 call :CHECK_HT_UPDATE
-if defined HT_UPDATE_READY goto :EOF
+if defined HT_UPDATE_READY exit /b 0
 
 call :SC_SPIDER
 call :SC_EXIF
@@ -338,7 +338,7 @@ echo  %DG%  [B] Back%R%
 echo.
 set "SCHO="
 set /p "SCHO=   >> "
-if not defined SCHO goto MENU_SCANNERS
+if not defined SCHO (cls & goto MENU_SCANNERS)
 if /i "%SCHO%"=="1"    goto LAUNCH_ESET
 if /i "%SCHO%"=="2"    goto LAUNCH_FSECURE
 if /i "%SCHO%"=="3"    goto LAUNCH_HITMAN
@@ -537,7 +537,7 @@ echo  %WB%  theHarvester  ^|  Email / Domain Recon%R%
 echo  %ORB%  =======================================================%R%
 echo.
 if not exist "%P_HARV%\theHarvester\__main__.py" echo  %RD%  Not ready. Type R on the menu to repair.%R% & pause & goto MENU
-set "HV_PATH=%P_HARV%" & set "HV_REQS=" & set "HV_PKG=theHarvester"
+set "HV_PATH=%P_HARV%" & set "HV_REQS=%P_HARV%\requirements.txt" & set "HV_PKG=theHarvester"
 call :HEALTH_VENV
 title HOME TOOLS  ^|  theHarvester
 powershell -NoProfile -Command "Set-Location 'C:\OSINT\theHarvester';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;33m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;33m  theHarvester  |  Email / Domain / Subdomain Recon'+$e+'[0m');Write-Host('  '+$e+'[1;33m'+$sep+$e+'[0m');Write-Host '  Enter a domain (e.g. example.com). Harvests emails, subdomains, IPs.' -ForegroundColor DarkGray;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{$d=Read-Host '  Domain';if($d){&$p -m theHarvester -d $d -b google,bing,yahoo,duckduckgo}}while($d)"
@@ -665,6 +665,7 @@ echo.
 echo  %GN%  Credentials saved.%R%
 echo  %DG%  To update: run LinkedIn Gatherer again when not logged in.%R%
 timeout /t 2 /nobreak >nul
+goto LINK_LAUNCH
 
 :LINK_LAUNCH
 set "HV_PATH=%P_LINK%" & set "HV_REQS=%P_LINK%\requirements.txt"
@@ -715,6 +716,7 @@ echo.
 echo  %GN%  API key saved. You're all set.%R%
 echo  %DG%  To change it later: delete %USERPROFILE%\.config\pwnedornot\config.json and relaunch.%R%
 timeout /t 2 /nobreak >nul
+goto PWND_LAUNCH
 
 :PWND_LAUNCH
 title HOME TOOLS  ^|  pwnedOrNot
@@ -1461,11 +1463,11 @@ goto STARTUP
 cls
 echo.
 echo  %CB%  =======================================================%R%
-echo  %WB%  HELP  ^|  HOME TOOLS v3.0%R%
+echo  %WB%  HELP  ^|  HOME TOOLS v!HT_VERSION!%R%
 echo  %CB%  =======================================================%R%
 echo.
 echo  %WB%  HOW TO USE%R%
-echo  %DG%  Type a number 1-11 and press ENTER to launch a tool.%R%
+echo  %DG%  Type a number 1-14 and press ENTER to launch a tool.%R%
 echo  %DG%  Tools install automatically on first launch.%R%
 echo  %DG%  Type [C] for the Command Center - full commands for every tool.%R%
 echo  %DG%  Type [I] to set or update your Instagram credentials.%R%
@@ -1483,6 +1485,9 @@ echo  %MGB%  8%R%   Holehe              %DG%Check email against 120+ sites%R%
 echo  %CY%  9%R%   Maigret             %DG%Deep username OSINT with HTML reports%R%
 echo  %WB% 10%R%   Photon              %DG%Web crawler: emails, URLs, API keys%R%
 echo  %RD% 11%R%   SQLMap              %DG%SQL injection scanner%R%
+echo  %CB% 12%R%   Scavenger           %DG%Pastebin leak and credential monitor%R%
+echo  %BB% 13%R%   LinkedIn Gatherer   %DG%LinkedIn profile and network OSINT%R%
+echo  %YB% 14%R%   pwnedOrNot          %DG%Email breach checker via HIBP API%R%
 echo.
 echo  %WB%  MENU OPTIONS%R%
 echo  %DG%  --------------------------------------------------------%R%
@@ -1752,7 +1757,7 @@ goto :EOF
 :: ============================================================
 ::  HOME TOOLS SELF-UPDATE
 ::  Checks GitHub for newer HomeTools.bat and auto-replaces.
-::  Uses exit 0 to close cmd /k window after launching runner.
+::  Uses exit /b 0 after launching runner so the shell closes cleanly.
 :: ============================================================
 :CHECK_HT_UPDATE
 if "!HAS_NET!"=="0" goto :EOF
@@ -1791,7 +1796,7 @@ echo  %GN%  Update ready!  Restarting HOME TOOLS v!HT_REMOTE_VER!...%R%
 timeout /t 2 /nobreak >nul
 start "" "%TEMP%\HT_runner.bat"
 set "HT_UPDATE_READY=1"
-exit 0
+exit /b 0
 
 :: ============================================================
 ::  GIT UPDATE HELPER
