@@ -1,6 +1,6 @@
 @echo off
 :: ============================================================
-::  HOME TOOLS  |  OSINT Launcher  |  v3.6
+::  HOME TOOLS  |  OSINT Launcher  |  v3.7
 ::  A self-installing OSINT toolkit launcher for Windows.
 ::
 ::  Tools clone and install automatically on first launch.
@@ -11,11 +11,15 @@
 ::  Install locations: C:\OSINT\   and   C:\Tools\exiftool\
 ::  Made with love by vortexdq.com
 :: ============================================================
-:: HOMETOOLS_VERSION:3.6
+:: HOMETOOLS_VERSION:3.7
+if "%~1"=="-k" goto :INIT
+cmd /k "%~f0" -k
+exit /b
+:INIT
 
 setlocal enabledelayedexpansion
 chcp 65001 >nul 2>&1
-title HOME TOOLS v3.6
+title HOME TOOLS v3.7
 
 :: ============================================================
 ::  ANSI COLORS
@@ -40,7 +44,7 @@ set "ORB=%E%[1;33m"
 :: ============================================================
 ::  VERSION
 :: ============================================================
-set "HT_VERSION=3.6"
+set "HT_VERSION=3.7"
 
 :: ============================================================
 ::  TOOL PATHS
@@ -78,7 +82,7 @@ goto STARTUP
 cls
 echo.
 echo  %CB%  =======================================================%R%
-echo  %CB%           HOME TOOLS v3.6  -  First Launch             %R%
+echo  %CB%           HOME TOOLS v3.7  -  First Launch             %R%
 echo  %CB%       Self-installing OSINT Toolkit for Windows         %R%
 echo  %CB%  =======================================================%R%
 echo.
@@ -179,7 +183,6 @@ if "!HAS_PY!"=="0"  echo  %RD%  [WARN] Python not found - Python tools cannot in
 if "!HAS_NET!"=="0" echo  %YW%  [WARN] No internet - installs and updates skipped.%R%
 
 call :CHECK_HT_UPDATE
-if defined HT_UPDATE_READY exit /b 0
 
 call :SC_SPIDER
 call :SC_EXIF
@@ -1519,7 +1522,7 @@ echo  %CY%  Goodbye.%R%
 echo  %DG%  Made with love by vortexdq.com%R%
 echo.
 timeout /t 1 /nobreak >nul
-exit /b 0
+exit 0
 
 
 :: ============================================================
@@ -1802,8 +1805,7 @@ set "HT_SELF=%~f0"
 echo  %GN%  Update downloaded - restarting with v!HT_REMOTE_VER!...%R%
 timeout /t 2 /nobreak >nul
 start "" "%TEMP%\HT_runner.bat"
-set "HT_UPDATE_READY=1"
-exit /b 0
+exit 0
 
 :: ============================================================
 ::  GIT UPDATE HELPER
