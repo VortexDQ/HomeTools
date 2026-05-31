@@ -1,6 +1,6 @@
 @echo off
 :: ============================================================
-::  HOME TOOLS  |  OSINT Launcher  |  v3.2
+::  HOME TOOLS  |  OSINT Launcher  |  v3.3
 ::  A self-installing OSINT toolkit launcher for Windows.
 ::
 ::  Tools clone and install automatically on first launch.
@@ -11,7 +11,7 @@
 ::  Install locations: C:\OSINT\   and   C:\Tools\exiftool\
 ::  Made with love by vortexdq.com
 :: ============================================================
-:: HOMETOOLS_VERSION:3.2
+:: HOMETOOLS_VERSION:3.3
 if "%~1"=="-k" goto :INIT
 start "HOME TOOLS" cmd.exe /k %~f0 -k
 exit /b
@@ -19,7 +19,7 @@ exit /b
 
 setlocal enabledelayedexpansion
 chcp 65001 >nul 2>&1
-title HOME TOOLS v3.2
+title HOME TOOLS v3.3
 
 :: ============================================================
 ::  ANSI COLORS
@@ -44,7 +44,7 @@ set "ORB=%E%[1;33m"
 :: ============================================================
 ::  VERSION
 :: ============================================================
-set "HT_VERSION=3.2"
+set "HT_VERSION=3.3"
 
 :: ============================================================
 ::  TOOL PATHS
@@ -82,7 +82,7 @@ goto STARTUP
 cls
 echo.
 echo  %CB%  =======================================================%R%
-echo  %CB%           HOME TOOLS v3.2  -  First Launch             %R%
+echo  %CB%           HOME TOOLS v3.3  -  First Launch             %R%
 echo  %CB%       Self-installing OSINT Toolkit for Windows         %R%
 echo  %CB%  =======================================================%R%
 echo.
@@ -205,7 +205,7 @@ echo  %GB%  =======================================================%R%
 echo  %GN%  All checks complete.%R%
 echo  %GB%  =======================================================%R%
 echo.
-timeout /t 2 /nobreak >nul
+powershell -NoProfile -Command "$e=[char]27;$cr=[char]13;$w=42;Write-Host('  '+$e+'[90mBooting HOME TOOLS...'+$e+'[0m');Write-Host;for($i=0;$i -le $w;$i++){$pct=[int](($i/$w)*100);$bar=([string][char]0x2588)*$i+$e+'[90m'+([string][char]0x2591)*($w-$i)+$e+'[0m';$col=if($pct -lt 35){$e+'[91m'}elseif($pct -lt 70){$e+'[93m'}else{$e+'[92m'};Write-Host -NoNewline([string]$cr+'  '+$col+$bar+'  '+[string]$pct+'%  '+$e+'[0m');Start-Sleep -Milliseconds 18};Write-Host;Write-Host;Write-Host -NoNewline '  ';'HOME TOOLS  v!HT_VERSION!  ONLINE'.ToCharArray()|ForEach-Object{Write-Host -NoNewline($e+'[1;92m'+$_+$e+'[0m');Start-Sleep -Milliseconds 45};Write-Host;Start-Sleep -Milliseconds 900"
 goto MENU
 
 
@@ -403,11 +403,13 @@ if not exist "%P_SPIDER%\sf.py" echo  %RD%  Not ready. Type R on the menu to rep
 set "HV_PATH=%P_SPIDER%" & set "HV_REQS=%P_SPIDER%\requirements.txt"
 call :HEALTH_VENV
 echo  %DG%  Starting web server...%R%
-start "SpiderFoot" powershell -NoExit -Command "Set-Location 'C:\OSINT\spiderfoot'; $p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'}; Write-Host '  SpiderFoot  |  OSINT Framework' -ForegroundColor Cyan; Write-Host '  Server starting - open browser at http://127.0.0.1:5001' -ForegroundColor Green; Write-Host '  Wait about 5 seconds before opening the URL.' -ForegroundColor DarkGray; Write-Host '  Close this window to stop the server.' -ForegroundColor DarkGray; Write-Host; & $p sf.py -l 127.0.0.1:5001"
-echo  %GN%  SpiderFoot starting in a new window.%R%
-echo  %CY%  Open your browser at: http://127.0.0.1:5001%R%
-echo  %DG%  Wait ~5 seconds for the server to start, then open the URL.%R%
-echo  %DG%  Press any key here to return to menu (server keeps running).%R%
+start "SpiderFoot  |  OSINT Server" powershell -NoExit -Command "$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;96m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;96m  SpiderFoot  |  Automated OSINT Framework'+$e+'[0m');Write-Host('  '+$e+'[1;96m'+$sep+$e+'[0m');Write-Host;Write-Host '  Server starting...' -ForegroundColor DarkGray;Write-Host;Set-Location 'C:\OSINT\spiderfoot';$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};&$p sf.py -l 127.0.0.1:5001"
+echo.
+echo  %GN%  SpiderFoot server launched in a separate window.%R%
+echo  %CY%  Browser:  http://127.0.0.1:5001%R%
+echo  %DG%  Wait ~5 seconds, then open the URL. Close that window to stop the server.%R%
+echo.
+echo  %WH%  Press any key to return to menu...%R%
 pause >nul
 goto MENU
 
@@ -419,10 +421,9 @@ echo  %WB%  ExifTool  ^|  File Metadata Reader / Writer%R%
 echo  %MB%  =======================================================%R%
 echo.
 if not exist "%P_EXIF%\exiftool.exe" echo  %RD%  Not ready. Type R on the menu to repair.%R% & pause & goto MENU
-start "ExifTool" powershell -NoExit -Command "Set-Location 'C:\Tools\exiftool'; Write-Host '  ExifTool  |  File Metadata Reader/Writer' -ForegroundColor Magenta; Write-Host '  Type a file path, or drag a file onto this window to paste its path.' -ForegroundColor DarkGray; Write-Host '  Blank = exit loop.' -ForegroundColor DarkGray; Write-Host; do { $f=Read-Host '  File/folder'; if($f){ .\exiftool.exe $f } } while($f)"
-echo  %GN%  ExifTool shell opened in a new window.%R%
-echo  %DG%  Switch to it, then press any key here to return to menu.%R%
-pause >nul
+title HOME TOOLS  ^|  ExifTool
+powershell -NoProfile -Command "Set-Location 'C:\Tools\exiftool';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;95m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;95m  ExifTool  |  File Metadata Reader / Writer'+$e+'[0m');Write-Host('  '+$e+'[1;95m'+$sep+$e+'[0m');Write-Host '  Type a file path or drag a file onto this window.' -ForegroundColor DarkGray;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;do{$f=Read-Host '  File/folder';if($f){.\exiftool.exe $f}}while($f)"
+title HOME TOOLS v!HT_VERSION!
 goto MENU
 
 :LAUNCH_SHERL
@@ -435,10 +436,9 @@ echo.
 if not exist "%P_SHERL%\sherlock_project" echo  %RD%  Not ready. Type R on the menu to repair.%R% & pause & goto MENU
 set "HV_PATH=%P_SHERL%" & set "HV_REQS=" & set "HV_PKG=sherlock-project"
 call :HEALTH_VENV
-start "Sherlock" powershell -NoExit -Command "Set-Location 'C:\OSINT\sherlock'; $p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'}; Write-Host '  Sherlock  |  Username Hunt across 400+ Sites' -ForegroundColor Yellow; Write-Host '  Type a username and press Enter. Blank = exit loop.' -ForegroundColor DarkGray; Write-Host '  Tip: try variations - john, john123, j0hn, john_doe, johndoe' -ForegroundColor DarkGray; Write-Host; do { $u=Read-Host '  Username'; if($u){ & $p -m sherlock_project $u } } while($u)"
-echo  %GN%  Sherlock shell opened in a new window.%R%
-echo  %DG%  Switch to it, then press any key here to return to menu.%R%
-pause >nul
+title HOME TOOLS  ^|  Sherlock
+powershell -NoProfile -Command "Set-Location 'C:\OSINT\sherlock';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;93m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;93m  Sherlock  |  Username Hunt across 400+ Sites'+$e+'[0m');Write-Host('  '+$e+'[1;93m'+$sep+$e+'[0m');Write-Host '  Tip: try variations  ->  john, john_doe, john123, j0hn' -ForegroundColor DarkGray;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{$u=Read-Host '  Username';if($u){&$p -m sherlock_project $u}}while($u)"
+title HOME TOOLS v!HT_VERSION!
 goto MENU
 
 
@@ -523,10 +523,9 @@ goto MENU
 :OGRAM_LAUNCH
 set "HV_PATH=%P_OGRAM%" & set "HV_REQS=%P_OGRAM%\requirements.txt"
 call :HEALTH_VENV
-start "Osintgram" powershell -NoExit -Command "Set-Location 'C:\OSINT\osintgram'; $p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'}; Write-Host '  Osintgram  |  Instagram OSINT' -ForegroundColor Green; Write-Host '  Type a target Instagram username. Blank = exit loop.' -ForegroundColor DarkGray; Write-Host '  After target loads, type commands like: info, followers, photos' -ForegroundColor DarkGray; Write-Host '  Press C on the HOME TOOLS menu for the full command list.' -ForegroundColor DarkGray; Write-Host; do { $t=Read-Host '  Target username'; if($t){ & $p main.py $t } } while($t)"
-echo  %GN%  Osintgram shell opened in a new window.%R%
-echo  %DG%  Switch to it, then press any key here to return to menu.%R%
-pause >nul
+title HOME TOOLS  ^|  Osintgram
+powershell -NoProfile -Command "Set-Location 'C:\OSINT\osintgram';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;92m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;92m  Osintgram  |  Instagram OSINT'+$e+'[0m');Write-Host('  '+$e+'[1;92m'+$sep+$e+'[0m');Write-Host '  Enter a target Instagram username, then use commands: info, followers, photos' -ForegroundColor DarkGray;Write-Host '  Press C on the HOME TOOLS menu for the full command list.' -ForegroundColor DarkGray;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{$t=Read-Host '  Target username';if($t){&$p main.py $t}}while($t)"
+title HOME TOOLS v!HT_VERSION!
 goto MENU
 
 
@@ -540,10 +539,9 @@ echo.
 if not exist "%P_HARV%\theHarvester\__main__.py" echo  %RD%  Not ready. Type R on the menu to repair.%R% & pause & goto MENU
 set "HV_PATH=%P_HARV%" & set "HV_REQS=" & set "HV_PKG=theHarvester"
 call :HEALTH_VENV
-start "theHarvester" powershell -NoExit -Command "Set-Location 'C:\OSINT\theHarvester'; $p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'}; Write-Host '  theHarvester  |  Email / Domain / Subdomain Recon' -ForegroundColor Yellow; Write-Host '  Type a domain (e.g. example.com) and press Enter. Blank = exit loop.' -ForegroundColor DarkGray; Write-Host '  Results: emails, subdomains, employee names, IPs.' -ForegroundColor DarkGray; Write-Host; do { $d=Read-Host '  Domain'; if($d){ & $p -m theHarvester -d $d -b google,bing,yahoo,duckduckgo } } while($d)"
-echo  %GN%  theHarvester shell opened in a new window.%R%
-echo  %DG%  Switch to it, then press any key here to return to menu.%R%
-pause >nul
+title HOME TOOLS  ^|  theHarvester
+powershell -NoProfile -Command "Set-Location 'C:\OSINT\theHarvester';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;33m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;33m  theHarvester  |  Email / Domain / Subdomain Recon'+$e+'[0m');Write-Host('  '+$e+'[1;33m'+$sep+$e+'[0m');Write-Host '  Enter a domain (e.g. example.com). Harvests emails, subdomains, IPs.' -ForegroundColor DarkGray;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{$d=Read-Host '  Domain';if($d){&$p -m theHarvester -d $d -b google,bing,yahoo,duckduckgo}}while($d)"
+title HOME TOOLS v!HT_VERSION!
 goto MENU
 
 :LAUNCH_HOLE
@@ -556,10 +554,9 @@ echo.
 if not exist "%P_HOLE%\holehe" echo  %RD%  Not ready. Type R on the menu to repair.%R% & pause & goto MENU
 set "HV_PATH=%P_HOLE%" & set "HV_REQS=%P_HOLE%\requirements.txt"
 call :HEALTH_VENV
-start "Holehe" powershell -NoExit -Command "Set-Location 'C:\OSINT\holehe'; $p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'}; Write-Host '  Holehe  |  Email to Social Accounts (120+ sites)' -ForegroundColor Green; Write-Host '  Type an email and press Enter. Blank = exit loop.' -ForegroundColor DarkGray; Write-Host '  Green [+] = account found  |  Red [-] = not found' -ForegroundColor DarkGray; Write-Host; do { $e=Read-Host '  Email'; if($e){ & $p -m holehe $e } } while($e)"
-echo  %GN%  Holehe shell opened in a new window.%R%
-echo  %DG%  Switch to it, then press any key here to return to menu.%R%
-pause >nul
+title HOME TOOLS  ^|  Holehe
+powershell -NoProfile -Command "Set-Location 'C:\OSINT\holehe';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;35m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;35m  Holehe  |  Email to Social Accounts - 120+ Sites'+$e+'[0m');Write-Host('  '+$e+'[1;35m'+$sep+$e+'[0m');Write-Host '  [+] = account exists     [-] = not found     [~] = rate limited' -ForegroundColor DarkGray;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{$em=Read-Host '  Email';if($em){&$p -m holehe $em}}while($em)"
+title HOME TOOLS v!HT_VERSION!
 goto MENU
 
 :LAUNCH_MAIG
@@ -572,10 +569,9 @@ echo.
 if not exist "%P_MAIG%\maigret" echo  %RD%  Not ready. Type R on the menu to repair.%R% & pause & goto MENU
 set "HV_PATH=%P_MAIG%" & set "HV_REQS=%P_MAIG%\requirements.txt" & set "HV_PKG=maigret"
 call :HEALTH_VENV
-start "Maigret" powershell -NoExit -Command "Set-Location 'C:\OSINT\maigret'; $p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'}; Write-Host '  Maigret  |  Deep Username OSINT (3000+ sites)' -ForegroundColor Cyan; Write-Host '  Discovers and links accounts across platforms.' -ForegroundColor DarkGray; Write-Host '  Add --html for an interactive HTML report with network graph.' -ForegroundColor DarkGray; Write-Host '  Type a username and press Enter. Blank = exit loop.' -ForegroundColor DarkGray; Write-Host; do { $u=Read-Host '  Username'; if($u){ & $p -m maigret $u --html } } while($u)"
-echo  %GN%  Maigret shell opened in a new window.%R%
-echo  %DG%  Switch to it, then press any key here to return to menu.%R%
-pause >nul
+title HOME TOOLS  ^|  Maigret
+powershell -NoProfile -Command "Set-Location 'C:\OSINT\maigret';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;96m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;96m  Maigret  |  Deep Username OSINT  -  3000+ Sites'+$e+'[0m');Write-Host('  '+$e+'[1;96m'+$sep+$e+'[0m');Write-Host '  Discovers and links accounts across platforms. Generates HTML report.' -ForegroundColor DarkGray;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{$u=Read-Host '  Username';if($u){&$p -m maigret $u --html}}while($u)"
+title HOME TOOLS v!HT_VERSION!
 goto MENU
 
 :LAUNCH_PHOT
@@ -588,10 +584,9 @@ echo.
 if not exist "%P_PHOT%\photon.py" echo  %RD%  Not ready. Type R on the menu to repair.%R% & pause & goto MENU
 set "HV_PATH=%P_PHOT%" & set "HV_REQS=%P_PHOT%\requirements.txt"
 call :HEALTH_VENV
-start "Photon" powershell -NoExit -Command "Set-Location 'C:\OSINT\Photon'; $p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'}; Write-Host '  Photon  |  Web Crawler / OSINT Spider' -ForegroundColor White; Write-Host '  Extracts emails, URLs, API keys, phone numbers and more.' -ForegroundColor DarkGray; Write-Host '  Type a URL (https://...) and press Enter. Blank = exit loop.' -ForegroundColor DarkGray; Write-Host; do { $u=Read-Host '  URL'; if($u){ & $p photon.py -u $u --level 2 --threads 5 } } while($u)"
-echo  %GN%  Photon shell opened in a new window.%R%
-echo  %DG%  Switch to it, then press any key here to return to menu.%R%
-pause >nul
+title HOME TOOLS  ^|  Photon
+powershell -NoProfile -Command "Set-Location 'C:\OSINT\Photon';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;97m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;97m  Photon  |  Web Crawler and OSINT Spider'+$e+'[0m');Write-Host('  '+$e+'[1;97m'+$sep+$e+'[0m');Write-Host '  Extracts emails, URLs, API keys, phone numbers and JS secrets.' -ForegroundColor DarkGray;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{$u=Read-Host '  URL (https://...)';if($u){&$p photon.py -u $u --level 2 --threads 5}}while($u)"
+title HOME TOOLS v!HT_VERSION!
 goto MENU
 
 :LAUNCH_SQLM
@@ -605,10 +600,9 @@ echo  %YW%  REMINDER: Only test systems you own or have permission to test.%R%
 echo.
 if not exist "%P_SQLM%\sqlmap.py" echo  %RD%  Not ready. Type R on the menu to repair.%R% & pause & goto MENU
 if "!HAS_PY!"=="0" echo  %RD%  Python not in PATH. SQLMap needs Python.%R% & pause & goto MENU
-start "SQLMap" powershell -NoExit -Command "Set-Location 'C:\OSINT\sqlmap'; Write-Host '  SQLMap  |  SQL Injection Scanner' -ForegroundColor Red; Write-Host '  Automatically detects and exploits SQL injection.' -ForegroundColor DarkGray; Write-Host '  Example target: http://site.com/page.php?id=1' -ForegroundColor DarkGray; Write-Host '  Type a target URL and press Enter. Blank = exit loop.' -ForegroundColor DarkGray; Write-Host; do { $u=Read-Host '  Target URL'; if($u){ python sqlmap.py -u $u --batch } } while($u)"
-echo  %GN%  SQLMap shell opened in a new window.%R%
-echo  %DG%  Switch to it, then press any key here to return to menu.%R%
-pause >nul
+title HOME TOOLS  ^|  SQLMap
+powershell -NoProfile -Command "Set-Location 'C:\OSINT\sqlmap';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;91m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;91m  SQLMap  |  SQL Injection Scanner'+$e+'[0m');Write-Host('  '+$e+'[1;91m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;93m  REMINDER: Only test systems you own or have permission to test.'+$e+'[0m');Write-Host '  Example: http://site.com/page.php?id=1' -ForegroundColor DarkGray;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;do{$u=Read-Host '  Target URL';if($u){python sqlmap.py -u $u --batch}}while($u)"
+title HOME TOOLS v!HT_VERSION!
 goto MENU
 
 
@@ -626,10 +620,9 @@ echo.
 if not exist "%P_SCAV%\scavenger.py" echo  %RD%  Not ready. Type R on the menu to repair.%R% & pause & goto MENU
 set "HV_PATH=%P_SCAV%" & set "HV_REQS=%P_SCAV%\requirements.txt"
 call :HEALTH_VENV
-start "Scavenger" powershell -NoExit -Command "Set-Location 'C:\OSINT\scavenger'; $p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'}; $q=$false; do { cls; Write-Host '  Scavenger  |  Pastebin Leak Monitor' -ForegroundColor Cyan; Write-Host '  Monitors Pastebin for leaked credentials, API keys, RSA keys.' -ForegroundColor DarkGray; Write-Host; Write-Host '  [1]  Archive Scrape   - continuously crawl Pastebin archive' -ForegroundColor White; Write-Host '  [2]  Track User      - monitor a specific Pastebin user' -ForegroundColor White; Write-Host '  [3]  Scan Folder     - scan local files for leaked credentials' -ForegroundColor White; Write-Host '  [Q]  Quit' -ForegroundColor DarkGray; Write-Host; $m=Read-Host '  Mode'; if($m -eq '1'){ Write-Host '  Starting archive scrape... Press Ctrl+C to stop.' -ForegroundColor Green; Write-Host; & $p pbincomArchiveScrape.py; pause } elseif($m -eq '2'){ $u=Read-Host '  Pastebin username to track'; if($u){ Add-Content -Path 'configs\users.txt' -Value $u; Write-Host ('  Added '+$u+' to tracking list. Starting tracker...') -ForegroundColor Green; Write-Host; & $p pbincomTrackUser.py; pause } } elseif($m -eq '3'){ do { $f=Read-Host '  Folder path to scan (blank = back)'; if($f){ Write-Host '  Scanning...' -ForegroundColor DarkGray; & $p findSensitiveData.py $f } } while($f) } elseif($m -eq 'Q' -or $m -eq 'q'){ $q=$true } } while(-not $q)"
-echo  %GN%  Scavenger opened in a new window.%R%
-echo  %DG%  Switch to it, then press any key here to return to menu.%R%
-pause >nul
+title HOME TOOLS  ^|  Scavenger
+powershell -NoProfile -Command "Set-Location 'C:\OSINT\scavenger';$e=[char]27;$sep=([string][char]0x2550)*54;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};$q=$false;do{cls;Write-Host('  '+$e+'[1;96m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;96m  Scavenger  |  Pastebin Leak Monitor'+$e+'[0m');Write-Host('  '+$e+'[1;96m'+$sep+$e+'[0m');Write-Host '  Monitors Pastebin for leaked credentials, API keys and RSA keys.' -ForegroundColor DarkGray;Write-Host;Write-Host '  [1]  Archive Scrape   -  continuously crawl Pastebin archive' -ForegroundColor White;Write-Host '  [2]  Track User       -  monitor a specific Pastebin user' -ForegroundColor White;Write-Host '  [3]  Scan Folder      -  scan local files for leaked credentials' -ForegroundColor White;Write-Host '  [Q]  Return to HOME TOOLS' -ForegroundColor DarkGray;Write-Host;$m=Read-Host '  Mode';if($m -eq '1'){Write-Host '  Starting archive scrape... Press Ctrl+C to stop.' -ForegroundColor Green;Write-Host;&$p pbincomArchiveScrape.py;Read-Host '  Press Enter to continue'}elseif($m -eq '2'){$u=Read-Host '  Pastebin username to track';if($u){Add-Content -Path 'configs\users.txt' -Value $u;Write-Host('  Added '+$u+' to tracking list. Starting tracker...') -ForegroundColor Green;Write-Host;&$p pbincomTrackUser.py;Read-Host '  Press Enter to continue'}}elseif($m -eq '3'){do{$f=Read-Host '  Folder path (blank = back)';if($f){Write-Host '  Scanning...' -ForegroundColor DarkGray;&$p findSensitiveData.py $f}}while($f)}elseif($m -eq 'Q'-or$m -eq 'q'){$q=$true}}while(-not $q)"
+title HOME TOOLS v!HT_VERSION!
 goto MENU
 
 :LAUNCH_LINK
@@ -676,10 +669,9 @@ timeout /t 2 /nobreak >nul
 :LINK_LAUNCH
 set "HV_PATH=%P_LINK%" & set "HV_REQS=%P_LINK%\requirements.txt"
 call :HEALTH_VENV
-start "LinkedIn Gatherer" powershell -NoExit -Command "Set-Location 'C:\OSINT\linkedin-gatherer'; $p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'}; Write-Host '  LinkedIn Gatherer  |  LinkedIn Profile OSINT' -ForegroundColor Blue; Write-Host '  Gather employee names, job titles and profile URLs from a company.' -ForegroundColor DarkGray; Write-Host '  The tool will ask: search URL, company name, output filename.' -ForegroundColor DarkGray; Write-Host '  Blank company name = stop loop.' -ForegroundColor DarkGray; Write-Host; do { Write-Host '  --- New search ---' -ForegroundColor DarkGray; try { & $p linkedin_gatherer.py } catch { Write-Host ('  Error: '+$_.Exception.Message) -ForegroundColor Red }; $again=Read-Host '  Search again? [Y/N]' } while($again -eq 'Y' -or $again -eq 'y')"
-echo  %GN%  LinkedIn Gatherer opened in a new window.%R%
-echo  %DG%  Switch to it, then press any key here to return to menu.%R%
-pause >nul
+title HOME TOOLS  ^|  LinkedIn Gatherer
+powershell -NoProfile -Command "Set-Location 'C:\OSINT\linkedin-gatherer';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;94m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;94m  LinkedIn Gatherer  |  LinkedIn Profile OSINT'+$e+'[0m');Write-Host('  '+$e+'[1;94m'+$sep+$e+'[0m');Write-Host '  Gathers employee names, job titles and profile URLs from a company.' -ForegroundColor DarkGray;Write-Host '  The tool will prompt: search URL, company name, output filename.' -ForegroundColor DarkGray;Write-Host '  Answer N to Search again? to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{Write-Host('  '+$e+'[90m--- New search ---'+$e+'[0m');try{&$p linkedin_gatherer.py}catch{Write-Host('  Error: '+$_.Exception.Message) -ForegroundColor Red};$again=Read-Host '  Search again? [Y/N]'}while($again -eq 'Y'-or$again -eq 'y')"
+title HOME TOOLS v!HT_VERSION!
 goto MENU
 
 :LAUNCH_PWND
@@ -725,10 +717,9 @@ echo  %DG%  To change it later: delete %USERPROFILE%\.config\pwnedornot\config.j
 timeout /t 2 /nobreak >nul
 
 :PWND_LAUNCH
-start "pwnedOrNot" powershell -NoExit -Command "Set-Location 'C:\OSINT\pwnedornot'; $p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'}; Write-Host '  pwnedOrNot  |  Email Breach Checker' -ForegroundColor Yellow; Write-Host '  Checks HaveIBeenPwned + public password dumps.' -ForegroundColor DarkGray; Write-Host '  Shows which breaches the email appeared in and any leaked passwords.' -ForegroundColor DarkGray; Write-Host '  Type an email and press Enter. Blank = exit loop.' -ForegroundColor DarkGray; Write-Host; do { $e=Read-Host '  Email'; if($e){ & $p pwnedornot.py -e $e } } while($e)"
-echo  %GN%  pwnedOrNot opened in a new window.%R%
-echo  %DG%  Switch to it, then press any key here to return to menu.%R%
-pause >nul
+title HOME TOOLS  ^|  pwnedOrNot
+powershell -NoProfile -Command "Set-Location 'C:\OSINT\pwnedornot';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;93m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;93m  pwnedOrNot  |  Email Breach Checker'+$e+'[0m');Write-Host('  '+$e+'[1;93m'+$sep+$e+'[0m');Write-Host '  Checks HaveIBeenPwned + public dumps. Shows breaches and leaked passwords.' -ForegroundColor DarkGray;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{$em=Read-Host '  Email';if($em){&$p pwnedornot.py -e $em}}while($em)"
+title HOME TOOLS v!HT_VERSION!
 goto MENU
 
 
