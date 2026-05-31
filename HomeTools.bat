@@ -1,6 +1,6 @@
 @echo off
 :: ============================================================
-::  HOME TOOLS  |  OSINT Launcher  |  v3.8
+::  HOME TOOLS  |  OSINT Launcher  |  v3.9
 ::  A self-installing OSINT toolkit launcher for Windows.
 ::
 ::  Tools clone and install automatically on first launch.
@@ -11,7 +11,7 @@
 ::  Install locations: C:\OSINT\   and   C:\Tools\exiftool\
 ::  Made with love by vortexdq.com
 :: ============================================================
-:: HOMETOOLS_VERSION:3.8
+:: HOMETOOLS_VERSION:3.9
 if "%~1"=="-k" goto :INIT
 cmd /k "%~f0" -k
 exit /b
@@ -19,7 +19,7 @@ exit /b
 
 setlocal enabledelayedexpansion
 chcp 65001 >nul 2>&1
-title HOME TOOLS v3.8
+title HOME TOOLS v3.9
 
 :: ============================================================
 ::  ANSI COLORS
@@ -44,7 +44,7 @@ set "ORB=%E%[1;33m"
 :: ============================================================
 ::  VERSION
 :: ============================================================
-set "HT_VERSION=3.8"
+set "HT_VERSION=3.9"
 
 :: ============================================================
 ::  TOOL PATHS
@@ -64,6 +64,10 @@ set "P_SQLM=C:\OSINT\sqlmap"
 set "P_SCAV=C:\OSINT\scavenger"
 set "P_LINK=C:\OSINT\linkedin-gatherer"
 set "P_PWND=C:\OSINT\pwnedornot"
+set "P_GHNT=C:\OSINT\GHunt"
+set "P_RECN=C:\OSINT\recon-ng"
+set "P_ZAP=C:\Tools\ZAP"
+set "P_WPSC=C:\OSINT\wpscan"
 
 :: ============================================================
 ::  FIRST RUN CHECK
@@ -82,7 +86,7 @@ goto STARTUP
 cls
 echo.
 echo  %CB%  =======================================================%R%
-echo  %CB%           HOME TOOLS v3.8  -  First Launch             %R%
+echo  %CB%           HOME TOOLS v3.9  -  First Launch             %R%
 echo  %CB%       Self-installing OSINT Toolkit for Windows         %R%
 echo  %CB%  =======================================================%R%
 echo.
@@ -196,6 +200,10 @@ call :SC_SQLM
 call :SC_SCAV
 call :SC_LINK
 call :SC_PWND
+call :SC_GHNT
+call :SC_RECN
+call :SC_ZAP
+call :SC_WPSC
 call :FIX_LINKEDIN
 call :FIX_OSINTGRAM
 
@@ -204,7 +212,73 @@ echo  %GB%  =======================================================%R%
 echo  %GN%  All checks complete.%R%
 echo  %GB%  =======================================================%R%
 echo.
-powershell -NoProfile -Command "$e=[char]27;$cr=[char]13;$w=42;Write-Host('  '+$e+'[90mBooting HOME TOOLS...'+$e+'[0m');Write-Host;for($i=0;$i -le $w;$i++){$pct=[int](($i/$w)*100);$bar=([string][char]0x2588)*$i+$e+'[90m'+([string][char]0x2591)*($w-$i)+$e+'[0m';$col=if($pct -lt 35){$e+'[91m'}elseif($pct -lt 70){$e+'[93m'}else{$e+'[92m'};Write-Host -NoNewline([string]$cr+'  '+$col+$bar+'  '+[string]$pct+'%  '+$e+'[0m');Start-Sleep -Milliseconds 18};Write-Host;Write-Host;Write-Host -NoNewline '  ';'HOME TOOLS  v!HT_VERSION!  ONLINE'.ToCharArray()|ForEach-Object{Write-Host -NoNewline($e+'[1;92m'+$_+$e+'[0m');Start-Sleep -Milliseconds 45};Write-Host;Start-Sleep -Milliseconds 900"
+set "HT_ANIM=%TEMP%\ht_boot_anim.ps1"
+(
+echo $e=[char]27; $cr=[char]13; try{$host.UI.RawUI.CursorVisible=$false}catch{}
+echo function W($ms){Start-Sleep -Milliseconds $ms}
+echo function CLS{[Console]::Clear()}
+echo $R='[91m';$G='[92m';$Y='[93m';$C='[96m';$W='[97m';$D='[90m';$M='[95m'
+echo $RB='[1;91m';$GB='[1;92m';$YB='[1;93m';$CB='[1;96m';$WB='[1;97m'
+echo ## PHASE 1 - DARKNESS
+echo CLS; W 400
+echo ## PHASE 2 - LIGHTNING
+echo 1..4 ^| ForEach-Object { CLS; Write-Host ''; Write-Host "    $($e)[1;93m*  *  *  *  *  *  *  *  *  *  *  *  *$($e)[0m"; Write-Host "    $($e)[1;97m                                     $($e)[0m"; Write-Host "    $($e)[1;93m*  *  *  *  *  *  *  *  *  *  *  *  *$($e)[0m"; W 65; CLS; W 45 }
+echo ## PHASE 3 - REAPER APPEARS
+echo CLS
+echo Write-Host ''
+echo Write-Host "             $($e)[90m.-~~~-.$($e)[0m"
+echo Write-Host "           $($e)[90m(  o   o  )$($e)[0m"
+echo Write-Host "            $($e)[90m\  ---  /$($e)[0m"
+echo Write-Host "             $($e)[90m'-----'$($e)[0m"
+echo Write-Host "               $($e)[90m^^^$($e)[0m"
+echo Write-Host "          $($e)[90m.---'^^^'---.$($e)[0m"
+echo Write-Host "         $($e)[90m/   ^^^^^^^   \$($e)[0m"
+echo Write-Host ''
+echo W 500
+echo ## PHASE 4 - SCYTHE RAISED
+echo CLS
+echo Write-Host ''
+echo Write-Host "    $($e)[90m,----._____$($e)[0m"
+echo Write-Host "   $($e)[90m/           '-.$($e)[0m"
+echo Write-Host "  $($e)[90m/               '$($e)[0m"
+echo Write-Host "             $($e)[90m.-~~~-.$($e)[0m"
+echo Write-Host "           $($e)[90m(  X   X  )$($e)[0m"
+echo Write-Host "            $($e)[90m\  ---  /$($e)[0m"
+echo Write-Host "             $($e)[90m'-----'$($e)[0m"
+echo Write-Host "               $($e)[90m^^^$($e)[0m"
+echo Write-Host "          $($e)[90m.---'^^^'---.$($e)[0m"
+echo Write-Host "         $($e)[90m/   ^^^^^^^   \$($e)[0m"
+echo Write-Host ''
+echo W 350
+echo ## PHASE 5 - SCYTHE SWINGS
+echo CLS
+echo Write-Host ''
+echo Write-Host "          $($e)[91m_______$($e)[0m"
+echo Write-Host "    $($e)[91m,---./       '----.$($e)[0m"
+echo Write-Host "   $($e)[91m/   /               '$($e)[0m"
+echo Write-Host "             $($e)[90m.-~~~-.$($e)[0m"
+echo Write-Host "           $($e)[90m(  X   X  )$($e)[0m"
+echo Write-Host "            $($e)[90m\  ---  /$($e)[0m"
+echo Write-Host "             $($e)[90m'-----'$($e)[0m"
+echo Write-Host "               $($e)[90m^^^$($e)[0m"
+echo Write-Host "          $($e)[90m.---'^^^'---.$($e)[0m"
+echo W 250
+echo ## PHASE 6 - SLASH
+echo 1..3 ^| ForEach-Object { CLS; Write-Host ''; Write-Host "  $($e)[1;91m          \\\   ///$($e)[0m"; Write-Host "  $($e)[1;91m           \\\ ///$($e)[0m"; Write-Host "  $($e)[1;91m    SLASH   -X-$($e)[0m"; Write-Host "  $($e)[1;91m           /// \\\$($e)[0m"; Write-Host "  $($e)[1;91m          ///   \\\$($e)[0m"; W 75; CLS; W 55 }
+echo ## PHASE 7 - HOME TOOLS TITLE APPEARS
+echo W 200; CLS; W 100
+echo $title = @('', '  [1;96m ___  ___  ___  ___  ___     ___  ___  ___  __  ___   [0m', '  [1;96m^| . \^| . \^| . \^| . \^| . \   ^|_ _^|^| . \^| . \^| .^|^|_ _^|  [0m', '  [1;96m^|  _/^|  _/^|  _/^|___/^|   /     ^| ^| ^|   /^|   /^| . ^|^| ^|   [0m', '  [1;96m^|_^|  ^|_^|  ^|_^|  ^|    ^|_^|\_\    ^|_^| ^|_^|\_\^|_^|\_\^|_^|^|^|_^|   [0m', '')
+echo $title ^| ForEach-Object { $l=$_ -replace '\[([0-9;]+m)',([char]27+'$1'); Write-Host $l; W 130 }
+echo ## PHASE 8 - PROGRESS BAR
+echo W 200; Write-Host ''
+echo $w=42; for($i=0;$i -le $w;$i++){$pct=[int](($i/$w)*100);$bar=([string][char]0x2588)*$i+$e+'[90m'+([string][char]0x2591)*($w-$i)+$e+'[0m';$col=if($pct -lt 35){$e+'[91m'}elseif($pct -lt 70){$e+'[93m'}else{$e+'[92m'};Write-Host -NoNewline([string]$cr+'  '+$col+$bar+'  '+[string]$pct+'%  '+$e+'[0m');W 16};Write-Host;Write-Host
+echo ## PHASE 9 - ONLINE REVEAL
+echo Write-Host -NoNewline '  '; 'HOME TOOLS  v!HT_VERSION!  ONLINE'.ToCharArray()^|ForEach-Object{Write-Host -NoNewline($e+'[1;92m'+$_+$e+'[0m');W 42}; Write-Host; W 800
+echo ## PHASE 10 - FADE TO MENU
+echo CLS
+) > "!HT_ANIM!"
+powershell -NoProfile -ExecutionPolicy Bypass -File "!HT_ANIM!" 2>nul
+del "!HT_ANIM!" >nul 2>&1
 goto MENU
 
 
@@ -238,6 +312,10 @@ set "S11=%RD%[--] %R%"
 set "S12=%RD%[--] %R%"
 set "S13=%RD%[--] %R%"
 set "S14=%RD%[--] %R%"
+set "S15=%RD%[--] %R%"
+set "S16=%RD%[--] %R%"
+set "S17=%RD%[--] %R%"
+set "S18=%RD%[--] %R%"
 
 if not exist "%P_JLT%\OemDrv.exe"               set "S1=%RD% [!!] %R%"
 if not exist "%P_SCAN%"                          set "S2=%RD% [!!] %R%"
@@ -253,6 +331,10 @@ if exist "%P_SQLM%\sqlmap.py"                    set "S11=%GN%[OK] %R%"
 if exist "%P_SCAV%\scavenger.py"                 set "S12=%GN%[OK] %R%"
 if exist "%P_LINK%\linkedin_gatherer.py"         set "S13=%GN%[OK] %R%"
 if exist "%P_PWND%\pwnedornot.py"                set "S14=%GN%[OK] %R%"
+if exist "%P_GHNT%\ghunt"                        set "S15=%GN%[OK] %R%"
+if exist "%P_RECN%\recon-ng"                     set "S16=%GN%[OK] %R%"
+if exist "%P_ZAP%\zap.bat"                       set "S17=%GN%[OK] %R%"
+for /f "delims=" %%W in ('where wpscan 2^>nul') do set "S18=%GN%[OK] %R%"
 
 echo  %WB%  DEVICE / LOCAL%R%
 echo  %DG%  --------------------------------------------------------%R%
@@ -273,6 +355,13 @@ echo  !S11!%RD%[11]%R%  %WH%SQLMap                    %DG%SQL injection scanner%
 echo  !S12!%CB%[12]%R%  %WH%Scavenger                 %DG%Pastebin leak and credential monitor%R%
 echo  !S13!%BB%[13]%R%  %WH%LinkedIn Gatherer          %DG%LinkedIn profile and network OSINT%R%
 echo  !S14!%YB%[14]%R%  %WH%pwnedOrNot                %DG%Email breach checker with passwords%R%
+echo.
+echo  %WB%  ADVANCED TOOLS%R%
+echo  %DG%  --------------------------------------------------------%R%
+echo  !S15!%GB%[15]%R%  %WH%GHunt                     %DG%Google account OSINT - email, location, more%R%
+echo  !S16!%CB%[16]%R%  %WH%Recon-ng                  %DG%Modular web reconnaissance framework%R%
+echo  !S17!%RD%[17]%R%  %WH%OWASP ZAP                 %DG%Web application security scanner%R%
+echo  !S18!%MGB%[18]%R%  %WH%WPScan                    %DG%WordPress vulnerability scanner%R%
 echo.
 echo  %DG%  --------------------------------------------------------%R%
 echo  %CY%  [R]%R% Repair   %CY%[C]%R% Commands   %CY%[H]%R% Help   %CY%[I]%R% Instagram setup   %CY%[Q]%R% Quit
@@ -296,6 +385,10 @@ if /i "%CHO%"=="11"        goto LAUNCH_SQLM
 if /i "%CHO%"=="12"        goto LAUNCH_SCAV
 if /i "%CHO%"=="13"        goto LAUNCH_LINK
 if /i "%CHO%"=="14"        goto LAUNCH_PWND
+if /i "%CHO%"=="15"        goto LAUNCH_GHNT
+if /i "%CHO%"=="16"        goto LAUNCH_RECN
+if /i "%CHO%"=="17"        goto LAUNCH_ZAP
+if /i "%CHO%"=="18"        goto LAUNCH_WPSC
 if /i "%CHO%"=="R"         goto REPAIR
 if /i "%CHO%"=="repair"    goto REPAIR
 if /i "%CHO%"=="C"         goto COMMAND_CENTER
@@ -308,7 +401,7 @@ if /i "%CHO%"=="creds"     goto OGRAM_SETUP_MENU
 if /i "%CHO%"=="Q"         goto QUIT
 if /i "%CHO%"=="quit"      goto QUIT
 if /i "%CHO%"=="exit"      goto QUIT
-echo  %RD%  Unknown option. Type 1-14, R, C, H, I, or Q.%R%
+echo  %RD%  Unknown option. Type 1-18, R, C, H, I, or Q.%R%
 timeout /t 1 /nobreak >nul
 goto MENU
 
@@ -720,6 +813,73 @@ goto PWND_LAUNCH
 :PWND_LAUNCH
 title HOME TOOLS  ^|  pwnedOrNot
 powershell -NoProfile -Command "Set-Location 'C:\OSINT\pwnedornot';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;93m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;93m  pwnedOrNot  |  Email Breach Checker'+$e+'[0m');Write-Host('  '+$e+'[1;93m'+$sep+$e+'[0m');Write-Host '  Checks HaveIBeenPwned + public dumps. Shows breaches and leaked passwords.' -ForegroundColor DarkGray;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{$em=Read-Host '  Email';if($em){&$p pwnedornot.py -e $em}}while($em)"
+title HOME TOOLS v!HT_VERSION!
+goto MENU
+
+
+:: ============================================================
+::  LAUNCHERS  15-18
+:: ============================================================
+
+:LAUNCH_GHNT
+cls
+echo.
+echo  %GB%  =======================================================%R%
+echo  %WB%  GHunt  ^|  Google Account OSINT%R%
+echo  %GB%  =======================================================%R%
+echo.
+if not exist "%P_GHNT%\ghunt" echo  %RD%  Not ready. Type R on the menu to repair.%R% & pause & goto MENU
+set "HV_PATH=%P_GHNT%" & set "HV_REQS=%P_GHNT%\requirements.txt"
+call :HEALTH_VENV
+title HOME TOOLS  ^|  GHunt
+powershell -NoProfile -Command "Set-Location 'C:\OSINT\GHunt';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;92m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;92m  GHunt  |  Google Account OSINT'+$e+'[0m');Write-Host('  '+$e+'[1;92m'+$sep+$e+'[0m');Write-Host '  Investigate Google accounts, locations, reviews and more.' -ForegroundColor DarkGray;Write-Host '  First time: run  ghunt login  to authenticate.' -ForegroundColor Yellow;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{Write-Host '  Commands: email / gaia / drive / youtube' -ForegroundColor DarkGray;$cmd=Read-Host '  ghunt subcommand (or blank to exit)';if($cmd){$tgt=Read-Host '  Target';if($tgt){&$p -m ghunt $cmd $tgt}}}while($cmd)"
+title HOME TOOLS v!HT_VERSION!
+goto MENU
+
+:LAUNCH_RECN
+cls
+echo.
+echo  %CB%  =======================================================%R%
+echo  %WB%  Recon-ng  ^|  Web Reconnaissance Framework%R%
+echo  %CB%  =======================================================%R%
+echo.
+if not exist "%P_RECN%\recon-ng" echo  %RD%  Not ready. Type R on the menu to repair.%R% & pause & goto MENU
+set "HV_PATH=%P_RECN%" & set "HV_REQS=%P_RECN%\requirements.txt"
+call :HEALTH_VENV
+title HOME TOOLS  ^|  Recon-ng
+powershell -NoProfile -Command "Set-Location 'C:\OSINT\recon-ng';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;96m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;96m  Recon-ng  |  Web Reconnaissance Framework'+$e+'[0m');Write-Host('  '+$e+'[1;96m'+$sep+$e+'[0m');Write-Host '  Interactive OSINT framework. Type help inside for all commands.' -ForegroundColor DarkGray;Write-Host '  Tip: workspaces create <name>  then  modules search <topic>' -ForegroundColor DarkGray;Write-Host '  Type exit inside recon-ng to return here.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};&$p recon-ng"
+title HOME TOOLS v!HT_VERSION!
+goto MENU
+
+:LAUNCH_ZAP
+cls
+echo.
+echo  %RD%  =======================================================%R%
+echo  %WB%  OWASP ZAP  ^|  Web Application Security Scanner%R%
+echo  %RD%  =======================================================%R%
+echo.
+echo  %YW%  REMINDER: Only scan applications you own or have permission to test.%R%
+echo.
+if not exist "%P_ZAP%\zap.bat" echo  %RD%  Not ready. Type R on the menu to repair.%R% & pause & goto MENU
+echo  %GN%  Launching OWASP ZAP...%R%
+echo  %DG%  ZAP opens its own GUI window. Close it when done.%R%
+echo.
+start "OWASP ZAP" "%P_ZAP%\zap.bat"
+echo  %WH%  Press any key to return to menu (ZAP keeps running)...%R%
+pause >nul
+goto MENU
+
+:LAUNCH_WPSC
+cls
+echo.
+echo  %MGB%  =======================================================%R%
+echo  %WB%  WPScan  ^|  WordPress Vulnerability Scanner%R%
+echo  %MGB%  =======================================================%R%
+echo.
+echo  %YW%  REMINDER: Only scan WordPress sites you own or have permission to test.%R%
+echo.
+title HOME TOOLS  ^|  WPScan
+powershell -NoProfile -Command "$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;35m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;35m  WPScan  |  WordPress Vulnerability Scanner'+$e+'[0m');Write-Host('  '+$e+'[1;35m'+$sep+$e+'[0m');Write-Host '  Scans WordPress sites for vulnerabilities, users, plugins, themes.' -ForegroundColor DarkGray;Write-Host '  Tip: add --api-token YOUR_TOKEN for vulnerability data (free at wpscan.com)' -ForegroundColor DarkGray;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;do{$u=Read-Host '  Target URL (https://example.com)';if($u){wpscan --url $u --enumerate u,p,t --random-user-agent}}while($u)"
 title HOME TOOLS v!HT_VERSION!
 goto MENU
 
@@ -1466,7 +1626,7 @@ echo  %WB%  HELP  ^|  HOME TOOLS v!HT_VERSION!%R%
 echo  %CB%  =======================================================%R%
 echo.
 echo  %WB%  HOW TO USE%R%
-echo  %DG%  Type a number 1-14 and press ENTER to launch a tool.%R%
+echo  %DG%  Type a number 1-18 and press ENTER to launch a tool.%R%
 echo  %DG%  Tools install automatically on first launch.%R%
 echo  %DG%  Type [C] for the Command Center - full commands for every tool.%R%
 echo  %DG%  Type [I] to set or update your Instagram credentials.%R%
@@ -1487,6 +1647,10 @@ echo  %RD% 11%R%   SQLMap              %DG%SQL injection scanner%R%
 echo  %CB% 12%R%   Scavenger           %DG%Pastebin leak and credential monitor%R%
 echo  %BB% 13%R%   LinkedIn Gatherer   %DG%LinkedIn profile and network OSINT%R%
 echo  %YB% 14%R%   pwnedOrNot          %DG%Email breach checker via HIBP API%R%
+echo  %GB% 15%R%   GHunt               %DG%Google account OSINT - email and location%R%
+echo  %CB% 16%R%   Recon-ng            %DG%Modular web reconnaissance framework%R%
+echo  %RD% 17%R%   OWASP ZAP           %DG%Web application security scanner (GUI)%R%
+echo  %MGB% 18%R%   WPScan              %DG%WordPress vulnerability scanner%R%
 echo.
 echo  %WB%  MENU OPTIONS%R%
 echo  %DG%  --------------------------------------------------------%R%
@@ -1752,6 +1916,71 @@ set "GIT_PATH=%P_PWND%" & set "GIT_NAME=pwnedOrNot" & set "GIT_REQS=1"
 call :GIT_CHECK_UPDATE
 :SC_PWND_END
 if exist "%P_PWND%\pwnedornot.py" (echo  %GN%    Status: Ready%R%) else (echo  %RD%    Status: NOT READY%R%)
+goto :EOF
+
+:SC_GHNT
+echo.
+echo  %GB%  [15] GHunt%R%
+if exist "%P_GHNT%\ghunt" goto :SC_GHNT_UPD
+if "!HAS_NET!"=="0" (echo  %DG%    Offline - not installed.%R%    & goto :SC_GHNT_END)
+if "!HAS_GIT!"=="0" (echo  %YW%    Needs git in PATH.%R%          & goto :SC_GHNT_END)
+if "!HAS_PY!"=="0"  (echo  %YW%    Needs Python in PATH.%R%       & goto :SC_GHNT_END)
+echo  %WH%    Not installed - downloading...%R%
+call :INSTALL_GHNT_FUNC
+goto :SC_GHNT_END
+:SC_GHNT_UPD
+if "!HAS_NET!"=="0" (echo  %DG%    Offline - skipping update.%R%  & goto :SC_GHNT_END)
+if "!HAS_GIT!"=="0" (echo  %GN%    Installed.%R%                   & goto :SC_GHNT_END)
+set "GIT_PATH=%P_GHNT%" & set "GIT_NAME=GHunt" & set "GIT_REQS=1"
+call :GIT_CHECK_UPDATE
+goto :SC_GHNT_END
+:SC_GHNT_END
+if exist "%P_GHNT%\ghunt" (echo  %GN%    Status: Ready%R%) else (echo  %RD%    Status: NOT READY%R%)
+goto :EOF
+
+:SC_RECN
+echo.
+echo  %CB%  [16] Recon-ng%R%
+if exist "%P_RECN%\recon-ng" goto :SC_RECN_UPD
+if "!HAS_NET!"=="0" (echo  %DG%    Offline - not installed.%R%    & goto :SC_RECN_END)
+if "!HAS_GIT!"=="0" (echo  %YW%    Needs git in PATH.%R%          & goto :SC_RECN_END)
+if "!HAS_PY!"=="0"  (echo  %YW%    Needs Python in PATH.%R%       & goto :SC_RECN_END)
+echo  %WH%    Not installed - downloading...%R%
+call :INSTALL_RECN_FUNC
+goto :SC_RECN_END
+:SC_RECN_UPD
+if "!HAS_NET!"=="0" (echo  %DG%    Offline - skipping update.%R%  & goto :SC_RECN_END)
+if "!HAS_GIT!"=="0" (echo  %GN%    Installed.%R%                   & goto :SC_RECN_END)
+set "GIT_PATH=%P_RECN%" & set "GIT_NAME=Recon-ng" & set "GIT_REQS=1"
+call :GIT_CHECK_UPDATE
+goto :SC_RECN_END
+:SC_RECN_END
+if exist "%P_RECN%\recon-ng" (echo  %GN%    Status: Ready%R%) else (echo  %RD%    Status: NOT READY%R%)
+goto :EOF
+
+:SC_ZAP
+echo.
+echo  %RD%  [17] OWASP ZAP%R%
+if exist "%P_ZAP%\zap.bat" goto :SC_ZAP_END
+if "!HAS_NET!"=="0" (echo  %DG%    Offline - not installed.%R%    & goto :SC_ZAP_END)
+echo  %WH%    Not installed - downloading...%R%
+call :INSTALL_ZAP_FUNC
+goto :SC_ZAP_END
+:SC_ZAP_END
+if exist "%P_ZAP%\zap.bat" (echo  %GN%    Status: Ready%R%) else (echo  %RD%    Status: NOT READY%R%)
+goto :EOF
+
+:SC_WPSC
+echo.
+echo  %MGB%  [18] WPScan%R%
+where wpscan >nul 2>&1 && (echo  %GN%    Status: Ready%R% & goto :EOF)
+if "!HAS_NET!"=="0" (echo  %DG%    Offline - not installed.%R%    & goto :SC_WPSC_END)
+where ruby >nul 2>&1 || (echo  %YW%    Needs Ruby in PATH. Get it at: https://rubyinstaller.org%R% & goto :SC_WPSC_END)
+echo  %WH%    Installing WPScan gem...%R%
+gem install wpscan --quiet 2>nul
+where wpscan >nul 2>&1 && (echo  %GN%    WPScan installed.%R%) || (echo  %RD%    Install failed - check Ruby and gem.%R%)
+:SC_WPSC_END
+where wpscan >nul 2>&1 && (echo  %GN%    Status: Ready%R%) || (echo  %RD%    Status: NOT READY%R%)
 goto :EOF
 
 
@@ -2057,6 +2286,49 @@ if defined HV_PKG                 "!HV_PATH!\venv\Scripts\python.exe" -m pip ins
 set "HV_PKG="
 copy nul "!HV_PATH!\venv\.health" >nul 2>&1
 echo  %GN%    Venv rebuilt and ready.%R%
+goto :EOF
+
+
+:INSTALL_GHNT_FUNC
+if exist "%P_GHNT%\ghunt" (echo  %GN%    Already installed.%R% & goto :EOF)
+echo  %WH%    Cloning GHunt...%R%
+git clone https://github.com/mxrch/GHunt "%P_GHNT%"
+if not exist "%P_GHNT%\ghunt" (echo  %RD%    Clone failed.%R% & goto :EOF)
+echo  %WH%    Creating venv and installing requirements...%R%
+python -m venv "%P_GHNT%\venv"
+"%P_GHNT%\venv\Scripts\python.exe" -m pip install --upgrade pip --quiet
+"%P_GHNT%\venv\Scripts\python.exe" -m pip install -r "%P_GHNT%\requirements.txt" --quiet --prefer-binary 2>nul
+"%P_GHNT%\venv\Scripts\python.exe" -m pip install -e "%P_GHNT%" --quiet 2>nul
+copy nul "%P_GHNT%\venv\.health" >nul 2>&1
+echo  %GN%    GHunt installed.%R%
+echo  %YW%    First use: launch tool 15 and run  ghunt login  to authenticate.%R%
+goto :EOF
+
+:INSTALL_RECN_FUNC
+if exist "%P_RECN%\recon-ng" (echo  %GN%    Already installed.%R% & goto :EOF)
+echo  %WH%    Cloning Recon-ng...%R%
+git clone https://github.com/lanmaster53/recon-ng "%P_RECN%"
+if not exist "%P_RECN%\recon-ng" (echo  %RD%    Clone failed.%R% & goto :EOF)
+echo  %WH%    Creating venv and installing requirements...%R%
+python -m venv "%P_RECN%\venv"
+"%P_RECN%\venv\Scripts\python.exe" -m pip install --upgrade pip --quiet
+"%P_RECN%\venv\Scripts\python.exe" -m pip install -r "%P_RECN%\REQUIREMENTS" --quiet --prefer-binary 2>nul
+copy nul "%P_RECN%\venv\.health" >nul 2>&1
+echo  %GN%    Recon-ng installed.%R%
+goto :EOF
+
+:INSTALL_ZAP_FUNC
+if exist "%P_ZAP%\zap.bat" (echo  %GN%    Already installed.%R% & goto :EOF)
+if not exist "%P_ZAP%" mkdir "%P_ZAP%"
+echo  %WH%    Downloading OWASP ZAP (cross-platform package)...%R%
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$ProgressPreference='SilentlyContinue'; try { $api=(Invoke-WebRequest 'https://api.github.com/repos/zaproxy/zaproxy/releases/latest' -UseBasicParsing -TimeoutSec 15).Content | ConvertFrom-Json; $asset=$api.assets | Where-Object{$_.name -match 'Crossplatform\.zip'} | Select-Object -First 1; if(-not $asset){$asset=$api.assets | Where-Object{$_.name -match '\.zip'} | Select-Object -First 1}; if($asset){Write-Host('    Downloading '+$asset.name+'...'); Invoke-WebRequest $asset.browser_download_url -OutFile 'C:\Tools\ZAP\zap.zip' -UseBasicParsing -TimeoutSec 180; Expand-Archive 'C:\Tools\ZAP\zap.zip' 'C:\Tools\ZAP' -Force; Remove-Item 'C:\Tools\ZAP\zap.zip' -Force -EA SilentlyContinue; $bat=Get-ChildItem 'C:\Tools\ZAP' -Recurse -Filter 'zap.bat' -EA SilentlyContinue | Select-Object -First 1; if($bat -and $bat.FullName -ne 'C:\Tools\ZAP\zap.bat'){Copy-Item $bat.FullName 'C:\Tools\ZAP\zap.bat' -Force}; Write-Host '    OWASP ZAP installed.' -ForegroundColor Green}else{Write-Host '    Could not find ZAP download asset.' -ForegroundColor Red}}catch{Write-Host('    Download failed: '+$_.Exception.Message) -ForegroundColor Red}"
+goto :EOF
+
+:INSTALL_WPSC_FUNC
+where ruby >nul 2>&1 || (echo  %YW%    Ruby not in PATH - get it at: https://rubyinstaller.org%R% & goto :EOF)
+echo  %WH%    Installing WPScan via gem...%R%
+gem install wpscan --quiet 2>nul
+where wpscan >nul 2>&1 && echo  %GN%    WPScan installed.%R% || echo  %RD%    gem install failed.%R%
 goto :EOF
 
 
