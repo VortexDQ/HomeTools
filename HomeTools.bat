@@ -1,6 +1,6 @@
 @echo off
 :: ============================================================
-::  HOME TOOLS  |  OSINT Launcher  |  v3.5
+::  HOME TOOLS  |  OSINT Launcher  |  v3.6
 ::  A self-installing OSINT toolkit launcher for Windows.
 ::
 ::  Tools clone and install automatically on first launch.
@@ -11,11 +11,11 @@
 ::  Install locations: C:\OSINT\   and   C:\Tools\exiftool\
 ::  Made with love by vortexdq.com
 :: ============================================================
-:: HOMETOOLS_VERSION:3.5
+:: HOMETOOLS_VERSION:3.6
 
 setlocal enabledelayedexpansion
 chcp 65001 >nul 2>&1
-title HOME TOOLS v3.5
+title HOME TOOLS v3.6
 
 :: ============================================================
 ::  ANSI COLORS
@@ -40,7 +40,7 @@ set "ORB=%E%[1;33m"
 :: ============================================================
 ::  VERSION
 :: ============================================================
-set "HT_VERSION=3.5"
+set "HT_VERSION=3.6"
 
 :: ============================================================
 ::  TOOL PATHS
@@ -78,7 +78,7 @@ goto STARTUP
 cls
 echo.
 echo  %CB%  =======================================================%R%
-echo  %CB%           HOME TOOLS v3.5  -  First Launch             %R%
+echo  %CB%           HOME TOOLS v3.6  -  First Launch             %R%
 echo  %CB%       Self-installing OSINT Toolkit for Windows         %R%
 echo  %CB%  =======================================================%R%
 echo.
@@ -1752,28 +1752,39 @@ goto :EOF
 
 :: ============================================================
 ::  HOME TOOLS SELF-UPDATE
-::  Checks GitHub for newer HomeTools.bat and auto-replaces.
-::  Uses exit /b 0 after launching runner so the shell closes cleanly.
+::  Uses temp files not for/f('ps') to avoid capture issues.
 :: ============================================================
 :CHECK_HT_UPDATE
 if "!HAS_NET!"=="0" goto :EOF
 echo  %DG%  Checking for HomeTools updates...%R%
 set "HT_REMOTE_VER="
-for /f "delims=" %%V in ('powershell -NoProfile -ExecutionPolicy Bypass -Command "try{$r=(Invoke-WebRequest ''https://raw.githubusercontent.com/VortexDQ/HomeTools/main/HomeTools.bat'' -UseBasicParsing -TimeoutSec 10).Content; $m=[regex]::Match($r,''HOMETOOLS_VERSION:([\d.]+)''); if($m.Success){$m.Groups[1].Value}}catch{}"') do set "HT_REMOTE_VER=%%V"
+set "HT_VER_TMP=%TEMP%\ht_ver_%RANDOM%.txt"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$ProgressPreference='SilentlyContinue'; try { $c=(Invoke-WebRequest 'https://raw.githubusercontent.com/VortexDQ/HomeTools/main/HomeTools.bat' -UseBasicParsing -TimeoutSec 10).Content; $m=[regex]::Match($c,'HOMETOOLS_VERSION:([\d.]+)'); if($m.Success){ $v=$m.Groups[1].Value.Trim(); if($v -match '^\d+\.\d+$'){ [System.IO.File]::WriteAllText($env:TEMP+'\ht_ver_tmp.txt',$v) } } } catch {}" >nul 2>nul
+if exist "%TEMP%\ht_ver_tmp.txt" (
+  set /p HT_REMOTE_VER= < "%TEMP%\ht_ver_tmp.txt"
+  del "%TEMP%\ht_ver_tmp.txt" >nul 2>nul
+)
 if not defined HT_REMOTE_VER (echo  %DG%  Version check unavailable.%R% & goto :EOF)
+:: Strip any trailing whitespace/CR from set /p read
+for /f "tokens=*" %%V in ("!HT_REMOTE_VER!") do set "HT_REMOTE_VER=%%V"
 if "!HT_REMOTE_VER!"=="!HT_VERSION!" (echo  %GN%  HOME TOOLS v!HT_VERSION! is up to date.%R% & goto :EOF)
+:: Compare - only update if remote is strictly newer
 set "HT_DO_UPDATE=0"
-for /f "delims=" %%C in ('powershell -NoProfile -Command "if([version]''!HT_REMOTE_VER!'' -gt [version]''!HT_VERSION!''){1}else{0}"') do set "HT_DO_UPDATE=%%C"
-if "!HT_DO_UPDATE!"=="0" (echo  %GN%  HOME TOOLS v!HT_VERSION! is up to date.%R% & goto :EOF)
+powershell -NoProfile -Command "$ProgressPreference='SilentlyContinue'; try { if([version]'!HT_REMOTE_VER!' -gt [version]'!HT_VERSION!'){ [System.IO.File]::WriteAllText($env:TEMP+'\ht_cmp_tmp.txt','1') } else { [System.IO.File]::WriteAllText($env:TEMP+'\ht_cmp_tmp.txt','0') } } catch { [System.IO.File]::WriteAllText($env:TEMP+'\ht_cmp_tmp.txt','0') }" >nul 2>nul
+if exist "%TEMP%\ht_cmp_tmp.txt" (
+  set /p HT_DO_UPDATE= < "%TEMP%\ht_cmp_tmp.txt"
+  del "%TEMP%\ht_cmp_tmp.txt" >nul 2>nul
+)
+if not "!HT_DO_UPDATE!"=="1" (echo  %GN%  HOME TOOLS v!HT_VERSION! is up to date.%R% & goto :EOF)
 echo.
 echo  %YB%  =======================================================%R%
-echo  %CB%      HOME TOOLS UPDATE AVAILABLE!%R%
+echo  %CB%      HOME TOOLS UPDATE AVAILABLE%R%
 echo  %WH%      Current:  %RD%v!HT_VERSION!%R%
 echo  %WH%      New:      %GN%v!HT_REMOTE_VER!%R%
 echo  %YB%  =======================================================%R%
 echo.
 echo  %WH%  Downloading v!HT_REMOTE_VER!...%R%
-powershell -NoProfile -ExecutionPolicy Bypass -Command "Invoke-WebRequest 'https://raw.githubusercontent.com/VortexDQ/HomeTools/main/HomeTools.bat' -OutFile '%TEMP%\HT_update.bat' -UseBasicParsing -TimeoutSec 30" >nul 2>&1
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$ProgressPreference='SilentlyContinue'; try { Invoke-WebRequest 'https://raw.githubusercontent.com/VortexDQ/HomeTools/main/HomeTools.bat' -OutFile '%TEMP%\HT_update.bat' -UseBasicParsing -TimeoutSec 30 } catch {}" >nul 2>nul
 if not exist "%TEMP%\HT_update.bat" (
   echo  %RD%  Download failed - continuing with current version.%R%
   timeout /t 2 /nobreak >nul
@@ -1788,7 +1799,7 @@ set "HT_SELF=%~f0"
   echo start "" "!HT_SELF!"
   echo del "%%~f0"
 ) > "%TEMP%\HT_runner.bat"
-echo  %GN%  Update ready!  Restarting HOME TOOLS v!HT_REMOTE_VER!...%R%
+echo  %GN%  Update downloaded - restarting with v!HT_REMOTE_VER!...%R%
 timeout /t 2 /nobreak >nul
 start "" "%TEMP%\HT_runner.bat"
 set "HT_UPDATE_READY=1"
