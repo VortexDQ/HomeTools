@@ -1,6 +1,6 @@
 @echo off
 :: ============================================================
-::  HOME TOOLS  |  OSINT Launcher  |  v3.0
+::  HOME TOOLS  |  OSINT Launcher  |  v3.2
 ::  A self-installing OSINT toolkit launcher for Windows.
 ::
 ::  Tools clone and install automatically on first launch.
@@ -11,6 +11,7 @@
 ::  Install locations: C:\OSINT\   and   C:\Tools\exiftool\
 ::  Made with love by vortexdq.com
 :: ============================================================
+:: HOMETOOLS_VERSION:3.2
 if "%~1"=="-k" goto :INIT
 start "HOME TOOLS" cmd.exe /k %~f0 -k
 exit /b
@@ -18,7 +19,7 @@ exit /b
 
 setlocal enabledelayedexpansion
 chcp 65001 >nul 2>&1
-title HOME TOOLS v3.0
+title HOME TOOLS v3.2
 
 :: ============================================================
 ::  ANSI COLORS
@@ -39,6 +40,11 @@ set "WH=%E%[97m"
 set "WB=%E%[1;97m"
 set "MGB=%E%[1;35m"
 set "ORB=%E%[1;33m"
+
+:: ============================================================
+::  VERSION
+:: ============================================================
+set "HT_VERSION=3.2"
 
 :: ============================================================
 ::  TOOL PATHS
@@ -76,7 +82,7 @@ goto STARTUP
 cls
 echo.
 echo  %CB%  =======================================================%R%
-echo  %CB%           HOME TOOLS v3.0  -  First Launch             %R%
+echo  %CB%           HOME TOOLS v3.2  -  First Launch             %R%
 echo  %CB%       Self-installing OSINT Toolkit for Windows         %R%
 echo  %CB%  =======================================================%R%
 echo.
@@ -176,6 +182,9 @@ if "!HAS_GIT!"=="0" echo  %RD%  [WARN] git not found - git tools cannot install/
 if "!HAS_PY!"=="0"  echo  %RD%  [WARN] Python not found - Python tools cannot install.%R%
 if "!HAS_NET!"=="0" echo  %YW%  [WARN] No internet - installs and updates skipped.%R%
 
+call :CHECK_HT_UPDATE
+if defined HT_UPDATE_READY goto :EOF
+
 call :SC_SPIDER
 call :SC_EXIF
 call :SC_SHERL
@@ -212,7 +221,7 @@ echo  %CB% ^|  _/^|  _/^|  _/^|___/^|   /     ^| ^| ^|   /^|   /^| . ^|^| ^|   %
 echo  %CB% ^|_^|  ^|_^|  ^|_^|  ^|    ^|_^|\_\    ^|_^| ^|_^|\_\^|_^|\_\^|_^|^|^|_^|   %R%
 echo.
 echo  %CY%  =======================================================%R%
-echo  %WB%              HOME TOOLS  ^|  v3.0%R%
+echo  %WB%              HOME TOOLS  ^|  v!HT_VERSION!%R%
 echo  %CY%  =======================================================%R%
 echo.
 
@@ -1748,6 +1757,50 @@ call :GIT_CHECK_UPDATE
 if exist "%P_PWND%\pwnedornot.py" (echo  %GN%    Status: Ready%R%) else (echo  %RD%    Status: NOT READY%R%)
 goto :EOF
 
+
+:: ============================================================
+::  HOME TOOLS SELF-UPDATE
+::  Checks GitHub for newer HomeTools.bat and auto-replaces.
+::  Uses exit 0 to close cmd /k window after launching runner.
+:: ============================================================
+:CHECK_HT_UPDATE
+if "!HAS_NET!"=="0" goto :EOF
+echo  %DG%  Checking for HomeTools updates...%R%
+set "HT_REMOTE_VER="
+for /f "delims=" %%V in ('powershell -NoProfile -ExecutionPolicy Bypass -Command "try{$r=(Invoke-WebRequest ''https://raw.githubusercontent.com/VortexDQ/HomeTools/main/HomeTools.bat'' -UseBasicParsing -TimeoutSec 10).Content; $m=[regex]::Match($r,''HOMETOOLS_VERSION:([\d.]+)''); if($m.Success){$m.Groups[1].Value}}catch{}"') do set "HT_REMOTE_VER=%%V"
+if not defined HT_REMOTE_VER (echo  %DG%  Version check unavailable.%R% & goto :EOF)
+if "!HT_REMOTE_VER!"=="!HT_VERSION!" (echo  %GN%  HOME TOOLS v!HT_VERSION! is up to date.%R% & goto :EOF)
+set "HT_DO_UPDATE=0"
+for /f "delims=" %%C in ('powershell -NoProfile -Command "if([version]''!HT_REMOTE_VER!'' -gt [version]''!HT_VERSION!''){1}else{0}"') do set "HT_DO_UPDATE=%%C"
+if "!HT_DO_UPDATE!"=="0" (echo  %GN%  HOME TOOLS v!HT_VERSION! is up to date.%R% & goto :EOF)
+echo.
+echo  %YB%  =======================================================%R%
+echo  %CB%      HOME TOOLS UPDATE AVAILABLE!%R%
+echo  %WH%      Current:  %RD%v!HT_VERSION!%R%
+echo  %WH%      New:      %GN%v!HT_REMOTE_VER!%R%
+echo  %YB%  =======================================================%R%
+echo.
+echo  %WH%  Downloading v!HT_REMOTE_VER!...%R%
+powershell -NoProfile -ExecutionPolicy Bypass -Command "Invoke-WebRequest 'https://raw.githubusercontent.com/VortexDQ/HomeTools/main/HomeTools.bat' -OutFile '%TEMP%\HT_update.bat' -UseBasicParsing -TimeoutSec 30" >nul 2>&1
+if not exist "%TEMP%\HT_update.bat" (
+  echo  %RD%  Download failed - continuing with current version.%R%
+  timeout /t 2 /nobreak >nul
+  goto :EOF
+)
+set "HT_SELF=%~f0"
+(
+  echo @echo off
+  echo timeout /t 2 /nobreak ^>nul
+  echo copy /y "%TEMP%\HT_update.bat" "!HT_SELF!" ^>nul 2^>^&1
+  echo del "%TEMP%\HT_update.bat" ^>nul 2^>^&1
+  echo start "" "!HT_SELF!"
+  echo del "%%~f0"
+) > "%TEMP%\HT_runner.bat"
+echo  %GN%  Update ready!  Restarting HOME TOOLS v!HT_REMOTE_VER!...%R%
+timeout /t 2 /nobreak >nul
+start "" "%TEMP%\HT_runner.bat"
+set "HT_UPDATE_READY=1"
+exit 0
 
 :: ============================================================
 ::  GIT UPDATE HELPER
