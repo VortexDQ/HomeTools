@@ -1,6 +1,6 @@
 @echo off
 :: ============================================================
-::  HOME TOOLS  |  OSINT Launcher  |  v3.7
+::  HOME TOOLS  |  OSINT Launcher  |  v3.8
 ::  A self-installing OSINT toolkit launcher for Windows.
 ::
 ::  Tools clone and install automatically on first launch.
@@ -11,7 +11,7 @@
 ::  Install locations: C:\OSINT\   and   C:\Tools\exiftool\
 ::  Made with love by vortexdq.com
 :: ============================================================
-:: HOMETOOLS_VERSION:3.7
+:: HOMETOOLS_VERSION:3.8
 if "%~1"=="-k" goto :INIT
 cmd /k "%~f0" -k
 exit /b
@@ -19,7 +19,7 @@ exit /b
 
 setlocal enabledelayedexpansion
 chcp 65001 >nul 2>&1
-title HOME TOOLS v3.7
+title HOME TOOLS v3.8
 
 :: ============================================================
 ::  ANSI COLORS
@@ -44,7 +44,7 @@ set "ORB=%E%[1;33m"
 :: ============================================================
 ::  VERSION
 :: ============================================================
-set "HT_VERSION=3.7"
+set "HT_VERSION=3.8"
 
 :: ============================================================
 ::  TOOL PATHS
@@ -82,7 +82,7 @@ goto STARTUP
 cls
 echo.
 echo  %CB%  =======================================================%R%
-echo  %CB%           HOME TOOLS v3.7  -  First Launch             %R%
+echo  %CB%           HOME TOOLS v3.8  -  First Launch             %R%
 echo  %CB%       Self-installing OSINT Toolkit for Windows         %R%
 echo  %CB%  =======================================================%R%
 echo.
@@ -1544,6 +1544,7 @@ if "!HAS_NET!"=="0" (echo  %DG%    Offline - skipping update.%R%  & goto :SC_SPI
 if "!HAS_GIT!"=="0" (echo  %GN%    Installed.%R%                   & goto :SC_SPIDER_END)
 set "GIT_PATH=%P_SPIDER%" & set "GIT_NAME=SpiderFoot" & set "GIT_REQS=1"
 call :GIT_CHECK_UPDATE
+goto :SC_SPIDER_END
 :SC_SPIDER_END
 if exist "%P_SPIDER%\sf.py" (echo  %GN%    Status: Ready%R%) else (echo  %RD%    Status: NOT READY%R%)
 goto :EOF
@@ -1597,6 +1598,7 @@ if "!HAS_NET!"=="0" (echo  %DG%    Offline - skipping update.%R%  & goto :SC_OGR
 if "!HAS_GIT!"=="0" (echo  %GN%    Installed.%R%                   & goto :SC_OGRAM_END)
 set "GIT_PATH=%P_OGRAM%" & set "GIT_NAME=Osintgram" & set "GIT_REQS=1"
 call :GIT_CHECK_UPDATE
+goto :SC_OGRAM_END
 :SC_OGRAM_END
 if exist "%P_OGRAM%\main.py" (echo  %GN%    Status: Ready%R%) else (echo  %RD%    Status: NOT READY%R%)
 goto :EOF
@@ -1726,7 +1728,7 @@ call :INSTALL_LINK_FUNC
 goto :SC_LINK_END
 :SC_LINK_UPD
 if "!HAS_NET!"=="0" (echo  %DG%    Offline - skipping update.%R%  & goto :SC_LINK_END)
-if "!HAS_GIT!"=="0" (echo  %GN%    Installed. (Python 2 tool - may need fixes)%R% & goto :SC_LINK_END)
+if "!HAS_GIT!"=="0" (echo  %GN%    Installed. Python 3 auto-patched.%R% & goto :SC_LINK_END)
 set "GIT_PATH=%P_LINK%" & set "GIT_NAME=LinkedIn Gatherer" & set "GIT_REQS=1"
 call :GIT_CHECK_UPDATE
 :SC_LINK_END
