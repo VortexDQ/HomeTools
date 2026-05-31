@@ -188,6 +188,7 @@ call :SC_SQLM
 call :SC_SCAV
 call :SC_LINK
 call :SC_PWND
+call :FIX_LINKEDIN
 call :FIX_OSINTGRAM
 
 echo.
@@ -616,11 +617,7 @@ echo.
 if not exist "%P_SCAV%\scavenger.py" echo  %RD%  Not ready. Type R on the menu to repair.%R% & pause & goto MENU
 set "HV_PATH=%P_SCAV%" & set "HV_REQS=%P_SCAV%\requirements.txt"
 call :HEALTH_VENV
-echo  %DG%  Scavenger monitors Pastebin for leaked credentials and API keys.%R%
-echo  %DG%  Choose a mode in the new window:%R%
-echo  %DG%  1 = Archive scrape   2 = Track user   3 = Scan local folder%R%
-echo.
-start "Scavenger" powershell -NoExit -Command "Set-Location 'C:\OSINT\scavenger'; $p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'}; Write-Host '  Scavenger  |  Pastebin Leak Monitor' -ForegroundColor Cyan; Write-Host '  Scans Pastebin for leaked credentials, API keys, RSA keys.' -ForegroundColor DarkGray; Write-Host '  Modes: [1] Archive scrape  [2] Track user  [3] Scan local folder' -ForegroundColor DarkGray; Write-Host; $m=Read-Host '  Mode (1/2/3)'; if($m -eq '1'){ & $p pbincomArchiveScrape.py } elseif($m -eq '2'){ $u=Read-Host '  Pastebin username to track'; if($u){ & $p pbincomTrackUser.py $u } } elseif($m -eq '3'){ $f=Read-Host '  Local folder path to scan'; if($f){ & $p findSensitiveData.py $f } } else { Write-Host '  Invalid choice.' -ForegroundColor Red }"
+start "Scavenger" powershell -NoExit -Command "Set-Location 'C:\OSINT\scavenger'; $p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'}; $q=$false; do { cls; Write-Host '  Scavenger  |  Pastebin Leak Monitor' -ForegroundColor Cyan; Write-Host '  Monitors Pastebin for leaked credentials, API keys, RSA keys.' -ForegroundColor DarkGray; Write-Host; Write-Host '  [1]  Archive Scrape   - continuously crawl Pastebin archive' -ForegroundColor White; Write-Host '  [2]  Track User      - monitor a specific Pastebin user' -ForegroundColor White; Write-Host '  [3]  Scan Folder     - scan local files for leaked credentials' -ForegroundColor White; Write-Host '  [Q]  Quit' -ForegroundColor DarkGray; Write-Host; $m=Read-Host '  Mode'; if($m -eq '1'){ Write-Host '  Starting archive scrape... Press Ctrl+C to stop.' -ForegroundColor Green; Write-Host; & $p pbincomArchiveScrape.py; pause } elseif($m -eq '2'){ $u=Read-Host '  Pastebin username to track'; if($u){ Add-Content -Path 'configs\users.txt' -Value $u; Write-Host ('  Added '+$u+' to tracking list. Starting tracker...') -ForegroundColor Green; Write-Host; & $p pbincomTrackUser.py; pause } } elseif($m -eq '3'){ do { $f=Read-Host '  Folder path to scan (blank = back)'; if($f){ Write-Host '  Scanning...' -ForegroundColor DarkGray; & $p findSensitiveData.py $f } } while($f) } elseif($m -eq 'Q' -or $m -eq 'q'){ $q=$true } } while(-not $q)"
 echo  %GN%  Scavenger opened in a new window.%R%
 echo  %DG%  Switch to it, then press any key here to return to menu.%R%
 pause >nul
@@ -634,13 +631,43 @@ echo  %WB%  LinkedIn Gatherer  ^|  LinkedIn OSINT%R%
 echo  %BB%  =======================================================%R%
 echo.
 if not exist "%P_LINK%\linkedin_gatherer.py" echo  %RD%  Not ready. Type R on the menu to repair.%R% & pause & goto MENU
-echo  %YW%  NOTE: This tool was written for Python 2. It may fail on Python 3.%R%
-echo  %YW%  If it crashes with NameError: raw_input, it needs a Python 2 fix.%R%
-echo  %DG%  Edit credentials first: C:\OSINT\linkedin-gatherer\config.py%R%
+:: Auto-patch Python 2 raw_input -> input (silent, runs every time as guard)
+call :FIX_LINKEDIN
+:: Check if LinkedIn credentials are set in config.py
+set "LKCRED=0"
+powershell -NoProfile -Command "if((Get-Content 'C:\OSINT\linkedin-gatherer\config.py' -Raw -EA SilentlyContinue) -match 'username\s*=\s*''.+'''){exit 0}else{exit 1}" >nul 2>nul && set "LKCRED=1"
+if "!LKCRED!"=="1" goto LINK_LAUNCH
+goto LINK_SETUP
+
+:LINK_SETUP
+cls
 echo.
+echo  %BB%  =======================================================%R%
+echo  %WB%  LinkedIn Gatherer  ^|  Account Setup%R%
+echo  %BB%  =======================================================%R%
+echo.
+echo  %WH%  LinkedIn Gatherer needs a LinkedIn account to log in.%R%
+echo  %YW%  Use a secondary / burner account - NOT your main one.%R%
+echo  %DG%  Credentials stored locally in: C:\OSINT\linkedin-gatherer\config.py%R%
+echo.
+set "LK_USER="
+set /p "LK_USER=   LinkedIn Email >> "
+if not defined LK_USER goto MENU
+echo.
+echo  %DG%  Password input is hidden while typing...%R%
+for /f "delims=" %%P in ('powershell -NoProfile -Command "$s=Read-Host -Prompt ''   LinkedIn Password'' -AsSecureString; [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($s))"') do set "LK_PASS=%%P"
+if not defined LK_PASS goto MENU
+powershell -NoProfile -Command "$f='C:\OSINT\linkedin-gatherer\config.py'; $c=Get-Content $f -Raw; $c=$c -replace 'username\s*=\s*.*','username = ''!LK_USER!'''; $c=$c -replace 'password\s*=\s*.*','password = ''!LK_PASS!'''; Set-Content $f $c -Encoding UTF8" >nul 2>nul
+set "LK_PASS="
+echo.
+echo  %GN%  Credentials saved.%R%
+echo  %DG%  To update: run LinkedIn Gatherer again when not logged in.%R%
+timeout /t 2 /nobreak >nul
+
+:LINK_LAUNCH
 set "HV_PATH=%P_LINK%" & set "HV_REQS=%P_LINK%\requirements.txt"
 call :HEALTH_VENV
-start "LinkedIn Gatherer" powershell -NoExit -Command "Set-Location 'C:\OSINT\linkedin-gatherer'; $p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'}; Write-Host '  LinkedIn Gatherer  |  LinkedIn Profile OSINT' -ForegroundColor Blue; Write-Host '  Scrapes LinkedIn profiles and network connections.' -ForegroundColor DarkGray; Write-Host '  NOTE: Edit config.py with your LinkedIn credentials first.' -ForegroundColor Yellow; Write-Host '  Type a company name or LinkedIn URL. Blank = exit loop.' -ForegroundColor DarkGray; Write-Host; do { $t=Read-Host '  Target company/URL'; if($t){ & $p linkedin_gatherer.py $t } } while($t)"
+start "LinkedIn Gatherer" powershell -NoExit -Command "Set-Location 'C:\OSINT\linkedin-gatherer'; $p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'}; Write-Host '  LinkedIn Gatherer  |  LinkedIn Profile OSINT' -ForegroundColor Blue; Write-Host '  Gather employee names, job titles and profile URLs from a company.' -ForegroundColor DarkGray; Write-Host '  The tool will ask: search URL, company name, output filename.' -ForegroundColor DarkGray; Write-Host '  Blank company name = stop loop.' -ForegroundColor DarkGray; Write-Host; do { Write-Host '  --- New search ---' -ForegroundColor DarkGray; try { & $p linkedin_gatherer.py } catch { Write-Host ('  Error: '+$_.Exception.Message) -ForegroundColor Red }; $again=Read-Host '  Search again? [Y/N]' } while($again -eq 'Y' -or $again -eq 'y')"
 echo  %GN%  LinkedIn Gatherer opened in a new window.%R%
 echo  %DG%  Switch to it, then press any key here to return to menu.%R%
 pause >nul
@@ -656,9 +683,9 @@ echo.
 if not exist "%P_PWND%\pwnedornot.py" echo  %RD%  Not ready. Type R on the menu to repair.%R% & pause & goto MENU
 set "HV_PATH=%P_PWND%" & set "HV_REQS=%P_PWND%\requirements.txt"
 call :HEALTH_VENV
-:: Check for API key in config
+:: Check if API key is configured (key must be non-empty string, 5+ chars)
 set "PWND_KEY=0"
-powershell -NoProfile -Command "if(Test-Path '%USERPROFILE%\.config\pwnedornot\config.json'){$c=Get-Content '%USERPROFILE%\.config\pwnedornot\config.json' -Raw -EA SilentlyContinue; if($c -match '\"api_key\"\s*:\s*\"[^\"]{5,}\"'){exit 0}else{exit 1}}else{exit 1}" >nul 2>nul && set "PWND_KEY=1"
+powershell -NoProfile -Command "$cfg='%USERPROFILE%\.config\pwnedornot\config.json'; if(Test-Path $cfg){try{$j=Get-Content $cfg -Raw | ConvertFrom-Json; if($j.api_key -and $j.api_key.Length -ge 5){exit 0}}catch{}}; exit 1" >nul 2>nul && set "PWND_KEY=1"
 if "!PWND_KEY!"=="0" goto PWND_SETUP
 goto PWND_LAUNCH
 
@@ -666,24 +693,30 @@ goto PWND_LAUNCH
 cls
 echo.
 echo  %YB%  =======================================================%R%
-echo  %WB%  pwnedOrNot  ^|  API Key Required%R%
+echo  %WB%  pwnedOrNot  ^|  API Key Setup%R%
 echo  %YB%  =======================================================%R%
 echo.
-echo  %WH%  pwnedOrNot requires a HaveIBeenPwned API key.%R%
-echo  %DG%  Get yours (free tier available) at:%R%
-echo  %CY%  https://haveibeenpwned.com/API/Key%R%
+echo  %WH%  pwnedOrNot needs a HaveIBeenPwned API key to work.%R%
+echo.
+echo  %DG%  How to get your free key:%R%
+echo  %CY%  1. Go to: https://haveibeenpwned.com/API/Key%R%
+echo  %CY%  2. Enter your email and subscribe (free plan available)%R%
+echo  %CY%  3. Copy the key from the confirmation email%R%
+echo  %CY%  4. Paste it below%R%
 echo.
 set "HIBP_KEY="
-set /p "HIBP_KEY=   Paste your API key >> "
+set /p "HIBP_KEY=   Paste API key >> "
 if not defined HIBP_KEY goto MENU
 if not exist "%USERPROFILE%\.config\pwnedornot" mkdir "%USERPROFILE%\.config\pwnedornot" >nul 2>&1
-(echo {"api_key": "!HIBP_KEY!"}) > "%USERPROFILE%\.config\pwnedornot\config.json"
+powershell -NoProfile -Command "$o=[PSCustomObject]@{api_key='!HIBP_KEY!'}; $o | ConvertTo-Json | Set-Content '%USERPROFILE%\.config\pwnedornot\config.json' -Encoding UTF8" >nul 2>nul
+set "HIBP_KEY="
 echo.
-echo  %GN%  API key saved.%R%
+echo  %GN%  API key saved. You're all set.%R%
+echo  %DG%  To change it later: delete %USERPROFILE%\.config\pwnedornot\config.json and relaunch.%R%
 timeout /t 2 /nobreak >nul
 
 :PWND_LAUNCH
-start "pwnedOrNot" powershell -NoExit -Command "Set-Location 'C:\OSINT\pwnedornot'; $p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'}; Write-Host '  pwnedOrNot  |  Email Breach Checker' -ForegroundColor Yellow; Write-Host '  Checks HaveIBeenPwned and searches public dumps for passwords.' -ForegroundColor DarkGray; Write-Host '  Type an email and press Enter. Blank = exit loop.' -ForegroundColor DarkGray; Write-Host; do { $e=Read-Host '  Email'; if($e){ & $p pwnedornot.py -e $e } } while($e)"
+start "pwnedOrNot" powershell -NoExit -Command "Set-Location 'C:\OSINT\pwnedornot'; $p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'}; Write-Host '  pwnedOrNot  |  Email Breach Checker' -ForegroundColor Yellow; Write-Host '  Checks HaveIBeenPwned + public password dumps.' -ForegroundColor DarkGray; Write-Host '  Shows which breaches the email appeared in and any leaked passwords.' -ForegroundColor DarkGray; Write-Host '  Type an email and press Enter. Blank = exit loop.' -ForegroundColor DarkGray; Write-Host; do { $e=Read-Host '  Email'; if($e){ & $p pwnedornot.py -e $e } } while($e)"
 echo  %GN%  pwnedOrNot opened in a new window.%R%
 echo  %DG%  Switch to it, then press any key here to return to menu.%R%
 pause >nul
@@ -1885,8 +1918,9 @@ python -m venv "%P_LINK%\venv"
 "%P_LINK%\venv\Scripts\python.exe" -m pip install --upgrade pip --quiet
 "%P_LINK%\venv\Scripts\python.exe" -m pip install requests --quiet --prefer-binary 2>nul
 copy nul "%P_LINK%\venv\.health" >nul 2>&1
-echo  %GN%    LinkedIn Gatherer installed.%R%
-echo  %YW%    NOTE: Python 2 tool - edit linkedin_gatherer.py to replace raw_input with input if it crashes.%R%
+echo  %WH%    Applying Python 3 compatibility patch...%R%
+call :FIX_LINKEDIN
+echo  %GN%    LinkedIn Gatherer installed and patched for Python 3.%R%
 goto :EOF
 
 :INSTALL_PWND_FUNC
@@ -1916,6 +1950,15 @@ goto :EOF
 :: ============================================================
 ::  SELF-FIX: Osintgram pyreadline Python 3.10+ compatibility
 :: ============================================================
+:: ============================================================
+::  SELF-FIX: LinkedIn Gatherer Python 2 -> 3 compatibility
+::  Patches raw_input() -> input() in all .py files
+:: ============================================================
+:FIX_LINKEDIN
+if not exist "%P_LINK%\linkedin_gatherer.py" goto :EOF
+powershell -NoProfile -ExecutionPolicy Bypass -Command "Get-ChildItem 'C:\OSINT\linkedin-gatherer\*.py' | ForEach-Object { $c=Get-Content $_.FullName -Raw; if($c -match 'raw_input\s*\('){ $c=$c -replace 'raw_input\s*\(','input('; Set-Content $_.FullName $c -Encoding UTF8; Write-Host ('    Patched Python 3 fix in: '+$_.Name) -ForegroundColor Green } }" 2>nul
+goto :EOF
+
 :FIX_OSINTGRAM
 if not exist "%P_OGRAM%\venv\Scripts\python.exe" goto :EOF
 powershell -NoProfile -ExecutionPolicy Bypass -Command "$f='C:\OSINT\osintgram\venv\Lib\site-packages\pyreadline\py3k_compat.py'; if(Test-Path $f){$c=Get-Content $f -Raw; if($c -match 'collections\.Callable' -and $c -notmatch 'collections\.abc\.Callable'){$c=$c -replace 'import collections','import collections`nimport collections.abc'; $c=$c -replace 'collections\.Callable','collections.abc.Callable'; Set-Content $f $c -Encoding UTF8; Write-Host '    Applied pyreadline Python 3.10+ compatibility fix.' -ForegroundColor Green}}" 2>nul
