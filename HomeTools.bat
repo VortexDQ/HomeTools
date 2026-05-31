@@ -1,6 +1,6 @@
 @echo off
 :: ============================================================
-::  HOME TOOLS  |  OSINT Launcher  |  v3.4
+::  HOME TOOLS  |  OSINT Launcher  |  v3.5
 ::  A self-installing OSINT toolkit launcher for Windows.
 ::
 ::  Tools clone and install automatically on first launch.
@@ -11,15 +11,11 @@
 ::  Install locations: C:\OSINT\   and   C:\Tools\exiftool\
 ::  Made with love by vortexdq.com
 :: ============================================================
-:: HOMETOOLS_VERSION:3.4
-if "%~1"=="-k" goto :INIT
-start "HOME TOOLS" cmd.exe /k "%~f0" -k
-exit /b
-:INIT
+:: HOMETOOLS_VERSION:3.5
 
 setlocal enabledelayedexpansion
 chcp 65001 >nul 2>&1
-title HOME TOOLS v3.4
+title HOME TOOLS v3.5
 
 :: ============================================================
 ::  ANSI COLORS
@@ -44,7 +40,7 @@ set "ORB=%E%[1;33m"
 :: ============================================================
 ::  VERSION
 :: ============================================================
-set "HT_VERSION=3.4"
+set "HT_VERSION=3.5"
 
 :: ============================================================
 ::  TOOL PATHS
@@ -82,7 +78,7 @@ goto STARTUP
 cls
 echo.
 echo  %CB%  =======================================================%R%
-echo  %CB%           HOME TOOLS v3.4  -  First Launch             %R%
+echo  %CB%           HOME TOOLS v3.5  -  First Launch             %R%
 echo  %CB%       Self-installing OSINT Toolkit for Windows         %R%
 echo  %CB%  =======================================================%R%
 echo.
