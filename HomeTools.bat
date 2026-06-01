@@ -1,6 +1,6 @@
 @echo off
 :: ============================================================
-::  HOME TOOLS  |  OSINT Launcher  |  v4.8
+::  HOME TOOLS  |  OSINT Launcher  |  v4.9
 ::  A self-installing OSINT toolkit launcher for Windows.
 ::
 ::  Tools clone and install automatically on first launch.
@@ -11,7 +11,7 @@
 ::  Install locations: C:\OSINT\   and   C:\Tools\exiftool\
 ::  Made with love by vortexdq.com
 :: ============================================================
-:: HOMETOOLS_VERSION:4.8
+:: HOMETOOLS_VERSION:4.9
 if "%~1"=="-k" goto :INIT
 cmd /k "%~f0" -k
 exit /b
@@ -19,7 +19,7 @@ exit /b
 
 setlocal enabledelayedexpansion
 chcp 65001 >nul 2>&1
-title HOME TOOLS v4.8
+title HOME TOOLS v4.9
 
 :: ============================================================
 ::  ANSI COLORS
@@ -44,7 +44,7 @@ set "ORB=%E%[1;33m"
 :: ============================================================
 ::  VERSION
 :: ============================================================
-set "HT_VERSION=4.8"
+set "HT_VERSION=4.9"
 
 :: ============================================================
 ::  TOOL PATHS
@@ -86,7 +86,7 @@ goto STARTUP
 cls
 echo.
 echo  %CB%  =======================================================%R%
-echo  %CB%           HOME TOOLS v4.8  -  First Launch             %R%
+echo  %CB%           HOME TOOLS v4.9  -  First Launch             %R%
 echo  %CB%       Self-installing OSINT Toolkit for Windows         %R%
 echo  %CB%  =======================================================%R%
 echo.
@@ -794,14 +794,28 @@ echo  %RD%  =======================================================%R%
 echo.
 echo  %YW%  REMINDER: Only scan applications you own or have permission to test.%R%
 echo.
-if not exist "%P_ZAP%\zap.bat" echo  %RD%  Not ready. Type R on the menu to repair.%R% & pause & goto MENU
-java -version >nul 2>&1 || (echo  %RD%  Java is required to run ZAP.%R% & echo  %CY%  Download Java at: https://adoptium.net%R% & echo. & pause & goto MENU)
-echo  %GN%  Launching ZAP by Checkmarx...%R%
-echo  %DG%  ZAP opens in its own GUI window.%R%
-echo  %DG%  Close the ZAP window when done - it does not run in this terminal.%R%
+REM Resolve javaw + ZAP jar (auto-installs Java if missing). Flat logic, GUI only, no extra terminal.
+call :ZAP_FIND
+if defined ZAP_JAR if defined ZAP_JAVAW goto ZAP_HAVE
+echo  %WH%  Java is needed to run ZAP - setting it up automatically...%R%
+echo  %DG%  First time only: this installs Java (a few minutes).%R%
 echo.
-start "ZAP" "%P_ZAP%\zap.bat"
-echo  %WH%  Press any key to return to menu (ZAP keeps running in background)...%R%
+call :ZAP_SETUP
+call :ZAP_FIND
+if defined ZAP_JAR if defined ZAP_JAVAW goto ZAP_HAVE
+echo.
+echo  %RD%  Could not set up Java automatically.%R%
+echo  %DG%  Install Java manually from https://adoptium.net then try again.%R%
+echo.
+pause
+goto MENU
+:ZAP_HAVE
+echo  %GN%  Launching OWASP ZAP...%R%
+echo  %DG%  ZAP opens in its own GUI window (no extra terminal).%R%
+echo  %DG%  Close the ZAP window when done - it runs independently.%R%
+echo.
+powershell -NoProfile -ExecutionPolicy Bypass -Command "Start-Process -FilePath '!ZAP_JAVAW!' -ArgumentList '-Xmx512m','-jar','!ZAP_JAR!' -WorkingDirectory (Split-Path '!ZAP_JAR!')"
+echo  %WH%  Press any key to return to HOME TOOLS (ZAP keeps running)...%R%
 pause >nul
 goto MENU
 
@@ -1891,7 +1905,7 @@ echo  %GB% 15%R%   GHunt               %DG%Google account OSINT - email, locatio
 echo  %DG%              %YW%First use: run tool then type  ghunt login%R%
 echo  %CB% 16%R%   Recon-ng            %DG%Modular web recon framework with its own console%R%
 echo  %RD% 17%R%   ZAP by Checkmarx    %DG%Web app security scanner - opens full GUI%R%
-echo  %DG%              %YW%Requires Java (https://adoptium.net)%R%
+echo  %DG%              %GN%Auto-installs Java on first launch (winget). GUI only, no terminal.%R%
 echo  %MGB% 18%R%   WPScan              %DG%WordPress vulnerability scanner - plugins, users, CVEs%R%
 echo  %DG%              %GN%Auto-installs Ruby + WPScan on first launch (winget).%R%
 echo  %DG%              Free for personal use. Commercial use needs paid plan.%R%
@@ -1907,7 +1921,7 @@ echo.
 echo  %WB%  REQUIREMENTS%R%
 echo  %DG%  --------------------------------------------------------%R%
 echo  %DG%  Python 3.10+  git  -  required for most tools (add both to PATH)%R%
-echo  %DG%  Java          -  required for ZAP only   (https://adoptium.net)%R%
+echo  %DG%  Java          -  for ZAP - auto-installed via winget on first run%R%
 echo  %DG%  Ruby          -  for WPScan - auto-installed via winget on first run%R%
 echo.
 echo  %WB%  INSTALL LOCATIONS%R%
@@ -2216,7 +2230,8 @@ echo  %WH%    Not installed - downloading...%R%
 call :INSTALL_ZAP_FUNC
 goto :SC_ZAP_END
 :SC_ZAP_JCHK
-java -version >nul 2>&1 || echo  %YW%    WARNING: Java not found. ZAP needs Java - get it at: https://adoptium.net%R%
+call :ZAP_FIND
+if not defined ZAP_JAVAW echo  %YW%    Java not detected - it will auto-install when you open ZAP.%R%
 :SC_ZAP_END
 if exist "%P_ZAP%\zap.bat" (echo  %GN%    Status: Ready%R%) else (echo  %RD%    Status: NOT READY%R%)
 goto :EOF
@@ -2257,6 +2272,31 @@ goto :EOF
 REM WPScan on Windows needs libcurl.dll next to its ruby bin or it crashes with a LoadError.
 if not defined WPSC_EXE goto :EOF
 powershell -NoProfile -ExecutionPolicy Bypass -Command "$ErrorActionPreference='SilentlyContinue';$ProgressPreference='SilentlyContinue';$bin=Split-Path '!WPSC_EXE!';$dll=Join-Path $bin 'libcurl.dll';if(Test-Path $dll){exit};Write-Host '    Installing libcurl (one-time, required for WPScan on Windows)...' -ForegroundColor Yellow;$tmp=Join-Path $env:TEMP 'ht_curl';New-Item -ItemType Directory -Force $tmp|Out-Null;try{Invoke-WebRequest 'https://curl.se/windows/latest.cgi?p=win64-mingw.zip' -OutFile (Join-Path $tmp 'c.zip') -UseBasicParsing -TimeoutSec 120;Expand-Archive (Join-Path $tmp 'c.zip') $tmp -Force;$f=Get-ChildItem $tmp -Recurse -Filter 'libcurl-x64.dll'|Select-Object -First 1;if(-not $f){$f=Get-ChildItem $tmp -Recurse -Filter 'libcurl.dll'|Select-Object -First 1};if($f){Copy-Item $f.FullName $dll -Force;Write-Host '    libcurl installed.' -ForegroundColor Green}else{Write-Host '    Could not find libcurl in package.' -ForegroundColor Red}}catch{Write-Host '    libcurl download failed - check your connection.' -ForegroundColor Red};Remove-Item $tmp -Recurse -Force -EA SilentlyContinue"
+goto :EOF
+
+
+:: ============================================================
+::  ZAP HELPERS
+::  ZAP_FIND  - locate javaw.exe + the zap-*.jar (no install)
+::  ZAP_SETUP - auto-install Java (Temurin JRE) via winget if missing
+::  ZAP launches GUI-only via javaw = no extra terminal window.
+:: ============================================================
+:ZAP_FIND
+set "ZAP_JAVAW="
+set "ZAP_JAR="
+set "ZAP_PF=%TEMP%\ht_zap.txt"
+del "%ZAP_PF%" >nul 2>&1
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$ErrorActionPreference='SilentlyContinue';$jar=Get-ChildItem 'C:\Tools\ZAP' -Recurse -Filter 'zap-*.jar'|Select-Object -First 1;$jw=(Get-Command javaw).Source;if(-not $jw){foreach($g in @('C:\Program Files\Eclipse Adoptium\*\bin\javaw.exe','C:\Program Files\Java\*\bin\javaw.exe','C:\Program Files\Android\openjdk\*\bin\javaw.exe',($env:LOCALAPPDATA+'\Programs\Eclipse Adoptium\*\bin\javaw.exe'))){$f=Get-ChildItem $g|Select-Object -First 1;if($f){$jw=$f.FullName;break}}};if($jar -and $jw){[IO.File]::WriteAllText($env:TEMP+'\ht_zap.txt',$jw+'|'+$jar.FullName)}" >nul 2>&1
+if not exist "%ZAP_PF%" goto :ZAP_FIND_END
+set "ZAP_LINE="
+set /p ZAP_LINE=<"%ZAP_PF%"
+for /f "tokens=1,2 delims=|" %%a in ("!ZAP_LINE!") do set "ZAP_JAVAW=%%a" & set "ZAP_JAR=%%b"
+:ZAP_FIND_END
+del "%ZAP_PF%" >nul 2>&1
+goto :EOF
+
+:ZAP_SETUP
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$ErrorActionPreference='SilentlyContinue';$jw=(Get-Command javaw).Source;if(-not $jw){foreach($g in @('C:\Program Files\Eclipse Adoptium\*\bin\javaw.exe','C:\Program Files\Java\*\bin\javaw.exe','C:\Program Files\Android\openjdk\*\bin\javaw.exe')){$f=Get-ChildItem $g|Select-Object -First 1;if($f){$jw=$f.FullName;break}}};if($jw){Write-Host '    Java found.' -ForegroundColor Green;exit};Write-Host '    Installing Java via winget (a few minutes)...' -ForegroundColor Yellow;winget install -e --id EclipseAdoptium.Temurin.17.JRE --accept-source-agreements --accept-package-agreements"
 goto :EOF
 
 
