@@ -1,6 +1,6 @@
 @echo off
 :: ============================================================
-::  HOME TOOLS  |  OSINT Launcher  |  v4.4
+::  HOME TOOLS  |  OSINT Launcher  |  v4.5
 ::  A self-installing OSINT toolkit launcher for Windows.
 ::
 ::  Tools clone and install automatically on first launch.
@@ -11,7 +11,7 @@
 ::  Install locations: C:\OSINT\   and   C:\Tools\exiftool\
 ::  Made with love by vortexdq.com
 :: ============================================================
-:: HOMETOOLS_VERSION:4.4
+:: HOMETOOLS_VERSION:4.5
 if "%~1"=="-k" goto :INIT
 cmd /k "%~f0" -k
 exit /b
@@ -19,7 +19,7 @@ exit /b
 
 setlocal enabledelayedexpansion
 chcp 65001 >nul 2>&1
-title HOME TOOLS v4.4
+title HOME TOOLS v4.5
 
 :: ============================================================
 ::  ANSI COLORS
@@ -44,7 +44,7 @@ set "ORB=%E%[1;33m"
 :: ============================================================
 ::  VERSION
 :: ============================================================
-set "HT_VERSION=4.4"
+set "HT_VERSION=4.5"
 
 :: ============================================================
 ::  TOOL PATHS
@@ -86,7 +86,7 @@ goto STARTUP
 cls
 echo.
 echo  %CB%  =======================================================%R%
-echo  %CB%           HOME TOOLS v4.4  -  First Launch             %R%
+echo  %CB%           HOME TOOLS v4.5  -  First Launch             %R%
 echo  %CB%       Self-installing OSINT Toolkit for Windows         %R%
 echo  %CB%  =======================================================%R%
 echo.
@@ -816,25 +816,31 @@ echo  %YW%  REMINDER: Only scan WordPress sites you own or have permission to te
 echo  %DG%  License: Free for personal/non-commercial use. Commercial use requires a paid plan.%R%
 echo.
 :: Auto-heal: ensure wpscan is available, install if missing
+set "WPSCAN_READY=0"
 where wpscan >nul 2>&1
-if errorlevel 1 (
-    echo  %YW%  WPScan not detected - attempting auto-install...%R%
-    echo.
+if not errorlevel 1 set "WPSCAN_READY=1"
+if "!WPSCAN_READY!"=="0" (
+    echo  %YW%  WPScan not in PATH - checking gem installation...%R%
     where ruby >nul 2>&1
     if errorlevel 1 (
-        echo  %RD%  Ruby not found. Install it first: https://rubyinstaller.org%R%
-        echo  %DG%  After installing Ruby, close and reopen HOME TOOLS, then try again.%R%
+        echo  %RD%  Ruby not found. Install from: https://rubyinstaller.org%R%
+        echo  %DG%  After installing, close and reopen HOME TOOLS to refresh PATH.%R%
         echo.
         pause & goto MENU
     )
-    gem install wpscan --no-document
-    where wpscan >nul 2>&1
+    REM Check if gem has wpscan
+    gem list wpscan 2>nul | find "wpscan" >nul 2>&1
     if errorlevel 1 (
-        echo  %RD%  Auto-install failed. Try manually: gem install wpscan --no-document%R%
-        echo.
-        pause & goto MENU
+        echo  %WH%  Installing WPScan gem (this takes 1-2 min)...%R%
+        gem install wpscan --no-document
+        if errorlevel 1 (
+            echo  %RD%  Install failed. Ensure Ruby bin is in PATH.%R%
+            echo  %DG%  Close and reopen HOME TOOLS to refresh PATH.%R%
+            echo.
+            pause & goto MENU
+        )
     )
-    echo  %GN%  WPScan installed successfully.%R%
+    echo  %GN%  WPScan gem ready. PATH refreshing...%R%
     echo.
 )
 title HOME TOOLS  ^|  WPScan
@@ -860,11 +866,20 @@ if /i "!WPSC_URL!"=="q"    goto WPSC_DONE
 if /i "!WPSC_URL!"=="back" goto WPSC_DONE
 if /i "!WPSC_URL!"=="menu" goto WPSC_DONE
 echo.
-wpscan --url "!WPSC_URL!" --enumerate u,p,t --random-user-agent
+REM Try wpscan directly first (fast if PATH is fine), fallback to PowerShell wrapper
+where wpscan >nul 2>&1
+if not errorlevel 1 (
+    wpscan --url "!WPSC_URL!" --enumerate u,p,t --random-user-agent
+) else (
+    echo  %DG%  Using PowerShell wrapper to run WPScan...%R%
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "& {try { $gems=ruby -e 'puts Gem.user_dir'; $exe=\"$gems/bin/wpscan.bat\"; if(Test-Path $exe){ & $exe --url '!WPSC_URL!' --enumerate u,p,t --random-user-agent } else { Write-Host 'WPScan executable not found even in gem directory. Try: gem install wpscan --no-document' -ForegroundColor Red; exit 1 } } catch { Write-Host 'Error running WPScan. Try closing/reopening HOME TOOLS.' -ForegroundColor Yellow; exit 1 } }"
+)
 if errorlevel 1 (
     echo.
-    echo  %YW%  WPScan exited with an error. Check the URL is correct and reachable.%R%
-    echo  %DG%  If WPScan stopped working, press R on the menu to repair.%R%
+    echo  %YW%  WPScan error. Possible causes:^%R%
+    echo  %DG%  1. URL is incorrect or site is not reachable%R%
+    echo  %DG%  2. Ruby/gem PATH not refreshed - close/reopen HOME TOOLS%R%
+    echo  %DG%  3. WPScan gem is corrupted - run: gem install wpscan --force%R%
 )
 echo.
 echo  %DG%  Press any key to scan another target, or close to stop...%R%
@@ -2228,14 +2243,39 @@ goto :EOF
 :SC_WPSC
 echo.
 echo  %MGB%  [18] WPScan%R%
+REM First check: is wpscan already in PATH?
 where wpscan >nul 2>&1 && (echo  %GN%    Status: Ready%R% & goto :EOF)
+REM If offline, skip
 if "!HAS_NET!"=="0" (echo  %DG%    Offline - not installed.%R%    & goto :SC_WPSC_END)
-where ruby >nul 2>&1 || (echo  %YW%    Needs Ruby in PATH. Get it at: https://rubyinstaller.org%R% & goto :SC_WPSC_END)
-echo  %WH%    Installing WPScan gem (may take 1-2 min)...%R%
-gem install wpscan --no-document 2>nul
-where wpscan >nul 2>&1 && (echo  %GN%    WPScan installed.%R%) || (echo  %RD%    Install failed - check Ruby and gem are in PATH.%R%)
+REM Check if Ruby is installed
+where ruby >nul 2>&1
+if errorlevel 1 (
+    echo  %YW%    Ruby not in PATH. Install from: https://rubyinstaller.org%R%
+    goto :SC_WPSC_END
+)
+REM Check if wpscan gem is already installed (faster than 'where', doesn't need PATH)
+echo  %DG%    Checking WPScan gem installation...%R%
+gem list wpscan >nul 2>&1
+if not errorlevel 1 (
+    REM Gem is installed but not in PATH - try to find it or just show it's ready
+    echo  %GN%    WPScan gem installed (refreshing PATH...)%R%
+    REM Prompt user to close and reopen to refresh PATH
+    goto :SC_WPSC_END
+)
+REM Not installed - try to install
+echo  %WH%    Installing WPScan (this may take 1-2 minutes)...%R%
+gem install wpscan --no-document
+if errorlevel 1 (
+    echo  %RD%    Install failed. Check Ruby bin folder is in PATH.%R%
+    echo  %DG%    Fix: Close all terminals, then reopen HOME TOOLS.%R%
+    goto :SC_WPSC_END
+)
+REM Install succeeded - show success
+echo  %GN%    WPScan installed. Close and reopen HOME TOOLS to refresh PATH.%R%
 :SC_WPSC_END
-where wpscan >nul 2>&1 && (echo  %GN%    Status: Ready%R%) || (echo  %RD%    Status: NOT READY%R%)
+REM Final check: try both methods - where command AND gem list
+where wpscan >nul 2>&1 && (echo  %GN%    Status: Ready%R% & goto :EOF)
+gem list wpscan >nul 2>&1 && (echo  %YW%    Status: Installed but needs PATH refresh - close/reopen HOME TOOLS%R%) || (echo  %RD%    Status: NOT READY%R%)
 goto :EOF
 
 
