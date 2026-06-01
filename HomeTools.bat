@@ -1,6 +1,6 @@
 @echo off
 :: ============================================================
-::  HOME TOOLS  |  OSINT Launcher  |  v4.1
+::  HOME TOOLS  |  OSINT Launcher  |  v4.2
 ::  A self-installing OSINT toolkit launcher for Windows.
 ::
 ::  Tools clone and install automatically on first launch.
@@ -11,7 +11,7 @@
 ::  Install locations: C:\OSINT\   and   C:\Tools\exiftool\
 ::  Made with love by vortexdq.com
 :: ============================================================
-:: HOMETOOLS_VERSION:4.1
+:: HOMETOOLS_VERSION:4.2
 if "%~1"=="-k" goto :INIT
 cmd /k "%~f0" -k
 exit /b
@@ -19,7 +19,7 @@ exit /b
 
 setlocal enabledelayedexpansion
 chcp 65001 >nul 2>&1
-title HOME TOOLS v4.1
+title HOME TOOLS v4.2
 
 :: ============================================================
 ::  ANSI COLORS
@@ -44,7 +44,7 @@ set "ORB=%E%[1;33m"
 :: ============================================================
 ::  VERSION
 :: ============================================================
-set "HT_VERSION=4.1"
+set "HT_VERSION=4.2"
 
 :: ============================================================
 ::  TOOL PATHS
@@ -86,7 +86,7 @@ goto STARTUP
 cls
 echo.
 echo  %CB%  =======================================================%R%
-echo  %CB%           HOME TOOLS v4.1  -  First Launch             %R%
+echo  %CB%           HOME TOOLS v4.2  -  First Launch             %R%
 echo  %CB%       Self-installing OSINT Toolkit for Windows         %R%
 echo  %CB%  =======================================================%R%
 echo.
@@ -448,7 +448,7 @@ echo  %MB%  =======================================================%R%
 echo.
 if not exist "%P_EXIF%\exiftool.exe" echo  %RD%  Not ready. Type R on the menu to repair.%R% & pause & goto MENU
 title HOME TOOLS  ^|  ExifTool
-powershell -NoProfile -Command "Set-Location 'C:\Tools\exiftool';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;95m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;95m  ExifTool  |  File Metadata Reader / Writer'+$e+'[0m');Write-Host('  '+$e+'[1;95m'+$sep+$e+'[0m');Write-Host '  Type a file path or drag a file onto this window.' -ForegroundColor DarkGray;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;do{$f=Read-Host '  File/folder';if($f){.\exiftool.exe $f}}while($f)"
+powershell -NoProfile -Command "Set-Location 'C:\Tools\exiftool';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;95m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;95m  ExifTool  |  File Metadata Reader / Writer'+$e+'[0m');Write-Host('  '+$e+'[1;95m'+$sep+$e+'[0m');Write-Host '  Drag a file onto this window or type a full path.' -ForegroundColor DarkGray;Write-Host;Write-Host '  COMMANDS' -ForegroundColor White;Write-Host '  file.jpg                  Read all metadata' -ForegroundColor DarkGray;Write-Host '  -all= file.jpg            Strip ALL metadata from file' -ForegroundColor DarkGray;Write-Host '  -GPS* file.jpg            Show GPS coordinates only' -ForegroundColor DarkGray;Write-Host '  -Author -Make file.jpg    Show specific tags' -ForegroundColor DarkGray;Write-Host '  -json file.jpg            Output metadata as JSON' -ForegroundColor DarkGray;Write-Host '  -csv -r C:\Photos\        Bulk scan folder to CSV' -ForegroundColor DarkGray;Write-Host '  -all= -r C:\Folder\       Strip metadata from entire folder' -ForegroundColor DarkGray;Write-Host;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;do{$f=Read-Host '  File/folder';if($f){.\exiftool.exe $f}}while($f)"
 title HOME TOOLS v!HT_VERSION!
 goto MENU
 
@@ -463,7 +463,7 @@ if not exist "%P_SHERL%\sherlock_project" echo  %RD%  Not ready. Type R on the m
 set "HV_PATH=%P_SHERL%" & set "HV_REQS=" & set "HV_PKG=sherlock-project"
 call :HEALTH_VENV
 title HOME TOOLS  ^|  Sherlock
-powershell -NoProfile -Command "Set-Location 'C:\OSINT\sherlock';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;93m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;93m  Sherlock  |  Username Hunt across 400+ Sites'+$e+'[0m');Write-Host('  '+$e+'[1;93m'+$sep+$e+'[0m');Write-Host '  Tip: try variations  ->  john, john_doe, john123, j0hn' -ForegroundColor DarkGray;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{$u=Read-Host '  Username';if($u){&$p -m sherlock_project $u}}while($u)"
+powershell -NoProfile -Command "Set-Location 'C:\OSINT\sherlock';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;93m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;93m  Sherlock  |  Username Hunt across 400+ Sites'+$e+'[0m');Write-Host('  '+$e+'[1;93m'+$sep+$e+'[0m');Write-Host '  Just type a username below. Results show every site where it exists.' -ForegroundColor DarkGray;Write-Host;Write-Host '  TIPS' -ForegroundColor White;Write-Host '  Try variations: john  john_doe  john123  j0hn  johnsmith' -ForegroundColor DarkGray;Write-Host '  [+] = account found    [x] = not found    [!] = error' -ForegroundColor DarkGray;Write-Host '  Results are saved automatically to a .txt file in the sherlock folder' -ForegroundColor DarkGray;Write-Host;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{$u=Read-Host '  Username';if($u){&$p -m sherlock_project $u}}while($u)"
 title HOME TOOLS v!HT_VERSION!
 goto MENU
 
@@ -550,7 +550,7 @@ goto MENU
 set "HV_PATH=%P_OGRAM%" & set "HV_REQS=%P_OGRAM%\requirements.txt"
 call :HEALTH_VENV
 title HOME TOOLS  ^|  Osintgram
-powershell -NoProfile -Command "Set-Location 'C:\OSINT\osintgram';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;92m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;92m  Osintgram  |  Instagram OSINT'+$e+'[0m');Write-Host('  '+$e+'[1;92m'+$sep+$e+'[0m');Write-Host '  Enter a target Instagram username, then use commands: info, followers, photos' -ForegroundColor DarkGray;Write-Host '  Press C on the HOME TOOLS menu for the full command list.' -ForegroundColor DarkGray;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{$t=Read-Host '  Target username';if($t){&$p main.py $t}}while($t)"
+powershell -NoProfile -Command "Set-Location 'C:\OSINT\osintgram';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;92m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;92m  Osintgram  |  Instagram OSINT'+$e+'[0m');Write-Host('  '+$e+'[1;92m'+$sep+$e+'[0m');Write-Host '  Enter a target Instagram username. Once loaded, type commands below.' -ForegroundColor DarkGray;Write-Host;Write-Host '  COMMANDS  (type after target loads)' -ForegroundColor White;Write-Host '  info          Account info: bio, followers, post count' -ForegroundColor DarkGray;Write-Host '  followers     List all followers' -ForegroundColor DarkGray;Write-Host '  following     List all accounts they follow' -ForegroundColor DarkGray;Write-Host '  photos        Download all photos' -ForegroundColor DarkGray;Write-Host '  location      Extract location data from posts' -ForegroundColor DarkGray;Write-Host '  hashtags      Hashtags used in posts' -ForegroundColor DarkGray;Write-Host '  comments      All comments made by the user' -ForegroundColor DarkGray;Write-Host '  captions      Post captions' -ForegroundColor DarkGray;Write-Host '  tagged        Photos the user is tagged in' -ForegroundColor DarkGray;Write-Host;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{$t=Read-Host '  Target username';if($t){&$p main.py $t}}while($t)"
 title HOME TOOLS v!HT_VERSION!
 goto MENU
 
@@ -566,7 +566,7 @@ if not exist "%P_HARV%\theHarvester\__main__.py" echo  %RD%  Not ready. Type R o
 set "HV_PATH=%P_HARV%" & set "HV_REQS=%P_HARV%\requirements.txt" & set "HV_PKG=theHarvester"
 call :HEALTH_VENV
 title HOME TOOLS  ^|  theHarvester
-powershell -NoProfile -Command "Set-Location 'C:\OSINT\theHarvester';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;33m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;33m  theHarvester  |  Email / Domain / Subdomain Recon'+$e+'[0m');Write-Host('  '+$e+'[1;33m'+$sep+$e+'[0m');Write-Host '  Enter a domain (e.g. example.com). Harvests emails, subdomains, IPs.' -ForegroundColor DarkGray;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{$d=Read-Host '  Domain';if($d){&$p -m theHarvester -d $d -b google,bing,yahoo,duckduckgo}}while($d)"
+powershell -NoProfile -Command "Set-Location 'C:\OSINT\theHarvester';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;33m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;33m  theHarvester  |  Email / Domain / Subdomain Recon'+$e+'[0m');Write-Host('  '+$e+'[1;33m'+$sep+$e+'[0m');Write-Host '  Enter a domain to harvest emails, subdomains, employee names and IPs.' -ForegroundColor DarkGray;Write-Host;Write-Host '  WHAT IT FINDS' -ForegroundColor White;Write-Host '  Emails, subdomains, employee names, IP addresses, open ports' -ForegroundColor DarkGray;Write-Host '  Sources: Google, Bing, Yahoo, DuckDuckGo (default)' -ForegroundColor DarkGray;Write-Host;Write-Host '  TIPS' -ForegroundColor White;Write-Host '  Enter just the domain: example.com  (no https://)' -ForegroundColor DarkGray;Write-Host '  Results include all emails found across all sources' -ForegroundColor DarkGray;Write-Host '  Use these emails with Holehe [8] or pwnedOrNot [14]' -ForegroundColor DarkGray;Write-Host;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{$d=Read-Host '  Domain (e.g. example.com)';if($d){&$p -m theHarvester -d $d -b google,bing,yahoo,duckduckgo}}while($d)"
 title HOME TOOLS v!HT_VERSION!
 goto MENU
 
@@ -581,7 +581,7 @@ if not exist "%P_HOLE%\holehe" echo  %RD%  Not ready. Type R on the menu to repa
 set "HV_PATH=%P_HOLE%" & set "HV_REQS=%P_HOLE%\requirements.txt"
 call :HEALTH_VENV
 title HOME TOOLS  ^|  Holehe
-powershell -NoProfile -Command "Set-Location 'C:\OSINT\holehe';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;35m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;35m  Holehe  |  Email to Social Accounts - 120+ Sites'+$e+'[0m');Write-Host('  '+$e+'[1;35m'+$sep+$e+'[0m');Write-Host '  [+] = account exists     [-] = not found     [~] = rate limited' -ForegroundColor DarkGray;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{$em=Read-Host '  Email';if($em){&$p -m holehe $em}}while($em)"
+powershell -NoProfile -Command "Set-Location 'C:\OSINT\holehe';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;35m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;35m  Holehe  |  Email to Social Accounts - 120+ Sites'+$e+'[0m');Write-Host('  '+$e+'[1;35m'+$sep+$e+'[0m');Write-Host '  Enter an email to check which sites have an account registered to it.' -ForegroundColor DarkGray;Write-Host;Write-Host '  READING RESULTS' -ForegroundColor White;Write-Host '  [+] Account found on that site' -ForegroundColor DarkGray;Write-Host '  [-] No account found' -ForegroundColor DarkGray;Write-Host '  [~] Rate limited - try again later' -ForegroundColor DarkGray;Write-Host;Write-Host '  TIPS' -ForegroundColor White;Write-Host '  Works best with Gmail, Outlook and Yahoo addresses' -ForegroundColor DarkGray;Write-Host '  Pair with theHarvester [7] - harvest emails then check each one here' -ForegroundColor DarkGray;Write-Host;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{$em=Read-Host '  Email';if($em){&$p -m holehe $em}}while($em)"
 title HOME TOOLS v!HT_VERSION!
 goto MENU
 
@@ -596,7 +596,7 @@ if not exist "%P_MAIG%\maigret" echo  %RD%  Not ready. Type R on the menu to rep
 set "HV_PATH=%P_MAIG%" & set "HV_REQS=%P_MAIG%\requirements.txt" & set "HV_PKG=maigret"
 call :HEALTH_VENV
 title HOME TOOLS  ^|  Maigret
-powershell -NoProfile -Command "Set-Location 'C:\OSINT\maigret';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;96m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;96m  Maigret  |  Deep Username OSINT  -  3000+ Sites'+$e+'[0m');Write-Host('  '+$e+'[1;96m'+$sep+$e+'[0m');Write-Host '  Discovers and links accounts across platforms. Generates HTML report.' -ForegroundColor DarkGray;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{$u=Read-Host '  Username';if($u){&$p -m maigret $u --html}}while($u)"
+powershell -NoProfile -Command "Set-Location 'C:\OSINT\maigret';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;96m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;96m  Maigret  |  Deep Username OSINT  -  3000+ Sites'+$e+'[0m');Write-Host('  '+$e+'[1;96m'+$sep+$e+'[0m');Write-Host '  Scans 3000+ sites and links accounts into an interactive HTML report.' -ForegroundColor DarkGray;Write-Host;Write-Host '  WHAT YOU GET' -ForegroundColor White;Write-Host '  HTML report with account network graph (saved in reports\ folder)' -ForegroundColor DarkGray;Write-Host '  All found profiles linked with profile URLs' -ForegroundColor DarkGray;Write-Host '  Account connections and linked identities' -ForegroundColor DarkGray;Write-Host;Write-Host '  TIPS' -ForegroundColor White;Write-Host '  Scan takes 1-3 min. Report opens in your browser when done.' -ForegroundColor DarkGray;Write-Host '  Try exact username then variations (underscore, numbers, etc.)' -ForegroundColor DarkGray;Write-Host '  Use after Sherlock [5] to go deeper on found usernames' -ForegroundColor DarkGray;Write-Host;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{$u=Read-Host '  Username';if($u){&$p -m maigret $u --html}}while($u)"
 title HOME TOOLS v!HT_VERSION!
 goto MENU
 
@@ -611,7 +611,7 @@ if not exist "%P_PHOT%\photon.py" echo  %RD%  Not ready. Type R on the menu to r
 set "HV_PATH=%P_PHOT%" & set "HV_REQS=%P_PHOT%\requirements.txt"
 call :HEALTH_VENV
 title HOME TOOLS  ^|  Photon
-powershell -NoProfile -Command "Set-Location 'C:\OSINT\Photon';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;97m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;97m  Photon  |  Web Crawler and OSINT Spider'+$e+'[0m');Write-Host('  '+$e+'[1;97m'+$sep+$e+'[0m');Write-Host '  Extracts emails, URLs, API keys, phone numbers and JS secrets.' -ForegroundColor DarkGray;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{$u=Read-Host '  URL (https://...)';if($u){&$p photon.py -u $u --level 2 --threads 5}}while($u)"
+powershell -NoProfile -Command "Set-Location 'C:\OSINT\Photon';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;97m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;97m  Photon  |  Web Crawler and OSINT Spider'+$e+'[0m');Write-Host('  '+$e+'[1;97m'+$sep+$e+'[0m');Write-Host '  Enter a URL to crawl. Extracts emails, URLs, API keys, phone numbers, JS secrets.' -ForegroundColor DarkGray;Write-Host;Write-Host '  WHAT IT EXTRACTS' -ForegroundColor White;Write-Host '  Emails, internal/external URLs, JavaScript files' -ForegroundColor DarkGray;Write-Host '  API keys, tokens, phone numbers, social media links' -ForegroundColor DarkGray;Write-Host '  Results saved in results\ folder (JSON + text files)' -ForegroundColor DarkGray;Write-Host;Write-Host '  SETTINGS (currently: depth=2, threads=5)' -ForegroundColor White;Write-Host '  Increase --level 3 for deeper crawl (slower)' -ForegroundColor DarkGray;Write-Host '  Increase --threads 10 for faster crawl' -ForegroundColor DarkGray;Write-Host;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{$u=Read-Host '  URL (https://...)';if($u){&$p photon.py -u $u --level 2 --threads 5}}while($u)"
 title HOME TOOLS v!HT_VERSION!
 goto MENU
 
@@ -627,7 +627,7 @@ echo.
 if not exist "%P_SQLM%\sqlmap.py" echo  %RD%  Not ready. Type R on the menu to repair.%R% & pause & goto MENU
 if "!HAS_PY!"=="0" echo  %RD%  Python not in PATH. SQLMap needs Python.%R% & pause & goto MENU
 title HOME TOOLS  ^|  SQLMap
-powershell -NoProfile -Command "Set-Location 'C:\OSINT\sqlmap';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;91m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;91m  SQLMap  |  SQL Injection Scanner'+$e+'[0m');Write-Host('  '+$e+'[1;91m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;93m  REMINDER: Only test systems you own or have permission to test.'+$e+'[0m');Write-Host '  Example: http://site.com/page.php?id=1' -ForegroundColor DarkGray;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;do{$u=Read-Host '  Target URL';if($u){python sqlmap.py -u $u --batch}}while($u)"
+powershell -NoProfile -Command "Set-Location 'C:\OSINT\sqlmap';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;91m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;91m  SQLMap  |  SQL Injection Scanner'+$e+'[0m');Write-Host('  '+$e+'[1;91m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;93m  REMINDER: Only test systems you own or have permission to test.'+$e+'[0m');Write-Host;Write-Host '  HOW TO USE' -ForegroundColor White;Write-Host '  Find a URL with a parameter like: http://site.com/page.php?id=1' -ForegroundColor DarkGray;Write-Host '  Paste it below. SQLMap tests it automatically with --batch mode.' -ForegroundColor DarkGray;Write-Host;Write-Host '  WHAT HAPPENS' -ForegroundColor White;Write-Host '  SQLMap detects injection type, lists databases, can dump tables' -ForegroundColor DarkGray;Write-Host '  --batch = auto-answers all prompts (no input needed during scan)' -ForegroundColor DarkGray;Write-Host;Write-Host '  USEFUL FLAGS  (add to URL after a space)' -ForegroundColor White;Write-Host '  --dbs               List all databases' -ForegroundColor DarkGray;Write-Host '  --tables -D dbname  List tables in a database' -ForegroundColor DarkGray;Write-Host '  --dump -D db -T tbl Dump a specific table' -ForegroundColor DarkGray;Write-Host '  --forms             Auto-detect and test all forms on the page' -ForegroundColor DarkGray;Write-Host;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;do{$u=Read-Host '  Target URL';if($u){python sqlmap.py -u $u --batch}}while($u)"
 title HOME TOOLS v!HT_VERSION!
 goto MENU
 
@@ -746,7 +746,7 @@ goto PWND_LAUNCH
 
 :PWND_LAUNCH
 title HOME TOOLS  ^|  pwnedOrNot
-powershell -NoProfile -Command "Set-Location 'C:\OSINT\pwnedornot';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;93m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;93m  pwnedOrNot  |  Email Breach Checker'+$e+'[0m');Write-Host('  '+$e+'[1;93m'+$sep+$e+'[0m');Write-Host '  Checks HaveIBeenPwned + public dumps. Shows breaches and leaked passwords.' -ForegroundColor DarkGray;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{$em=Read-Host '  Email';if($em){&$p pwnedornot.py -e $em}}while($em)"
+powershell -NoProfile -Command "Set-Location 'C:\OSINT\pwnedornot';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;93m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;93m  pwnedOrNot  |  Email Breach Checker'+$e+'[0m');Write-Host('  '+$e+'[1;93m'+$sep+$e+'[0m');Write-Host '  Enter an email to check all known data breaches and leaked passwords.' -ForegroundColor DarkGray;Write-Host;Write-Host '  WHAT YOU GET' -ForegroundColor White;Write-Host '  List of breaches the email appeared in (site, date, data types)' -ForegroundColor DarkGray;Write-Host '  Any leaked passwords found in public dumps' -ForegroundColor DarkGray;Write-Host '  Pastebin mentions of the address' -ForegroundColor DarkGray;Write-Host;Write-Host '  TIPS' -ForegroundColor White;Write-Host '  Found passwords reveal patterns - people reuse passwords with small changes' -ForegroundColor DarkGray;Write-Host '  Run on every email you find with theHarvester [7] or Holehe [8]' -ForegroundColor DarkGray;Write-Host '  Needs a HIBP API key - press I on menu then pick pwnedOrNot if not set' -ForegroundColor DarkGray;Write-Host;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{$em=Read-Host '  Email';if($em){&$p pwnedornot.py -e $em}}while($em)"
 title HOME TOOLS v!HT_VERSION!
 goto MENU
 
@@ -766,7 +766,7 @@ if not exist "%P_GHNT%\ghunt" echo  %RD%  Not ready. Type R on the menu to repai
 set "HV_PATH=%P_GHNT%" & set "HV_REQS=%P_GHNT%\requirements.txt"
 call :HEALTH_VENV
 title HOME TOOLS  ^|  GHunt
-powershell -NoProfile -Command "Set-Location 'C:\OSINT\GHunt';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;92m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;92m  GHunt  |  Google Account OSINT'+$e+'[0m');Write-Host('  '+$e+'[1;92m'+$sep+$e+'[0m');Write-Host '  Investigate Google accounts, locations, reviews and more.' -ForegroundColor DarkGray;Write-Host '  First time: run  ghunt login  to authenticate.' -ForegroundColor Yellow;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{Write-Host '  Commands: email / gaia / drive / youtube' -ForegroundColor DarkGray;$cmd=Read-Host '  ghunt subcommand (or blank to exit)';if($cmd){$tgt=Read-Host '  Target';if($tgt){&$p -m ghunt $cmd $tgt}}}while($cmd)"
+powershell -NoProfile -Command "Set-Location 'C:\OSINT\GHunt';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;92m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;92m  GHunt  |  Google Account OSINT'+$e+'[0m');Write-Host('  '+$e+'[1;92m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;93m  First time: type  login  as the subcommand to authenticate.'+$e+'[0m');Write-Host;Write-Host '  SUBCOMMANDS' -ForegroundColor White;Write-Host '  email    target@gmail.com    Account info: name, Gaia ID, profile pic' -ForegroundColor DarkGray;Write-Host '                               Last edit, Maps activity, YouTube channel' -ForegroundColor DarkGray;Write-Host '  gaia     GAIA_ID              Search by internal Google ID' -ForegroundColor DarkGray;Write-Host '  drive    target@gmail.com    Find publicly shared Drive files' -ForegroundColor DarkGray;Write-Host '  youtube  target@gmail.com    Find linked YouTube channel' -ForegroundColor DarkGray;Write-Host '  login    (no target)         Authenticate with your Google account' -ForegroundColor DarkGray;Write-Host;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{$cmd=Read-Host '  Subcommand (email/gaia/drive/youtube/login)';if($cmd -eq 'login'){&$p -m ghunt login}elseif($cmd){$tgt=Read-Host '  Target (email or ID)';if($tgt){&$p -m ghunt $cmd $tgt}}}while($cmd)"
 title HOME TOOLS v!HT_VERSION!
 goto MENU
 
@@ -781,7 +781,7 @@ if not exist "%P_RECN%\recon-ng" echo  %RD%  Not ready. Type R on the menu to re
 set "HV_PATH=%P_RECN%" & set "HV_REQS=%P_RECN%\REQUIREMENTS"
 call :HEALTH_VENV
 title HOME TOOLS  ^|  Recon-ng
-powershell -NoProfile -Command "Set-Location 'C:\OSINT\recon-ng';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;96m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;96m  Recon-ng  |  Web Reconnaissance Framework'+$e+'[0m');Write-Host('  '+$e+'[1;96m'+$sep+$e+'[0m');Write-Host '  Interactive OSINT framework. Type help inside for all commands.' -ForegroundColor DarkGray;Write-Host '  Tip: workspaces create <name>  then  modules search <topic>' -ForegroundColor DarkGray;Write-Host '  Type exit inside recon-ng to return here.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};&$p recon-ng"
+powershell -NoProfile -Command "Set-Location 'C:\OSINT\recon-ng';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;96m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;96m  Recon-ng  |  Web Reconnaissance Framework'+$e+'[0m');Write-Host('  '+$e+'[1;96m'+$sep+$e+'[0m');Write-Host '  Modular recon framework - type commands inside its console.' -ForegroundColor DarkGray;Write-Host;Write-Host '  QUICK START  (type these inside recon-ng)' -ForegroundColor White;Write-Host '  workspaces create NAME          Create a new workspace for a target' -ForegroundColor DarkGray;Write-Host '  workspaces load NAME            Switch to an existing workspace' -ForegroundColor DarkGray;Write-Host '  modules search email            Find email harvesting modules' -ForegroundColor DarkGray;Write-Host '  modules search domain           Find domain recon modules' -ForegroundColor DarkGray;Write-Host '  marketplace install MODULE      Install a module' -ForegroundColor DarkGray;Write-Host '  modules load MODULE             Load an installed module' -ForegroundColor DarkGray;Write-Host '  info                            Show current module info' -ForegroundColor DarkGray;Write-Host '  options set SOURCE example.com  Set the target' -ForegroundColor DarkGray;Write-Host '  run                             Execute the module' -ForegroundColor DarkGray;Write-Host '  show hosts                      Show all discovered hosts' -ForegroundColor DarkGray;Write-Host '  exit                            Return to HOME TOOLS' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};&$p recon-ng"
 title HOME TOOLS v!HT_VERSION!
 goto MENU
 
@@ -816,7 +816,29 @@ echo  %YW%  REMINDER: Only scan WordPress sites you own or have permission to te
 echo  %DG%  License: Free for personal/non-commercial use. Commercial use requires a paid plan.%R%
 echo.
 title HOME TOOLS  ^|  WPScan
-powershell -NoProfile -Command "$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;35m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;35m  WPScan  |  WordPress Vulnerability Scanner'+$e+'[0m');Write-Host('  '+$e+'[1;35m'+$sep+$e+'[0m');Write-Host '  Scans WordPress sites for vulnerabilities, users, plugins and themes.' -ForegroundColor DarkGray;Write-Host '  Tip: get a free API token at wpscan.com and add --api-token YOUR_TOKEN' -ForegroundColor DarkGray;Write-Host '  Tip: use --enumerate u to find usernames, p for plugins, t for themes' -ForegroundColor DarkGray;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;do{$u=Read-Host '  Target URL (https://wordpress-site.com)';if($u){wpscan --url $u --enumerate u,p,t --random-user-agent}}while($u)"
+echo  %MGB%  ============================================================%R%
+echo  %WB%    QUICK COMMANDS%R%
+echo  %MGB%  ============================================================%R%
+echo  %DG%  wpscan --url URL                          Basic scan%R%
+echo  %DG%  wpscan --url URL --enumerate u             Find usernames%R%
+echo  %DG%  wpscan --url URL --enumerate p             Find plugins%R%
+echo  %DG%  wpscan --url URL --enumerate t             Find themes%R%
+echo  %DG%  wpscan --url URL --enumerate u,p,t         All of the above%R%
+echo  %DG%  wpscan --url URL --api-token TOKEN         Add CVE vuln data%R%
+echo  %DG%  wpscan --url URL --random-user-agent       Bypass WAF detection%R%
+echo  %DG%  Get a free API token at: https://wpscan.com%R%
+echo.
+:WPSC_LOOP
+set "WPSC_URL="
+set /p "WPSC_URL=   Target URL (blank to return) >> "
+if not defined WPSC_URL goto WPSC_DONE
+echo.
+wpscan --url "!WPSC_URL!" --enumerate u,p,t --random-user-agent
+echo.
+echo  %DG%  Press any key to scan another target...%R%
+pause >nul
+goto WPSC_LOOP
+:WPSC_DONE
 title HOME TOOLS v!HT_VERSION!
 goto MENU
 
