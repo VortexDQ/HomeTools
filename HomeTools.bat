@@ -1,6 +1,6 @@
 @echo off
 :: ============================================================
-::  HOME TOOLS  |  OSINT Launcher  |  v5.0
+::  HOME TOOLS  |  OSINT Launcher  |  v5.1
 ::  A self-installing OSINT toolkit launcher for Windows.
 ::
 ::  Tools clone and install automatically on first launch.
@@ -11,7 +11,7 @@
 ::  Install locations: C:\OSINT\   and   C:\Tools\exiftool\
 ::  Made with love by vortexdq.com
 :: ============================================================
-:: HOMETOOLS_VERSION:5.0
+:: HOMETOOLS_VERSION:5.1
 if "%~1"=="-k" goto :INIT
 cmd /k "%~f0" -k
 exit /b
@@ -19,7 +19,7 @@ exit /b
 
 setlocal enabledelayedexpansion
 chcp 65001 >nul 2>&1
-title HOME TOOLS v5.0
+title HOME TOOLS v5.1
 
 :: ============================================================
 ::  ANSI COLORS
@@ -44,14 +44,15 @@ set "ORB=%E%[1;33m"
 :: ============================================================
 ::  VERSION
 :: ============================================================
-set "HT_VERSION=5.0"
+set "HT_VERSION=5.1"
 
 :: ============================================================
 ::  TOOL PATHS
 ::  Edit paths below if your tools live somewhere different.
 :: ============================================================
-set "P_JLT=%USERPROFILE%\Desktop\Stuff\JLT EDGE WIRLESS (2)"
-set "P_SCAN=%USERPROFILE%\Desktop\Stuff\Scanners"
+set "P_JLT=C:\Tools\JLT"
+set "P_SCAN=C:\Tools\Scanners"
+set "HT_ASSETS=https://raw.githubusercontent.com/VortexDQ/HomeTools/main/assets"
 set "P_SPIDER=C:\OSINT\spiderfoot"
 set "P_EXIF=C:\Tools\exiftool"
 set "P_SHERL=C:\OSINT\sherlock"
@@ -86,7 +87,7 @@ goto STARTUP
 cls
 echo.
 echo  %CB%  =======================================================%R%
-echo  %CB%           HOME TOOLS v5.0  -  First Launch             %R%
+echo  %CB%           HOME TOOLS v5.1  -  First Launch             %R%
 echo  %CB%       Self-installing OSINT Toolkit for Windows         %R%
 echo  %CB%  =======================================================%R%
 echo.
@@ -302,7 +303,7 @@ echo  !S17!%RD%[17]%R%  %WH%OWASP ZAP                 %DG%Web application securi
 echo  !S18!%MGB%[18]%R%  %WH%WPScan                    %DG%WordPress vulnerability scanner%R%
 echo.
 echo  %DG%  --------------------------------------------------------%R%
-echo  %CY%  [R]%R% Repair   %CY%[C]%R% Commands   %CY%[H]%R% Help   %CY%[I]%R% Instagram setup   %CY%[Q]%R% Quit
+echo  %CY%  [R]%R% Repair   %CY%[C]%R% Commands   %CY%[D]%R% Dictionary   %CY%[H]%R% Help   %CY%[I]%R% Instagram   %CY%[Q]%R% Quit
 echo  %DG%  --------------------------------------------------------%R%
 echo  %DG%             Made with love by vortexdq.com%R%
 echo.
@@ -331,6 +332,9 @@ if /i "%CHO%"=="R"         goto REPAIR
 if /i "%CHO%"=="repair"    goto REPAIR
 if /i "%CHO%"=="C"         goto COMMAND_CENTER
 if /i "%CHO%"=="commands"  goto COMMAND_CENTER
+if /i "%CHO%"=="D"         goto INFO_DICT
+if /i "%CHO%"=="dict"      goto INFO_DICT
+if /i "%CHO%"=="dictionary" goto INFO_DICT
 if /i "%CHO%"=="H"         goto HELP
 if /i "%CHO%"=="help"      goto HELP
 if /i "%CHO%"=="I"         goto OGRAM_SETUP_MENU
@@ -339,7 +343,7 @@ if /i "%CHO%"=="creds"     goto OGRAM_SETUP_MENU
 if /i "%CHO%"=="Q"         goto QUIT
 if /i "%CHO%"=="quit"      goto QUIT
 if /i "%CHO%"=="exit"      goto QUIT
-echo  %RD%  Unknown option. Type 1-18, R, C, H, I, or Q.%R%
+echo  %RD%  Unknown option. Type 1-18, R, C, D, H, I, or Q.%R%
 timeout /t 1 /nobreak >nul
 goto MENU
 
@@ -384,40 +388,46 @@ goto MENU_SCANNERS
 :LAUNCH_JLT
 cls
 echo.
-echo  %CB%  Launching JLT Edge Wireless...%R%
+echo  %CB%  JLT Edge Wireless%R%
 echo.
+if exist "%P_JLT%\OemDrv.exe" goto :LAUNCH_JLT_RUN
+set "FETCH_NAME=JLT" & set "FETCH_DIR=%P_JLT%" & set "FETCH_CHECK=%P_JLT%\OemDrv.exe"
+call :FETCH_ASSET
 if not exist "%P_JLT%\OemDrv.exe" goto :LAUNCH_JLT_NF
+:LAUNCH_JLT_RUN
 start "" "%P_JLT%\OemDrv.exe"
 echo  %GN%  Launched.%R%
 timeout /t 2 /nobreak >nul
 goto MENU
 :LAUNCH_JLT_NF
-echo  %RD%  OemDrv.exe not found at: %P_JLT%%R%
-echo  %DG%  Check the JLT EDGE WIRLESS (2) folder exists in Desktop\Stuff%R%
+echo  %RD%  Could not download/extract JLT. Check your internet and try again.%R%
 echo.
 pause
 goto MENU
 
 :LAUNCH_ESET
 cls
-echo  %CB%  Launching ESET Online Scanner...%R%
-if not exist "%P_SCAN%\esetonlinescanner.exe" echo  %RD%  Not found.%R% & pause & goto MENU_SCANNERS
+echo  %CB%  ESET Online Scanner%R%
+if not exist "%P_SCAN%\esetonlinescanner.exe" set "FETCH_NAME=Scanners" & set "FETCH_DIR=%P_SCAN%" & set "FETCH_CHECK=%P_SCAN%\esetonlinescanner.exe" & call :FETCH_ASSET
+if not exist "%P_SCAN%\esetonlinescanner.exe" echo  %RD%  Download failed - check internet.%R% & pause & goto MENU_SCANNERS
 start "" "%P_SCAN%\esetonlinescanner.exe"
 timeout /t 2 /nobreak >nul
 goto MENU
 
 :LAUNCH_FSECURE
 cls
-echo  %CB%  Launching F-Secure Online Scanner...%R%
-if not exist "%P_SCAN%\F-SecureOnlineScanner.exe" echo  %RD%  Not found.%R% & pause & goto MENU_SCANNERS
+echo  %CB%  F-Secure Online Scanner%R%
+if not exist "%P_SCAN%\F-SecureOnlineScanner.exe" set "FETCH_NAME=Scanners" & set "FETCH_DIR=%P_SCAN%" & set "FETCH_CHECK=%P_SCAN%\F-SecureOnlineScanner.exe" & call :FETCH_ASSET
+if not exist "%P_SCAN%\F-SecureOnlineScanner.exe" echo  %RD%  Download failed - check internet.%R% & pause & goto MENU_SCANNERS
 start "" "%P_SCAN%\F-SecureOnlineScanner.exe"
 timeout /t 2 /nobreak >nul
 goto MENU
 
 :LAUNCH_HITMAN
 cls
-echo  %CB%  Launching HitmanPro...%R%
-if not exist "%P_SCAN%\HitmanPro_x64.exe" echo  %RD%  Not found.%R% & pause & goto MENU_SCANNERS
+echo  %CB%  HitmanPro%R%
+if not exist "%P_SCAN%\HitmanPro_x64.exe" set "FETCH_NAME=Scanners" & set "FETCH_DIR=%P_SCAN%" & set "FETCH_CHECK=%P_SCAN%\HitmanPro_x64.exe" & call :FETCH_ASSET
+if not exist "%P_SCAN%\HitmanPro_x64.exe" echo  %RD%  Download failed - check internet.%R% & pause & goto MENU_SCANNERS
 start "" "%P_SCAN%\HitmanPro_x64.exe"
 timeout /t 2 /nobreak >nul
 goto MENU
@@ -897,6 +907,90 @@ goto WPSC_LOOP
 :WPSC_DONE
 title HOME TOOLS v!HT_VERSION!
 goto MENU
+
+
+:: ============================================================
+::  INFO DICTIONARY  -  editable glossary the user can extend
+:: ============================================================
+:INFO_DICT
+cls
+set "DICT=%~dp0HomeTools_Dictionary.txt"
+if not exist "!DICT!" call :WRITE_DEFAULT_DICT
+echo.
+echo  %CB%  =======================================================%R%
+echo  %WB%        INFO DICTIONARY  ^|  OSINT terms and tips%R%
+echo  %CB%  =======================================================%R%
+echo  %DG%  Your own editable reference - add notes anytime.%R%
+echo  %DG%  File: !DICT!%R%
+echo  %DG%  --------------------------------------------------------%R%
+echo.
+more < "!DICT!"
+echo.
+echo  %DG%  --------------------------------------------------------%R%
+echo  %CY%  [E]%R% Edit in Notepad    %CY%[A]%R% Add a quick note    %CY%[B]%R% Back
+set "DCHO="
+set /p "DCHO=   >> "
+if /i "!DCHO!"=="E" goto INFO_DICT_EDIT
+if /i "!DCHO!"=="A" goto INFO_DICT_ADD
+goto MENU
+:INFO_DICT_EDIT
+start "" notepad "!DICT!"
+goto INFO_DICT
+:INFO_DICT_ADD
+echo.
+set "DNOTE="
+set /p "DNOTE=   Type your note (added to the file) >> "
+if defined DNOTE >>"!DICT!" echo !DNOTE!
+goto INFO_DICT
+
+:WRITE_DEFAULT_DICT
+set "DICT=%~dp0HomeTools_Dictionary.txt"
+>"!DICT!" echo ==========================================================
+>>"!DICT!" echo  HOME TOOLS - INFO DICTIONARY
+>>"!DICT!" echo  Edit this file freely. Add your own terms, tips and notes.
+>>"!DICT!" echo ==========================================================
+>>"!DICT!" echo.
+>>"!DICT!" echo --- GENERAL TERMS ---
+>>"!DICT!" echo OSINT      : Open Source Intelligence - gathering info from public sources.
+>>"!DICT!" echo Recon      : Reconnaissance - the info-gathering phase before any test.
+>>"!DICT!" echo Footprint  : The total public data trail a person or company leaves online.
+>>"!DICT!" echo Pivot      : Using one finding (an email) to discover more (accounts, names).
+>>"!DICT!" echo Dorking    : Using advanced search-engine queries to find hidden info.
+>>"!DICT!" echo Breach     : A leaked dataset of accounts/passwords from a hacked service.
+>>"!DICT!" echo Enumerate  : List items a target exposes (users, plugins, subdomains).
+>>"!DICT!" echo Payload    : The input sent to test or exploit a weakness.
+>>"!DICT!" echo False +    : A result that looks positive but is not actually real.
+>>"!DICT!" echo.
+>>"!DICT!" echo --- WORKFLOW: investigating a person ---
+>>"!DICT!" echo 1. Username  -^> Sherlock [5] then Maigret [9] for depth.
+>>"!DICT!" echo 2. Email     -^> Holehe [8] for accounts, pwnedOrNot [14] for breaches.
+>>"!DICT!" echo 3. Google    -^> GHunt [15] for Google account, Maps, YouTube.
+>>"!DICT!" echo 4. Photos    -^> ExifTool [4] for GPS and camera metadata.
+>>"!DICT!" echo.
+>>"!DICT!" echo --- WORKFLOW: investigating a domain/site ---
+>>"!DICT!" echo 1. theHarvester [7]  -^> emails, subdomains, names.
+>>"!DICT!" echo 2. Photon [10]       -^> crawl for links, keys, secrets.
+>>"!DICT!" echo 3. Recon-ng [16]     -^> run targeted recon modules.
+>>"!DICT!" echo 4. ZAP [17] / SQLMap [11] / WPScan [18] -^> security testing (with permission).
+>>"!DICT!" echo.
+>>"!DICT!" echo --- PER-TOOL QUICK NOTES ---
+>>"!DICT!" echo Sherlock   : type a username. [+]=found. Saves a .txt of results.
+>>"!DICT!" echo Maigret    : makes an HTML report graph. Slower but deeper than Sherlock.
+>>"!DICT!" echo Holehe     : [+]=account exists, [-]=none, [~]=rate limited.
+>>"!DICT!" echo theHarvester: enter a bare domain like example.com (no https).
+>>"!DICT!" echo pwnedOrNot : needs a HIBP key (paid). You can skip and add later.
+>>"!DICT!" echo GHunt      : run the login wizard once using the GHunt Companion extension.
+>>"!DICT!" echo ExifTool   : pick a folder, then a file name, then read or strip metadata.
+>>"!DICT!" echo Osintgram  : needs a burner IG account with 2FA OFF. Set it with [I].
+>>"!DICT!" echo SQLMap     : give a URL with a parameter like page.php?id=1
+>>"!DICT!" echo WPScan     : --enumerate u,p,t finds users, plugins, themes.
+>>"!DICT!" echo ZAP        : opens a GUI. Proxy is 127.0.0.1:8080.
+>>"!DICT!" echo.
+>>"!DICT!" echo --- LEGAL ---
+>>"!DICT!" echo Only test systems you OWN or have WRITTEN permission to test.
+>>"!DICT!" echo.
+>>"!DICT!" echo --- MY NOTES (add your own below) ---
+goto :EOF
 
 
 :: ============================================================
@@ -2337,6 +2431,19 @@ for /d %%D in ("%LOCALAPPDATA%\Programs\Python\Python3*") do if exist "%%D\pytho
 if "!HAS_PY!"=="0" for /d %%D in ("C:\Program Files\Python3*") do if exist "%%D\python.exe" set "PATH=%%D;%%D\Scripts;!PATH!" & set "HAS_PY=1"
 :ECR_PY_DONE
 if "!HAS_PY!"=="1" (echo  %GN%  Python ready.%R%) else (echo  %RD%  Python auto-install failed - install manually from python.org.%R%)
+goto :EOF
+
+
+:: ============================================================
+::  FETCH ASSET  (download + extract a bundled zip from GitHub)
+::  Set FETCH_NAME (zip base name), FETCH_DIR (extract target),
+::  FETCH_CHECK (a file that should exist after extract).
+:: ============================================================
+:FETCH_ASSET
+if "!HAS_NET!"=="0" (echo  %RD%  Offline - cannot download !FETCH_NAME!.%R% & goto :EOF)
+echo  %WH%    Downloading !FETCH_NAME! (first time only)...%R%
+if not exist "!FETCH_DIR!" mkdir "!FETCH_DIR!" >nul 2>&1
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$ProgressPreference='SilentlyContinue';try{$z=$env:TEMP+'\ht_!FETCH_NAME!.zip';Invoke-WebRequest '!HT_ASSETS!/!FETCH_NAME!.zip' -OutFile $z -UseBasicParsing -TimeoutSec 300;Expand-Archive $z '!FETCH_DIR!' -Force;Remove-Item $z -Force -EA SilentlyContinue;Write-Host '    Done.' -ForegroundColor Green}catch{Write-Host ('    Download failed: '+$_.Exception.Message) -ForegroundColor Red}"
 goto :EOF
 
 
