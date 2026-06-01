@@ -1,6 +1,6 @@
 @echo off
 :: ============================================================
-::  HOME TOOLS  |  OSINT Launcher  |  v4.9
+::  HOME TOOLS  |  OSINT Launcher  |  v5.0
 ::  A self-installing OSINT toolkit launcher for Windows.
 ::
 ::  Tools clone and install automatically on first launch.
@@ -11,7 +11,7 @@
 ::  Install locations: C:\OSINT\   and   C:\Tools\exiftool\
 ::  Made with love by vortexdq.com
 :: ============================================================
-:: HOMETOOLS_VERSION:4.9
+:: HOMETOOLS_VERSION:5.0
 if "%~1"=="-k" goto :INIT
 cmd /k "%~f0" -k
 exit /b
@@ -19,7 +19,7 @@ exit /b
 
 setlocal enabledelayedexpansion
 chcp 65001 >nul 2>&1
-title HOME TOOLS v4.9
+title HOME TOOLS v5.0
 
 :: ============================================================
 ::  ANSI COLORS
@@ -44,7 +44,7 @@ set "ORB=%E%[1;33m"
 :: ============================================================
 ::  VERSION
 :: ============================================================
-set "HT_VERSION=4.9"
+set "HT_VERSION=5.0"
 
 :: ============================================================
 ::  TOOL PATHS
@@ -86,7 +86,7 @@ goto STARTUP
 cls
 echo.
 echo  %CB%  =======================================================%R%
-echo  %CB%           HOME TOOLS v4.9  -  First Launch             %R%
+echo  %CB%           HOME TOOLS v5.0  -  First Launch             %R%
 echo  %CB%       Self-installing OSINT Toolkit for Windows         %R%
 echo  %CB%  =======================================================%R%
 echo.
@@ -181,9 +181,13 @@ set "HAS_NET=0"
 where git    >nul 2>&1 && set "HAS_GIT=1"
 where python >nul 2>&1 && set "HAS_PY=1"
 ping -n 1 -w 2000 8.8.8.8 >nul 2>&1 && set "HAS_NET=1"
+if "!HAS_NET!"=="0" ping -n 1 -w 2000 1.1.1.1 >nul 2>&1 && set "HAS_NET=1"
 
-if "!HAS_GIT!"=="0" echo  %RD%  [WARN] git not found - git tools cannot install/update.%R%
-if "!HAS_PY!"=="0"  echo  %RD%  [WARN] Python not found - Python tools cannot install.%R%
+REM Auto-install core requirements (git + Python) via winget if missing.
+call :ENSURE_CORE_REQS
+
+if "!HAS_GIT!"=="0" echo  %RD%  [WARN] git still missing - get it at: https://git-scm.com/download/win%R%
+if "!HAS_PY!"=="0"  echo  %RD%  [WARN] Python still missing - get it at: https://python.org/downloads%R%
 if "!HAS_NET!"=="0" echo  %YW%  [WARN] No internet - installs and updates skipped.%R%
 
 call :CHECK_HT_UPDATE
@@ -448,7 +452,7 @@ echo  %MB%  =======================================================%R%
 echo.
 if not exist "%P_EXIF%\exiftool.exe" echo  %RD%  Not ready. Type R on the menu to repair.%R% & pause & goto MENU
 title HOME TOOLS  ^|  ExifTool
-powershell -NoProfile -Command "Set-Location 'C:\Tools\exiftool';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;95m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;95m  ExifTool  |  File Metadata Reader / Writer'+$e+'[0m');Write-Host('  '+$e+'[1;95m'+$sep+$e+'[0m');Write-Host '  Drag a file onto this window or type a full path.' -ForegroundColor DarkGray;Write-Host;Write-Host '  COMMANDS' -ForegroundColor White;Write-Host '  file.jpg                  Read all metadata' -ForegroundColor DarkGray;Write-Host '  -all= file.jpg            Strip ALL metadata from file' -ForegroundColor DarkGray;Write-Host '  -GPS* file.jpg            Show GPS coordinates only' -ForegroundColor DarkGray;Write-Host '  -Author -Make file.jpg    Show specific tags' -ForegroundColor DarkGray;Write-Host '  -json file.jpg            Output metadata as JSON' -ForegroundColor DarkGray;Write-Host '  -csv -r C:\Photos\        Bulk scan folder to CSV' -ForegroundColor DarkGray;Write-Host '  -all= -r C:\Folder\       Strip metadata from entire folder' -ForegroundColor DarkGray;Write-Host;Write-Host '  Type  q  or leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;do{$f=Read-Host '  File/folder';if('q','back','menu','home','exit' -contains $f){break};if($f){.\exiftool.exe $f;if($LASTEXITCODE -ne 0){Write-Host '  ExifTool error. Check the file path is correct.' -ForegroundColor Yellow}}}while($f -and ('q','back','menu','home','exit' -notcontains $f))"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$exif='C:\Tools\exiftool\exiftool.exe';$e=[char]27;$s=([string][char]0x2550)*54;function H{Clear-Host;Write-Host('  '+$e+'[1;95m'+$s+$e+'[0m');Write-Host('  '+$e+'[1;95m  ExifTool  |  Metadata Reader'+$e+'[0m');Write-Host('  '+$e+'[1;95m'+$s+$e+'[0m')};H;Write-Host '  Step-by-step: pick a FOLDER, then the FILE NAME, then read its metadata.' -ForegroundColor DarkGray;while($true){Write-Host;$folder=Read-Host '  Folder path (Enter = Desktop, q = quit)';if('q','quit','exit','menu','home','back' -contains $folder){break};if([string]::IsNullOrWhiteSpace($folder)){$folder=[Environment]::GetFolderPath('Desktop')};$folder=$folder.Trim().Trim([char]34);if(Test-Path $folder -PathType Leaf){$full=$folder}else{if(-not(Test-Path $folder)){Write-Host '  Folder not found - try again.' -ForegroundColor Red;continue};Write-Host;Write-Host '  Files in this folder:' -ForegroundColor White;Get-ChildItem $folder -File|Select-Object -First 40|ForEach-Object{Write-Host ('    '+$_.Name) -ForegroundColor DarkGray};Write-Host;$name=Read-Host '  Exact file name (e.g. photo.jpg)';if([string]::IsNullOrWhiteSpace($name)){continue};$full=Join-Path $folder ($name.Trim().Trim([char]34))};if(-not(Test-Path $full -PathType Leaf)){Write-Host '  File not found - check the name and try again.' -ForegroundColor Red;continue};H;Write-Host ('  Reading: '+$full) -ForegroundColor Green;Write-Host;& $exif $full;while($true){Write-Host;Write-Host '  WHAT NEXT for this file?' -ForegroundColor White;Write-Host '    [Enter] read all again    gps = GPS location    json = JSON output' -ForegroundColor DarkGray;Write-Host '    strip = remove ALL metadata    or type any exiftool flags' -ForegroundColor DarkGray;Write-Host '    new = choose another file    q = back to HOME TOOLS' -ForegroundColor DarkGray;$c=Read-Host '  Command';if('q','quit','exit','menu','home','back' -contains $c){exit};if($c -eq 'new'){break};if([string]::IsNullOrWhiteSpace($c)){& $exif $full}elseif($c -eq 'gps'){& $exif -a -gps:all $full}elseif($c -eq 'strip'){& $exif -all= -overwrite_original $full;Write-Host '  All metadata removed from the file.' -ForegroundColor Green}elseif($c -eq 'json'){& $exif -json $full}else{$flags=$c -split ' ';& $exif @flags $full}}}"
 title HOME TOOLS v!HT_VERSION!
 goto MENU
 
@@ -460,7 +464,7 @@ echo  %WB%  Sherlock  ^|  Username OSINT%R%
 echo  %YB%  =======================================================%R%
 echo.
 if not exist "%P_SHERL%\sherlock_project" echo  %RD%  Not ready. Type R on the menu to repair.%R% & pause & goto MENU
-set "HV_PATH=%P_SHERL%" & set "HV_REQS=" & set "HV_PKG=sherlock-project"
+set "HV_PATH=%P_SHERL%" & set "HV_REQS=" & set "HV_PKG=sherlock-project" & set "HV_VERIFY=sherlock_project"
 call :HEALTH_VENV
 title HOME TOOLS  ^|  Sherlock
 powershell -NoProfile -Command "Set-Location 'C:\OSINT\sherlock';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;93m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;93m  Sherlock  |  Username Hunt across 400+ Sites'+$e+'[0m');Write-Host('  '+$e+'[1;93m'+$sep+$e+'[0m');Write-Host '  Just type a username below. Results show every site where it exists.' -ForegroundColor DarkGray;Write-Host;Write-Host '  TIPS' -ForegroundColor White;Write-Host '  Try variations: john  john_doe  john123  j0hn  johnsmith' -ForegroundColor DarkGray;Write-Host '  [+] = account found    [x] = not found    [!] = error' -ForegroundColor DarkGray;Write-Host '  Results are saved automatically to a .txt file in the sherlock folder' -ForegroundColor DarkGray;Write-Host;Write-Host '  Type  q  or leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{$u=Read-Host '  Username';if('q','back','menu','home','exit' -contains $u){break};if($u){&$p -m sherlock_project $u;if($LASTEXITCODE -ne 0){Write-Host '  Error running Sherlock. Press R on menu to repair if this continues.' -ForegroundColor Yellow}}}while($u -and ('q','back','menu','home','exit' -notcontains $u))"
@@ -510,16 +514,13 @@ echo.
 set "IG_USER="
 set /p "IG_USER=   Instagram Username >> "
 if not defined IG_USER goto :OG_SETUP_CANCEL
+if not exist "%P_OGRAM%\config" mkdir "%P_OGRAM%\config" >nul 2>&1
 echo.
 echo  %DG%  Password input is hidden while typing...%R%
-for /f "delims=" %%P in ('powershell -NoProfile -Command "$s=Read-Host -Prompt ''   Instagram Password'' -AsSecureString; [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($s))"') do set "IG_PASS=%%P"
-if not defined IG_PASS goto :OG_SETUP_CANCEL
-if not exist "%P_OGRAM%\config" mkdir "%P_OGRAM%\config" >nul 2>&1
-(echo [Credentials]
-echo username = !IG_USER!
-echo password = !IG_PASS!
-echo hikerapi_token = ) > "%P_OGRAM%\config\credentials.ini"
-set "IG_PASS="
+REM Prompt for password AND write the ini inside ONE PowerShell call so the
+REM hidden Read-Host has a real console (a for/f pipe would return blank).
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$sec=Read-Host '   Instagram Password' -AsSecureString; $p=[Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($sec)); if([string]::IsNullOrWhiteSpace($p)){Write-Host '   No password entered.' -ForegroundColor Red; exit 1}; $lines=@('[Credentials]','username = !IG_USER!','password = '+$p,'hikerapi_token = '); Set-Content 'C:\OSINT\osintgram\config\credentials.ini' $lines -Encoding UTF8"
+if errorlevel 1 goto :OG_SETUP_CANCEL
 echo.
 echo  %GN%  Credentials saved.%R%
 echo  %DG%  To change them later: press [I] on the main menu.%R%
@@ -547,7 +548,7 @@ timeout /t 1 /nobreak >nul
 goto MENU
 
 :OGRAM_LAUNCH
-set "HV_PATH=%P_OGRAM%" & set "HV_REQS=%P_OGRAM%\requirements.txt"
+set "HV_PATH=%P_OGRAM%" & set "HV_REQS=%P_OGRAM%\requirements.txt" & set "HV_VERIFY=instaloader"
 call :HEALTH_VENV
 title HOME TOOLS  ^|  Osintgram
 powershell -NoProfile -Command "Set-Location 'C:\OSINT\osintgram';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;92m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;92m  Osintgram  |  Instagram OSINT'+$e+'[0m');Write-Host('  '+$e+'[1;92m'+$sep+$e+'[0m');Write-Host '  Enter a target Instagram username. Once loaded, type commands below.' -ForegroundColor DarkGray;Write-Host;Write-Host '  COMMANDS  (type after target loads)' -ForegroundColor White;Write-Host '  info          Account info: bio, followers, post count' -ForegroundColor DarkGray;Write-Host '  followers     List all followers' -ForegroundColor DarkGray;Write-Host '  following     List all accounts they follow' -ForegroundColor DarkGray;Write-Host '  photos        Download all photos' -ForegroundColor DarkGray;Write-Host '  location      Extract location data from posts' -ForegroundColor DarkGray;Write-Host '  hashtags      Hashtags used in posts' -ForegroundColor DarkGray;Write-Host '  comments      All comments made by the user' -ForegroundColor DarkGray;Write-Host '  captions      Post captions' -ForegroundColor DarkGray;Write-Host '  tagged        Photos the user is tagged in' -ForegroundColor DarkGray;Write-Host;Write-Host '  Type  q  or leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{$t=Read-Host '  Target username';if('q','back','menu','home','exit' -contains $t){break};if($t){&$p main.py $t;if($LASTEXITCODE -ne 0){Write-Host '  Osintgram error. Check credentials (I on menu) or press R to repair.' -ForegroundColor Yellow}}}while($t -and ('q','back','menu','home','exit' -notcontains $t))"
@@ -563,7 +564,7 @@ echo  %WB%  theHarvester  ^|  Email / Domain Recon%R%
 echo  %ORB%  =======================================================%R%
 echo.
 if not exist "%P_HARV%\theHarvester\__main__.py" echo  %RD%  Not ready. Type R on the menu to repair.%R% & pause & goto MENU
-set "HV_PATH=%P_HARV%" & set "HV_REQS=%P_HARV%\requirements.txt" & set "HV_PKG=theHarvester"
+set "HV_PATH=%P_HARV%" & set "HV_REQS=%P_HARV%\requirements.txt" & set "HV_VERIFY=anyio"
 call :HEALTH_VENV
 title HOME TOOLS  ^|  theHarvester
 powershell -NoProfile -Command "Set-Location 'C:\OSINT\theHarvester';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;33m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;33m  theHarvester  |  Email / Domain / Subdomain Recon'+$e+'[0m');Write-Host('  '+$e+'[1;33m'+$sep+$e+'[0m');Write-Host '  Enter a domain to harvest emails, subdomains, employee names and IPs.' -ForegroundColor DarkGray;Write-Host;Write-Host '  WHAT IT FINDS' -ForegroundColor White;Write-Host '  Emails, subdomains, employee names, IP addresses, open ports' -ForegroundColor DarkGray;Write-Host '  Sources: Google, Bing, Yahoo, DuckDuckGo (default)' -ForegroundColor DarkGray;Write-Host;Write-Host '  TIPS' -ForegroundColor White;Write-Host '  Enter just the domain: example.com  (no https://)' -ForegroundColor DarkGray;Write-Host '  Results include all emails found across all sources' -ForegroundColor DarkGray;Write-Host '  Use these emails with Holehe [8] or pwnedOrNot [14]' -ForegroundColor DarkGray;Write-Host;Write-Host '  Type  q  or leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{$d=Read-Host '  Domain (e.g. example.com)';if('q','back','menu','home','exit' -contains $d){break};if($d){&$p -m theHarvester -d $d -b google,bing,yahoo,duckduckgo;if($LASTEXITCODE -ne 0){Write-Host '  Error. Press R on menu to repair if this continues.' -ForegroundColor Yellow}}}while($d -and ('q','back','menu','home','exit' -notcontains $d))"
@@ -578,10 +579,10 @@ echo  %WB%  Holehe  ^|  Email to Accounts%R%
 echo  %MGB%  =======================================================%R%
 echo.
 if not exist "%P_HOLE%\holehe" echo  %RD%  Not ready. Type R on the menu to repair.%R% & pause & goto MENU
-set "HV_PATH=%P_HOLE%" & set "HV_REQS=%P_HOLE%\requirements.txt"
+set "HV_PATH=%P_HOLE%" & set "HV_REQS=%P_HOLE%\requirements.txt" & set "HV_PKG=requests" & set "HV_VERIFY=requests"
 call :HEALTH_VENV
 title HOME TOOLS  ^|  Holehe
-powershell -NoProfile -Command "Set-Location 'C:\OSINT\holehe';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;35m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;35m  Holehe  |  Email to Social Accounts - 120+ Sites'+$e+'[0m');Write-Host('  '+$e+'[1;35m'+$sep+$e+'[0m');Write-Host '  Enter an email to check which sites have an account registered to it.' -ForegroundColor DarkGray;Write-Host;Write-Host '  READING RESULTS' -ForegroundColor White;Write-Host '  [+] Account found on that site' -ForegroundColor DarkGray;Write-Host '  [-] No account found' -ForegroundColor DarkGray;Write-Host '  [~] Rate limited - try again later' -ForegroundColor DarkGray;Write-Host;Write-Host '  TIPS' -ForegroundColor White;Write-Host '  Works best with Gmail, Outlook and Yahoo addresses' -ForegroundColor DarkGray;Write-Host '  Pair with theHarvester [7] - harvest emails then check each one here' -ForegroundColor DarkGray;Write-Host;Write-Host '  Type  q  or leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{$em=Read-Host '  Email';if('q','back','menu','home','exit' -contains $em){break};if($em){&$p -m holehe $em;if($LASTEXITCODE -ne 0){Write-Host '  Error. Press R on menu to repair if this continues.' -ForegroundColor Yellow}}}while($em -and ('q','back','menu','home','exit' -notcontains $em))"
+powershell -NoProfile -Command "Set-Location 'C:\OSINT\holehe';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;35m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;35m  Holehe  |  Email to Social Accounts - 120+ Sites'+$e+'[0m');Write-Host('  '+$e+'[1;35m'+$sep+$e+'[0m');Write-Host '  Enter an email to check which sites have an account registered to it.' -ForegroundColor DarkGray;Write-Host;Write-Host '  READING RESULTS' -ForegroundColor White;Write-Host '  [+] Account found on that site' -ForegroundColor DarkGray;Write-Host '  [-] No account found' -ForegroundColor DarkGray;Write-Host '  [~] Rate limited - try again later' -ForegroundColor DarkGray;Write-Host;Write-Host '  TIPS' -ForegroundColor White;Write-Host '  Works best with Gmail, Outlook and Yahoo addresses' -ForegroundColor DarkGray;Write-Host '  Pair with theHarvester [7] - harvest emails then check each one here' -ForegroundColor DarkGray;Write-Host;Write-Host '  Type  q  or leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$h=if(Test-Path 'venv\Scripts\holehe.exe'){'.\venv\Scripts\holehe.exe'}else{'holehe'};do{$em=Read-Host '  Email';if('q','back','menu','home','exit' -contains $em){break};if($em){&$h $em;if($LASTEXITCODE -ne 0){Write-Host '  Error. Press R on menu to repair if this continues.' -ForegroundColor Yellow}}}while($em -and ('q','back','menu','home','exit' -notcontains $em))"
 title HOME TOOLS v!HT_VERSION!
 goto MENU
 
@@ -593,7 +594,7 @@ echo  %WB%  Maigret  ^|  Deep Username OSINT%R%
 echo  %CY%  =======================================================%R%
 echo.
 if not exist "%P_MAIG%\maigret" echo  %RD%  Not ready. Type R on the menu to repair.%R% & pause & goto MENU
-set "HV_PATH=%P_MAIG%" & set "HV_REQS=%P_MAIG%\requirements.txt" & set "HV_PKG=maigret"
+set "HV_PATH=%P_MAIG%" & set "HV_REQS=%P_MAIG%\requirements.txt" & set "HV_PKG=maigret" & set "HV_VERIFY=maigret"
 call :HEALTH_VENV
 title HOME TOOLS  ^|  Maigret
 powershell -NoProfile -Command "Set-Location 'C:\OSINT\maigret';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;96m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;96m  Maigret  |  Deep Username OSINT  -  3000+ Sites'+$e+'[0m');Write-Host('  '+$e+'[1;96m'+$sep+$e+'[0m');Write-Host '  Scans 3000+ sites and links accounts into an interactive HTML report.' -ForegroundColor DarkGray;Write-Host;Write-Host '  WHAT YOU GET' -ForegroundColor White;Write-Host '  HTML report with account network graph (saved in reports\ folder)' -ForegroundColor DarkGray;Write-Host '  All found profiles linked with profile URLs' -ForegroundColor DarkGray;Write-Host '  Account connections and linked identities' -ForegroundColor DarkGray;Write-Host;Write-Host '  TIPS' -ForegroundColor White;Write-Host '  Scan takes 1-3 min. Report opens in your browser when done.' -ForegroundColor DarkGray;Write-Host '  Try exact username then variations (underscore, numbers, etc.)' -ForegroundColor DarkGray;Write-Host '  Use after Sherlock [5] to go deeper on found usernames' -ForegroundColor DarkGray;Write-Host;Write-Host '  Type  q  or leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{$u=Read-Host '  Username';if('q','back','menu','home','exit' -contains $u){break};if($u){&$p -m maigret $u --html;if($LASTEXITCODE -ne 0){Write-Host '  Error. Press R on menu to repair if this continues.' -ForegroundColor Yellow}}}while($u -and ('q','back','menu','home','exit' -notcontains $u))"
@@ -608,7 +609,7 @@ echo  %WB%  Photon  ^|  Web Crawler / OSINT Spider%R%
 echo  %WB%  =======================================================%R%
 echo.
 if not exist "%P_PHOT%\photon.py" echo  %RD%  Not ready. Type R on the menu to repair.%R% & pause & goto MENU
-set "HV_PATH=%P_PHOT%" & set "HV_REQS=%P_PHOT%\requirements.txt"
+set "HV_PATH=%P_PHOT%" & set "HV_REQS=%P_PHOT%\requirements.txt" & set "HV_VERIFY=requests"
 call :HEALTH_VENV
 title HOME TOOLS  ^|  Photon
 powershell -NoProfile -Command "Set-Location 'C:\OSINT\Photon';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;97m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;97m  Photon  |  Web Crawler and OSINT Spider'+$e+'[0m');Write-Host('  '+$e+'[1;97m'+$sep+$e+'[0m');Write-Host '  Enter a URL to crawl. Extracts emails, URLs, API keys, phone numbers, JS secrets.' -ForegroundColor DarkGray;Write-Host;Write-Host '  WHAT IT EXTRACTS' -ForegroundColor White;Write-Host '  Emails, internal/external URLs, JavaScript files' -ForegroundColor DarkGray;Write-Host '  API keys, tokens, phone numbers, social media links' -ForegroundColor DarkGray;Write-Host '  Results saved in results\ folder (JSON + text files)' -ForegroundColor DarkGray;Write-Host;Write-Host '  SETTINGS (currently: depth=2, threads=5)' -ForegroundColor White;Write-Host '  Increase --level 3 for deeper crawl (slower)' -ForegroundColor DarkGray;Write-Host '  Increase --threads 10 for faster crawl' -ForegroundColor DarkGray;Write-Host;Write-Host '  Type  q  or leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{$u=Read-Host '  URL (https://...)';if('q','back','menu','home','exit' -contains $u){break};if($u){&$p photon.py -u $u --level 2 --threads 5;if($LASTEXITCODE -ne 0){Write-Host '  Error. Press R on menu to repair if this continues.' -ForegroundColor Yellow}}}while($u -and ('q','back','menu','home','exit' -notcontains $u))"
@@ -644,7 +645,7 @@ echo  %WB%  Scavenger  ^|  Pastebin Leak Monitor%R%
 echo  %CB%  =======================================================%R%
 echo.
 if not exist "%P_SCAV%\scavenger.py" echo  %RD%  Not ready. Type R on the menu to repair.%R% & pause & goto MENU
-set "HV_PATH=%P_SCAV%" & set "HV_REQS=%P_SCAV%\requirements.txt"
+set "HV_PATH=%P_SCAV%" & set "HV_REQS=%P_SCAV%\requirements.txt" & set "HV_VERIFY=requests"
 call :HEALTH_VENV
 title HOME TOOLS  ^|  Scavenger
 powershell -NoProfile -Command "Set-Location 'C:\OSINT\scavenger';$e=[char]27;$sep=([string][char]0x2550)*54;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};$q=$false;do{cls;Write-Host('  '+$e+'[1;96m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;96m  Scavenger  |  Pastebin Leak Monitor'+$e+'[0m');Write-Host('  '+$e+'[1;96m'+$sep+$e+'[0m');Write-Host '  Monitors Pastebin for leaked credentials, API keys and RSA keys.' -ForegroundColor DarkGray;Write-Host;Write-Host '  [1]  Archive Scrape   -  continuously crawl Pastebin archive' -ForegroundColor White;Write-Host '  [2]  Track User       -  monitor a specific Pastebin user' -ForegroundColor White;Write-Host '  [3]  Scan Folder      -  scan local files for leaked credentials' -ForegroundColor White;Write-Host '  [Q]  Return to HOME TOOLS' -ForegroundColor DarkGray;Write-Host;$m=Read-Host '  Mode';if($m -eq '1'){Write-Host '  Starting archive scrape... Press Ctrl+C to stop.' -ForegroundColor Green;Write-Host;&$p pbincomArchiveScrape.py;Read-Host '  Press Enter to continue'}elseif($m -eq '2'){$u=Read-Host '  Pastebin username to track';if($u){Add-Content -Path 'configs\users.txt' -Value $u;Write-Host('  Added '+$u+' to tracking list. Starting tracker...') -ForegroundColor Green;Write-Host;&$p pbincomTrackUser.py;Read-Host '  Press Enter to continue'}}elseif($m -eq '3'){do{$f=Read-Host '  Folder path (blank = back)';if($f){Write-Host '  Scanning...' -ForegroundColor DarkGray;&$p findSensitiveData.py $f}}while($f)}elseif($m -eq 'Q'-or$m -eq 'q'){$q=$true}}while(-not $q)"
@@ -694,8 +695,10 @@ timeout /t 2 /nobreak >nul
 goto LINK_LAUNCH
 
 :LINK_LAUNCH
-set "HV_PATH=%P_LINK%" & set "HV_REQS=%P_LINK%\requirements.txt"
+set "HV_PATH=%P_LINK%" & set "HV_REQS=%P_LINK%\requirements.txt" & set "HV_VERIFY=requests"
 call :HEALTH_VENV
+REM Self-heal: ensure Python 2 code is converted to Python 3 (idempotent)
+call :FIX_LINKEDIN
 title HOME TOOLS  ^|  LinkedIn Gatherer
 powershell -NoProfile -Command "Set-Location 'C:\OSINT\linkedin-gatherer';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;94m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;94m  LinkedIn Gatherer  |  LinkedIn Profile OSINT'+$e+'[0m');Write-Host('  '+$e+'[1;94m'+$sep+$e+'[0m');Write-Host '  Gathers employee names, job titles and profile URLs from a company.' -ForegroundColor DarkGray;Write-Host '  The tool will prompt: search URL, company name, output filename.' -ForegroundColor DarkGray;Write-Host '  Answer N to Search again? to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{Write-Host('  '+$e+'[90m--- New search ---'+$e+'[0m');try{&$p linkedin_gatherer.py}catch{Write-Host('  Error: '+$_.Exception.Message) -ForegroundColor Red};$again=Read-Host '  Search again? [Y/N]'}while($again -eq 'Y'-or$again -eq 'y')"
 title HOME TOOLS v!HT_VERSION!
@@ -709,13 +712,15 @@ echo  %WB%  pwnedOrNot  ^|  Email Breach Checker%R%
 echo  %YB%  =======================================================%R%
 echo.
 if not exist "%P_PWND%\pwnedornot.py" echo  %RD%  Not ready. Type R on the menu to repair.%R% & pause & goto MENU
-set "HV_PATH=%P_PWND%" & set "HV_REQS=%P_PWND%\requirements.txt"
+set "HV_PATH=%P_PWND%" & set "HV_REQS=%P_PWND%\requirements.txt" & set "HV_VERIFY=requests"
 call :HEALTH_VENV
 :: Check if API key is configured (key must be non-empty string, 5+ chars)
 set "PWND_KEY=0"
 powershell -NoProfile -Command "$cfg='%USERPROFILE%\.config\pwnedornot\config.json'; if(Test-Path $cfg){try{$j=Get-Content $cfg -Raw | ConvertFrom-Json; if($j.api_key -and $j.api_key.Length -ge 5){exit 0}}catch{}}; exit 1" >nul 2>nul && set "PWND_KEY=1"
-if "!PWND_KEY!"=="0" goto PWND_SETUP
-goto PWND_LAUNCH
+if "!PWND_KEY!"=="1" goto PWND_LAUNCH
+REM Allow users who chose to defer the key to skip the prompt every time.
+if exist "%USERPROFILE%\.config\pwnedornot\.skipped" goto PWND_LAUNCH
+goto PWND_SETUP
 
 :PWND_SETUP
 cls
@@ -724,18 +729,27 @@ echo  %YB%  =======================================================%R%
 echo  %WB%  pwnedOrNot  ^|  API Key Setup%R%
 echo  %YB%  =======================================================%R%
 echo.
-echo  %WH%  pwnedOrNot needs a HaveIBeenPwned API key to work.%R%
+echo  %WH%  pwnedOrNot uses a HaveIBeenPwned API key for breach lookups.%R%
+echo  %DG%  HIBP charges a small fee for the breach API - there is no free bypass.%R%
 echo.
-echo  %DG%  How to get your free key:%R%
+echo  %DG%  How to get a key:%R%
 echo  %CY%  1. Go to: https://haveibeenpwned.com/API/Key%R%
-echo  %CY%  2. Enter your email and subscribe (free plan available)%R%
-echo  %CY%  3. Copy the key from the confirmation email%R%
-echo  %CY%  4. Paste it below%R%
+echo  %CY%  2. Subscribe (cheapest tier) and copy your key%R%
+echo  %CY%  3. Paste it below%R%
+echo.
+echo  %WH%  No key yet? Press ENTER to SKIP - you can add one later via [I] on the menu.%R%
+echo  %DG%  Tip: Holehe [8] checks which sites an email is registered on for free.%R%
 echo.
 set "HIBP_KEY="
-set /p "HIBP_KEY=   Paste API key >> "
-if not defined HIBP_KEY goto MENU
+set /p "HIBP_KEY=   Paste API key (or Enter to skip) >> "
 if not exist "%USERPROFILE%\.config\pwnedornot" mkdir "%USERPROFILE%\.config\pwnedornot" >nul 2>&1
+if not defined HIBP_KEY (
+  echo. & echo  %YW%  Skipped. You can add a key later - pwnedOrNot will still open.%R%
+  copy nul "%USERPROFILE%\.config\pwnedornot\.skipped" >nul 2>&1
+  timeout /t 2 /nobreak >nul
+  goto PWND_LAUNCH
+)
+del "%USERPROFILE%\.config\pwnedornot\.skipped" >nul 2>&1
 powershell -NoProfile -Command "$o=[PSCustomObject]@{api_key='!HIBP_KEY!'}; $o | ConvertTo-Json | Set-Content '%USERPROFILE%\.config\pwnedornot\config.json' -Encoding UTF8" >nul 2>nul
 set "HIBP_KEY="
 echo.
@@ -763,10 +777,10 @@ echo  %WB%  GHunt  ^|  Google Account OSINT%R%
 echo  %GB%  =======================================================%R%
 echo.
 if not exist "%P_GHNT%\ghunt" echo  %RD%  Not ready. Type R on the menu to repair.%R% & pause & goto MENU
-set "HV_PATH=%P_GHNT%" & set "HV_REQS=%P_GHNT%\requirements.txt"
+set "HV_PATH=%P_GHNT%" & set "HV_REQS=%P_GHNT%\requirements.txt" & set "HV_VERIFY=ghunt"
 call :HEALTH_VENV
 title HOME TOOLS  ^|  GHunt
-powershell -NoProfile -Command "Set-Location 'C:\OSINT\GHunt';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;92m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;92m  GHunt  |  Google Account OSINT'+$e+'[0m');Write-Host('  '+$e+'[1;92m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;93m  First time: type  login  as the subcommand to authenticate.'+$e+'[0m');Write-Host;Write-Host '  SUBCOMMANDS' -ForegroundColor White;Write-Host '  email    target@gmail.com    Account info: name, Gaia ID, profile pic' -ForegroundColor DarkGray;Write-Host '                               Last edit, Maps activity, YouTube channel' -ForegroundColor DarkGray;Write-Host '  gaia     GAIA_ID              Search by internal Google ID' -ForegroundColor DarkGray;Write-Host '  drive    target@gmail.com    Find publicly shared Drive files' -ForegroundColor DarkGray;Write-Host '  youtube  target@gmail.com    Find linked YouTube channel' -ForegroundColor DarkGray;Write-Host '  login    (no target)         Authenticate with your Google account' -ForegroundColor DarkGray;Write-Host;Write-Host '  Type  q  or leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};do{$cmd=Read-Host '  Subcommand (email/gaia/drive/youtube/login)';if('q','back','menu','home','exit' -contains $cmd){break};if($cmd -eq 'login'){&$p -m ghunt login}elseif($cmd){$tgt=Read-Host '  Target (email or ID)';if($tgt){&$p -m ghunt $cmd $tgt;if($LASTEXITCODE -ne 0){Write-Host '  Error. If not authenticated, run login first.' -ForegroundColor Yellow}}}}while($cmd -and ('q','back','menu','home','exit' -notcontains $cmd))"
+powershell -NoProfile -Command "Set-Location 'C:\OSINT\GHunt';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;92m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;92m  GHunt  |  Google Account OSINT'+$e+'[0m');Write-Host('  '+$e+'[1;92m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;93m  First time: type  login  as the subcommand to authenticate.'+$e+'[0m');Write-Host;Write-Host '  SUBCOMMANDS' -ForegroundColor White;Write-Host '  email    target@gmail.com    Account info: name, Gaia ID, profile pic' -ForegroundColor DarkGray;Write-Host '                               Last edit, Maps activity, YouTube channel' -ForegroundColor DarkGray;Write-Host '  gaia     GAIA_ID              Search by internal Google ID' -ForegroundColor DarkGray;Write-Host '  drive    target@gmail.com    Find publicly shared Drive files' -ForegroundColor DarkGray;Write-Host '  youtube  target@gmail.com    Find linked YouTube channel' -ForegroundColor DarkGray;Write-Host '  login    (no target)         Authenticate with your Google account' -ForegroundColor DarkGray;Write-Host;Write-Host '  Type  q  or leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};$cf=Join-Path $env:LOCALAPPDATA 'GHunt\creds.m';if(-not(Test-Path $cf)){Write-Host;Write-Host '  ===== ONE-TIME LOGIN NEEDED =====' -ForegroundColor Yellow;Write-Host '  GHunt must borrow a Google login once. Easiest way:' -ForegroundColor White;Write-Host '   1. In Chrome/Edge install the free extension: GHunt Companion' -ForegroundColor DarkGray;Write-Host '   2. Be logged into ANY Google account in that browser' -ForegroundColor DarkGray;Write-Host '   3. Open the extension, click Generate authentication, Copy' -ForegroundColor DarkGray;Write-Host '   4. Below, choose method (1) Cookies base64 and paste it' -ForegroundColor DarkGray;Write-Host '  Extension: https://github.com/mxrch/GHunt#companion' -ForegroundColor DarkGray;Write-Host;Read-Host '  Press Enter to start the login wizard';&$p -m ghunt login;Write-Host;Write-Host '  Login step finished. You can now run a lookup.' -ForegroundColor Green};do{$cmd=Read-Host '  Subcommand (email/gaia/drive/youtube/login)';if('q','back','menu','home','exit' -contains $cmd){break};if($cmd -eq 'login'){&$p -m ghunt login}elseif($cmd){$tgt=Read-Host '  Target (email or ID)';if($tgt){&$p -m ghunt $cmd $tgt;if($LASTEXITCODE -ne 0){Write-Host '  Error. If not authenticated, type  login  to authenticate.' -ForegroundColor Yellow}}}}while($cmd -and ('q','back','menu','home','exit' -notcontains $cmd))"
 title HOME TOOLS v!HT_VERSION!
 goto MENU
 
@@ -2301,6 +2315,32 @@ goto :EOF
 
 
 :: ============================================================
+::  ENSURE CORE REQUIREMENTS  (git + Python via winget)
+::  Auto-installs missing prerequisites and refreshes PATH so
+::  this session can use them immediately.
+:: ============================================================
+:ENSURE_CORE_REQS
+if "!HAS_NET!"=="0" goto :EOF
+if "!HAS_GIT!"=="1" goto :ECR_PY
+echo  %YW%  git not found - installing automatically (winget)...%R%
+winget install -e --id Git.Git --accept-source-agreements --accept-package-agreements >nul 2>&1
+where git >nul 2>&1 && set "HAS_GIT=1"
+if "!HAS_GIT!"=="0" if exist "C:\Program Files\Git\cmd\git.exe" set "PATH=C:\Program Files\Git\cmd;!PATH!" & set "HAS_GIT=1"
+if "!HAS_GIT!"=="1" (echo  %GN%  git ready.%R%) else (echo  %RD%  git auto-install failed - install manually from git-scm.com.%R%)
+:ECR_PY
+if "!HAS_PY!"=="1" goto :EOF
+echo  %YW%  Python not found - installing automatically (winget)...%R%
+winget install -e --id Python.Python.3.12 --accept-source-agreements --accept-package-agreements >nul 2>&1
+where python >nul 2>&1 && set "HAS_PY=1"
+if "!HAS_PY!"=="1" goto :ECR_PY_DONE
+for /d %%D in ("%LOCALAPPDATA%\Programs\Python\Python3*") do if exist "%%D\python.exe" set "PATH=%%D;%%D\Scripts;!PATH!" & set "HAS_PY=1"
+if "!HAS_PY!"=="0" for /d %%D in ("C:\Program Files\Python3*") do if exist "%%D\python.exe" set "PATH=%%D;%%D\Scripts;!PATH!" & set "HAS_PY=1"
+:ECR_PY_DONE
+if "!HAS_PY!"=="1" (echo  %GN%  Python ready.%R%) else (echo  %RD%  Python auto-install failed - install manually from python.org.%R%)
+goto :EOF
+
+
+:: ============================================================
 ::  HOME TOOLS SELF-UPDATE
 ::  Uses temp files not for/f('ps') to avoid capture issues.
 :: ============================================================
@@ -2563,7 +2603,11 @@ goto :EOF
 :: ============================================================
 :FIX_LINKEDIN
 if not exist "%P_LINK%\linkedin_gatherer.py" goto :EOF
-powershell -NoProfile -ExecutionPolicy Bypass -Command "Get-ChildItem 'C:\OSINT\linkedin-gatherer\*.py' | ForEach-Object { $c=Get-Content $_.FullName -Raw; if($c -match 'raw_input\s*\('){ $c=$c -replace 'raw_input\s*\(','input('; Set-Content $_.FullName $c -Encoding UTF8; Write-Host ('    Patched Python 3 fix in: '+$_.Name) -ForegroundColor Green } }" 2>nul
+REM Convert Python 2 -> 3. Try the official 2to3 (lib2to3) first; fall back to regex patch.
+python -m lib2to3 -w -n "%P_LINK%" >nul 2>&1
+if not errorlevel 1 goto :FIX_LINKEDIN_DONE
+powershell -NoProfile -ExecutionPolicy Bypass -Command "Get-ChildItem 'C:\OSINT\linkedin-gatherer\*.py' -Recurse | ForEach-Object { $c=Get-Content $_.FullName -Raw; $c=$c -replace 'raw_input\s*\(','input('; $c=[regex]::Replace($c,'(?m)^(\s*)print\s+(?!\()(.+?)\s*$','$1print($2)'); $c=$c -replace 'except\s+(\w[\w.]*)\s*,\s*(\w+)\s*:','except $1 as $2:'; $c=$c -replace '\.iteritems\(\)','.items()'; $c=$c -replace '\.has_key\(([^)]*)\)','.__contains__($1)'; Set-Content $_.FullName $c -Encoding UTF8 }" 2>nul
+:FIX_LINKEDIN_DONE
 goto :EOF
 
 :FIX_OSINTGRAM
@@ -2582,28 +2626,34 @@ goto :EOF
 :HEALTH_VENV
 if not exist "!HV_PATH!\venv\Scripts\python.exe" goto :HV_CREATE
 if not exist "!HV_PATH!\venv\.health" goto :HV_INSTALL
-goto :EOF
-:HV_INSTALL
-echo  %DG%    Verifying dependencies...%R%
-if exist "!HV_REQS!"              "!HV_PATH!\venv\Scripts\python.exe" -m pip install -r "!HV_REQS!" --quiet --prefer-binary 2>nul
-if exist "!HV_PATH!\setup.py"       "!HV_PATH!\venv\Scripts\python.exe" -m pip install -e "!HV_PATH!" --quiet 2>nul
-if exist "!HV_PATH!\pyproject.toml" "!HV_PATH!\venv\Scripts\python.exe" -m pip install -e "!HV_PATH!" --quiet 2>nul
-if defined HV_PKG                 "!HV_PATH!\venv\Scripts\python.exe" -m pip install !HV_PKG! --quiet --prefer-binary 2>nul
-set "HV_PKG="
-copy nul "!HV_PATH!\venv\.health" >nul 2>&1
-goto :EOF
+REM Health marker exists - verify a key import still works; if not, auto-repair.
+if not defined HV_VERIFY goto :HV_DONE
+"!HV_PATH!\venv\Scripts\python.exe" -c "import !HV_VERIFY!" >nul 2>&1
+if errorlevel 1 goto :HV_REPAIR
+goto :HV_DONE
+:HV_REPAIR
+echo  %YW%    Dependencies missing or broken - self-repairing (one moment)...%R%
+del "!HV_PATH!\venv\.health" >nul 2>&1
+goto :HV_INSTALL
 :HV_CREATE
 echo  %YW%    No venv found - rebuilding automatically...%R%
 python -m venv "!HV_PATH!\venv" 2>nul
-if not exist "!HV_PATH!\venv\Scripts\python.exe" (echo  %RD%    Venv creation failed - is Python 3.10+ installed and in PATH?%R% & goto :EOF)
+if not exist "!HV_PATH!\venv\Scripts\python.exe" (echo  %RD%    Venv creation failed - is Python 3.10+ installed and in PATH?%R% & goto :HV_DONE)
+:HV_INSTALL
+echo  %DG%    Verifying / installing dependencies (first run can take a minute)...%R%
+REM Ensure pip exists in the venv (some venvs get created without it -> silent install failures).
+"!HV_PATH!\venv\Scripts\python.exe" -m pip --version >nul 2>&1 || "!HV_PATH!\venv\Scripts\python.exe" -m ensurepip --upgrade >nul 2>&1
 "!HV_PATH!\venv\Scripts\python.exe" -m pip install --upgrade pip --quiet 2>nul
-if exist "!HV_REQS!"              "!HV_PATH!\venv\Scripts\python.exe" -m pip install -r "!HV_REQS!" --quiet --prefer-binary 2>nul
-if exist "!HV_PATH!\setup.py"       "!HV_PATH!\venv\Scripts\python.exe" -m pip install -e "!HV_PATH!" --quiet 2>nul
-if exist "!HV_PATH!\pyproject.toml" "!HV_PATH!\venv\Scripts\python.exe" -m pip install -e "!HV_PATH!" --quiet 2>nul
-if defined HV_PKG                 "!HV_PATH!\venv\Scripts\python.exe" -m pip install !HV_PKG! --quiet --prefer-binary 2>nul
-set "HV_PKG="
+if exist "!HV_REQS!"                "!HV_PATH!\venv\Scripts\python.exe" -m pip install -r "!HV_REQS!" --quiet --prefer-binary
+if exist "!HV_PATH!\pyproject.toml" "!HV_PATH!\venv\Scripts\python.exe" -m pip install "!HV_PATH!" --quiet --prefer-binary
+if exist "!HV_PATH!\setup.py"       "!HV_PATH!\venv\Scripts\python.exe" -m pip install "!HV_PATH!" --quiet --prefer-binary
+if defined HV_PKG                   "!HV_PATH!\venv\Scripts\python.exe" -m pip install !HV_PKG! --quiet --prefer-binary
+REM Final verification: if the key import still fails, tell the user clearly.
+if defined HV_VERIFY "!HV_PATH!\venv\Scripts\python.exe" -c "import !HV_VERIFY!" >nul 2>&1 && (echo  %GN%    Dependencies OK.%R%) || (echo  %RD%    Some dependencies failed to install - check your internet and press R.%R%)
 copy nul "!HV_PATH!\venv\.health" >nul 2>&1
-echo  %GN%    Venv rebuilt and ready.%R%
+:HV_DONE
+set "HV_PKG="
+set "HV_VERIFY="
 goto :EOF
 
 
