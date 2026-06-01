@@ -1,6 +1,6 @@
 @echo off
 :: ============================================================
-::  HOME TOOLS  |  OSINT Launcher  |  v4.7
+::  HOME TOOLS  |  OSINT Launcher  |  v4.8
 ::  A self-installing OSINT toolkit launcher for Windows.
 ::
 ::  Tools clone and install automatically on first launch.
@@ -11,7 +11,7 @@
 ::  Install locations: C:\OSINT\   and   C:\Tools\exiftool\
 ::  Made with love by vortexdq.com
 :: ============================================================
-:: HOMETOOLS_VERSION:4.7
+:: HOMETOOLS_VERSION:4.8
 if "%~1"=="-k" goto :INIT
 cmd /k "%~f0" -k
 exit /b
@@ -19,7 +19,7 @@ exit /b
 
 setlocal enabledelayedexpansion
 chcp 65001 >nul 2>&1
-title HOME TOOLS v4.7
+title HOME TOOLS v4.8
 
 :: ============================================================
 ::  ANSI COLORS
@@ -44,7 +44,7 @@ set "ORB=%E%[1;33m"
 :: ============================================================
 ::  VERSION
 :: ============================================================
-set "HT_VERSION=4.7"
+set "HT_VERSION=4.8"
 
 :: ============================================================
 ::  TOOL PATHS
@@ -86,7 +86,7 @@ goto STARTUP
 cls
 echo.
 echo  %CB%  =======================================================%R%
-echo  %CB%           HOME TOOLS v4.7  -  First Launch             %R%
+echo  %CB%           HOME TOOLS v4.8  -  First Launch             %R%
 echo  %CB%       Self-installing OSINT Toolkit for Windows         %R%
 echo  %CB%  =======================================================%R%
 echo.
@@ -2301,18 +2301,20 @@ if not exist "%TEMP%\HT_update.bat" (
   goto :EOF
 )
 set "HT_SELF=%~f0"
-(
-  echo @echo off
-  echo timeout /t 2 /nobreak ^>nul
-  echo copy /y "%TEMP%\HT_update.bat" "!HT_SELF!" ^>nul 2^>^&1
-  echo del "%TEMP%\HT_update.bat" ^>nul 2^>^&1
-  echo start "" "!HT_SELF!"
-  echo del "%%~f0"
-) > "%TEMP%\HT_runner.bat"
-echo  %GN%  Update downloaded - restarting with v!HT_REMOTE_VER!...%R%
-timeout /t 2 /nobreak >nul
-start "" "%TEMP%\HT_runner.bat"
-exit 0
+REM Build the swap runner with individual echo lines (no parenthesis block = no parse traps).
+REM Runner waits until this window has closed (file unlocked), swaps in the new version,
+REM then reopens HOME TOOLS in a SINGLE window. The runner itself runs HIDDEN (no terminal).
+> "%TEMP%\HT_runner.bat" echo @echo off
+>>"%TEMP%\HT_runner.bat" echo :wait
+>>"%TEMP%\HT_runner.bat" echo timeout /t 1 /nobreak ^>nul
+>>"%TEMP%\HT_runner.bat" echo copy /y "%TEMP%\HT_update.bat" "!HT_SELF!" ^>nul 2^>^&1
+>>"%TEMP%\HT_runner.bat" echo if errorlevel 1 goto wait
+>>"%TEMP%\HT_runner.bat" echo del "%TEMP%\HT_update.bat" ^>nul 2^>^&1
+>>"%TEMP%\HT_runner.bat" echo start "" "!HT_SELF!"
+>>"%TEMP%\HT_runner.bat" echo del "%%~f0"
+echo  %GN%  Update downloaded - applying and reopening (one window)...%R%
+powershell -NoProfile -ExecutionPolicy Bypass -Command "Start-Process -WindowStyle Hidden -FilePath '%TEMP%\HT_runner.bat'"
+exit
 
 :: ============================================================
 ::  GIT UPDATE HELPER
