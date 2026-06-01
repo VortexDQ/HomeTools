@@ -1,6 +1,6 @@
 @echo off
 :: ============================================================
-::  HOME TOOLS  |  OSINT Launcher  |  v5.1
+::  HOME TOOLS  |  OSINT Launcher  |  v5.2
 ::  A self-installing OSINT toolkit launcher for Windows.
 ::
 ::  Tools clone and install automatically on first launch.
@@ -11,7 +11,7 @@
 ::  Install locations: C:\OSINT\   and   C:\Tools\exiftool\
 ::  Made with love by vortexdq.com
 :: ============================================================
-:: HOMETOOLS_VERSION:5.1
+:: HOMETOOLS_VERSION:5.2
 if "%~1"=="-k" goto :INIT
 cmd /k "%~f0" -k
 exit /b
@@ -19,7 +19,7 @@ exit /b
 
 setlocal enabledelayedexpansion
 chcp 65001 >nul 2>&1
-title HOME TOOLS v5.1
+title HOME TOOLS v5.2
 
 :: ============================================================
 ::  ANSI COLORS
@@ -44,7 +44,7 @@ set "ORB=%E%[1;33m"
 :: ============================================================
 ::  VERSION
 :: ============================================================
-set "HT_VERSION=5.1"
+set "HT_VERSION=5.2"
 
 :: ============================================================
 ::  TOOL PATHS
@@ -87,7 +87,7 @@ goto STARTUP
 cls
 echo.
 echo  %CB%  =======================================================%R%
-echo  %CB%           HOME TOOLS v5.1  -  First Launch             %R%
+echo  %CB%           HOME TOOLS v5.2  -  First Launch             %R%
 echo  %CB%       Self-installing OSINT Toolkit for Windows         %R%
 echo  %CB%  =======================================================%R%
 echo.
@@ -191,6 +191,18 @@ if "!HAS_GIT!"=="0" echo  %RD%  [WARN] git still missing - get it at: https://gi
 if "!HAS_PY!"=="0"  echo  %RD%  [WARN] Python still missing - get it at: https://python.org/downloads%R%
 if "!HAS_NET!"=="0" echo  %YW%  [WARN] No internet - installs and updates skipped.%R%
 
+REM ---- Fast startup gate: only run update checks once per day ----
+REM Missing tools always install. Updates/pulls only run if not done today,
+REM or when the user presses R (Repair) which sets DO_UPDATES=1.
+set "DO_UPDATES=0"
+set "UPD_MARK=%~dp0.last_update"
+set "LAST_UPD="
+if exist "!UPD_MARK!" set /p LAST_UPD=<"!UPD_MARK!"
+if not "!LAST_UPD!"=="%DATE%" set "DO_UPDATES=1"
+if "!DO_UPDATES!"=="1" >"!UPD_MARK!" echo %DATE%
+if "!DO_UPDATES!"=="1" echo  %DG%  Daily update check (first launch today)...%R%
+if "!DO_UPDATES!"=="0" echo  %DG%  Quick start - updates already checked today. Press R to force.%R%
+
 call :CHECK_HT_UPDATE
 
 call :SC_SPIDER
@@ -209,7 +221,6 @@ call :SC_GHNT
 call :SC_RECN
 call :SC_ZAP
 call :SC_WPSC
-call :FIX_LINKEDIN
 call :FIX_OSINTGRAM
 
 echo.
@@ -1968,6 +1979,8 @@ set "CFM="
 set /p "CFM=   >> "
 if not defined CFM goto MENU
 if /i not "%CFM%"=="Y" goto MENU
+REM Force a full update pass by clearing the daily marker.
+del "%~dp0.last_update" >nul 2>&1
 goto STARTUP
 
 
@@ -2338,8 +2351,6 @@ echo  %WH%    Not installed - downloading...%R%
 call :INSTALL_ZAP_FUNC
 goto :SC_ZAP_END
 :SC_ZAP_JCHK
-call :ZAP_FIND
-if not defined ZAP_JAVAW echo  %YW%    Java not detected - it will auto-install when you open ZAP.%R%
 :SC_ZAP_END
 if exist "%P_ZAP%\zap.bat" (echo  %GN%    Status: Ready%R%) else (echo  %RD%    Status: NOT READY%R%)
 goto :EOF
@@ -2347,8 +2358,11 @@ goto :EOF
 :SC_WPSC
 echo.
 echo  %MGB%  [18] WPScan%R%
-call :WPSC_FIND
-if defined WPSC_EXE goto :SC_WPSC_RDY
+REM Fast status check - no PowerShell spawn at startup.
+set "WPSC_FOUND="
+where wpscan >nul 2>&1 && set "WPSC_FOUND=1"
+if not defined WPSC_FOUND for /d %%D in (C:\Ruby*) do if exist "%%D\bin\wpscan.bat" set "WPSC_FOUND=1"
+if defined WPSC_FOUND goto :SC_WPSC_RDY
 echo  %YW%    Not installed - open tool 18 to auto-install (Ruby + WPScan).%R%
 echo  %RD%    Status: NOT READY%R%
 goto :EOF
@@ -2453,6 +2467,7 @@ goto :EOF
 :: ============================================================
 :CHECK_HT_UPDATE
 if "!HAS_NET!"=="0" goto :EOF
+if not "!DO_UPDATES!"=="1" goto :EOF
 echo  %DG%  Checking for HomeTools updates...%R%
 set "HT_REMOTE_VER="
 set "HT_VER_TMP=%TEMP%\ht_ver_%RANDOM%.txt"
@@ -2508,6 +2523,7 @@ exit
 ::  Set GIT_PATH, GIT_NAME, GIT_REQS (1=has reqs, 0=no reqs)
 :: ============================================================
 :GIT_CHECK_UPDATE
+if not "!DO_UPDATES!"=="1" (echo  %GN%    Installed.%R% & goto :EOF)
 echo  %DG%    Checking for updates...%R%
 git -C "%GIT_PATH%" pull --ff-only > "%TEMP%\ht_gp.txt" 2>&1
 if errorlevel 1 goto :GCU_FAIL
@@ -2696,6 +2712,7 @@ goto :EOF
 ::  EXIFTOOL VERSION UPDATE
 :: ============================================================
 :UPDATE_EXIF_FUNC
+if not "!DO_UPDATES!"=="1" goto :EOF
 echo  %DG%    Checking ExifTool version...%R%
 powershell -NoProfile -ExecutionPolicy Bypass -Command "$ProgressPreference='SilentlyContinue'; $vf='C:\Tools\exiftool\.exifver'; $cur=if(Test-Path $vf){(Get-Content $vf -Raw).Trim()}else{try{(& 'C:\Tools\exiftool\exiftool.exe' -ver 2>$null).Trim()}catch{''}}; try{ $latest=(Invoke-WebRequest 'https://exiftool.org/ver.txt' -UseBasicParsing -TimeoutSec 10).Content.Trim(); if($cur -eq $latest){ Write-Host('    ExifTool v'+$cur+' is current.') -ForegroundColor Green }else{ Write-Host('    Updating ExifTool '+$cur+' -> '+$latest+'...') -ForegroundColor Yellow; $zip='C:\Tools\exiftool\update.zip'; Invoke-WebRequest('https://exiftool.org/exiftool-'+$latest+'_64.zip') -OutFile $zip -UseBasicParsing -TimeoutSec 120; Expand-Archive $zip 'C:\Tools\exiftool' -Force; $f=Get-ChildItem 'C:\Tools\exiftool' -Recurse -Filter 'exiftool(-k).exe' -EA SilentlyContinue | Select-Object -First 1; if($f){ Copy-Item $f.FullName 'C:\Tools\exiftool\exiftool.exe' -Force; [IO.File]::WriteAllText($vf,$latest); Write-Host '    ExifTool updated.' -ForegroundColor Green }; Remove-Item $zip -Force -EA SilentlyContinue; Get-ChildItem 'C:\Tools\exiftool' -Directory | Where-Object{$_.Name -like 'exiftool-*'} | Remove-Item -Recurse -Force -EA SilentlyContinue } }catch{ Write-Host '    Version check failed (offline?).' -ForegroundColor Yellow }"
 goto :EOF
@@ -2710,6 +2727,10 @@ goto :EOF
 :: ============================================================
 :FIX_LINKEDIN
 if not exist "%P_LINK%\linkedin_gatherer.py" goto :EOF
+REM Fast path: skip entirely if already converted (no Python 2 print statements left).
+findstr /R /C:"print \"" /C:"print '" "%P_LINK%\linkedin_gatherer.py" >nul 2>&1
+if errorlevel 1 goto :EOF
+echo  %WH%    Converting LinkedIn Gatherer to Python 3 (one-time)...%R%
 REM Convert Python 2 -> 3. Try the official 2to3 (lib2to3) first; fall back to regex patch.
 python -m lib2to3 -w -n "%P_LINK%" >nul 2>&1
 if not errorlevel 1 goto :FIX_LINKEDIN_DONE

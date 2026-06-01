@@ -1,0 +1,12 @@
+# Local runtime files - never commit (privacy + machine-specific)
+.last_update
+HomeTools_Dictionary.txt
+*.log
+logs/
+# Local helper/config files that may contain personal data
+Install.ps1
+Launch-OSINT.ps1
+Setup-OSINTLauncher.ps1
+osint-tools.json
+osint-tools-template.json
+plugins/
