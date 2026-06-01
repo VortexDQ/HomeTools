@@ -1,6 +1,6 @@
 @echo off
 :: ============================================================
-::  HOME TOOLS  |  OSINT Launcher  |  v4.0
+::  HOME TOOLS  |  OSINT Launcher  |  v4.1
 ::  A self-installing OSINT toolkit launcher for Windows.
 ::
 ::  Tools clone and install automatically on first launch.
@@ -11,7 +11,7 @@
 ::  Install locations: C:\OSINT\   and   C:\Tools\exiftool\
 ::  Made with love by vortexdq.com
 :: ============================================================
-:: HOMETOOLS_VERSION:4.0
+:: HOMETOOLS_VERSION:4.1
 if "%~1"=="-k" goto :INIT
 cmd /k "%~f0" -k
 exit /b
@@ -19,7 +19,7 @@ exit /b
 
 setlocal enabledelayedexpansion
 chcp 65001 >nul 2>&1
-title HOME TOOLS v4.0
+title HOME TOOLS v4.1
 
 :: ============================================================
 ::  ANSI COLORS
@@ -44,7 +44,7 @@ set "ORB=%E%[1;33m"
 :: ============================================================
 ::  VERSION
 :: ============================================================
-set "HT_VERSION=4.0"
+set "HT_VERSION=4.1"
 
 :: ============================================================
 ::  TOOL PATHS
@@ -86,7 +86,7 @@ goto STARTUP
 cls
 echo.
 echo  %CB%  =======================================================%R%
-echo  %CB%           HOME TOOLS v4.0  -  First Launch             %R%
+echo  %CB%           HOME TOOLS v4.1  -  First Launch             %R%
 echo  %CB%       Self-installing OSINT Toolkit for Windows         %R%
 echo  %CB%  =======================================================%R%
 echo.
@@ -212,73 +212,7 @@ echo  %GB%  =======================================================%R%
 echo  %GN%  All checks complete.%R%
 echo  %GB%  =======================================================%R%
 echo.
-set "HT_ANIM=%TEMP%\ht_boot_anim.ps1"
-(
-echo $e=[char]27; $cr=[char]13; try{$host.UI.RawUI.CursorVisible=$false}catch{}
-echo function W($ms){Start-Sleep -Milliseconds $ms}
-echo function CLS{[Console]::Clear()}
-echo $R='[91m';$G='[92m';$Y='[93m';$C='[96m';$W='[97m';$D='[90m';$M='[95m'
-echo $RB='[1;91m';$GB='[1;92m';$YB='[1;93m';$CB='[1;96m';$WB='[1;97m'
-echo ## PHASE 1 - DARKNESS
-echo CLS; W 400
-echo ## PHASE 2 - LIGHTNING
-echo 1..4 ^| ForEach-Object { CLS; Write-Host ''; Write-Host "    $($e)[1;93m*  *  *  *  *  *  *  *  *  *  *  *  *$($e)[0m"; Write-Host "    $($e)[1;97m                                     $($e)[0m"; Write-Host "    $($e)[1;93m*  *  *  *  *  *  *  *  *  *  *  *  *$($e)[0m"; W 65; CLS; W 45 }
-echo ## PHASE 3 - REAPER APPEARS
-echo CLS
-echo Write-Host ''
-echo Write-Host "             $($e)[90m.-~~~-.$($e)[0m"
-echo Write-Host "           $($e)[90m(  o   o  )$($e)[0m"
-echo Write-Host "            $($e)[90m\  ---  /$($e)[0m"
-echo Write-Host "             $($e)[90m'-----'$($e)[0m"
-echo Write-Host "               $($e)[90m^^^$($e)[0m"
-echo Write-Host "          $($e)[90m.---'^^^'---.$($e)[0m"
-echo Write-Host "         $($e)[90m/   ^^^^^^^   \$($e)[0m"
-echo Write-Host ''
-echo W 500
-echo ## PHASE 4 - SCYTHE RAISED
-echo CLS
-echo Write-Host ''
-echo Write-Host "    $($e)[90m,----._____$($e)[0m"
-echo Write-Host "   $($e)[90m/           '-.$($e)[0m"
-echo Write-Host "  $($e)[90m/               '$($e)[0m"
-echo Write-Host "             $($e)[90m.-~~~-.$($e)[0m"
-echo Write-Host "           $($e)[90m(  X   X  )$($e)[0m"
-echo Write-Host "            $($e)[90m\  ---  /$($e)[0m"
-echo Write-Host "             $($e)[90m'-----'$($e)[0m"
-echo Write-Host "               $($e)[90m^^^$($e)[0m"
-echo Write-Host "          $($e)[90m.---'^^^'---.$($e)[0m"
-echo Write-Host "         $($e)[90m/   ^^^^^^^   \$($e)[0m"
-echo Write-Host ''
-echo W 350
-echo ## PHASE 5 - SCYTHE SWINGS
-echo CLS
-echo Write-Host ''
-echo Write-Host "          $($e)[91m_______$($e)[0m"
-echo Write-Host "    $($e)[91m,---./       '----.$($e)[0m"
-echo Write-Host "   $($e)[91m/   /               '$($e)[0m"
-echo Write-Host "             $($e)[90m.-~~~-.$($e)[0m"
-echo Write-Host "           $($e)[90m(  X   X  )$($e)[0m"
-echo Write-Host "            $($e)[90m\  ---  /$($e)[0m"
-echo Write-Host "             $($e)[90m'-----'$($e)[0m"
-echo Write-Host "               $($e)[90m^^^$($e)[0m"
-echo Write-Host "          $($e)[90m.---'^^^'---.$($e)[0m"
-echo W 250
-echo ## PHASE 6 - SLASH
-echo 1..3 ^| ForEach-Object { CLS; Write-Host ''; Write-Host "  $($e)[1;91m          \\\   ///$($e)[0m"; Write-Host "  $($e)[1;91m           \\\ ///$($e)[0m"; Write-Host "  $($e)[1;91m    SLASH   -X-$($e)[0m"; Write-Host "  $($e)[1;91m           /// \\\$($e)[0m"; Write-Host "  $($e)[1;91m          ///   \\\$($e)[0m"; W 75; CLS; W 55 }
-echo ## PHASE 7 - HOME TOOLS TITLE APPEARS
-echo W 200; CLS; W 100
-echo $title = @('', '  [1;96m ___  ___  ___  ___  ___     ___  ___  ___  __  ___   [0m', '  [1;96m^| . \^| . \^| . \^| . \^| . \   ^|_ _^|^| . \^| . \^| .^|^|_ _^|  [0m', '  [1;96m^|  _/^|  _/^|  _/^|___/^|   /     ^| ^| ^|   /^|   /^| . ^|^| ^|   [0m', '  [1;96m^|_^|  ^|_^|  ^|_^|  ^|    ^|_^|\_\    ^|_^| ^|_^|\_\^|_^|\_\^|_^|^|^|_^|   [0m', '')
-echo $title ^| ForEach-Object { $l=$_ -replace '\[([0-9;]+m)',([char]27+'$1'); Write-Host $l; W 130 }
-echo ## PHASE 8 - PROGRESS BAR
-echo W 200; Write-Host ''
-echo $w=42; for($i=0;$i -le $w;$i++){$pct=[int](($i/$w)*100);$bar=([string][char]0x2588)*$i+$e+'[90m'+([string][char]0x2591)*($w-$i)+$e+'[0m';$col=if($pct -lt 35){$e+'[91m'}elseif($pct -lt 70){$e+'[93m'}else{$e+'[92m'};Write-Host -NoNewline([string]$cr+'  '+$col+$bar+'  '+[string]$pct+'%  '+$e+'[0m');W 16};Write-Host;Write-Host
-echo ## PHASE 9 - ONLINE REVEAL
-echo Write-Host -NoNewline '  '; 'HOME TOOLS  v!HT_VERSION!  ONLINE'.ToCharArray()^|ForEach-Object{Write-Host -NoNewline($e+'[1;92m'+$_+$e+'[0m');W 42}; Write-Host; W 800
-echo ## PHASE 10 - FADE TO MENU
-echo CLS
-) > "!HT_ANIM!"
-powershell -NoProfile -ExecutionPolicy Bypass -File "!HT_ANIM!" 2>nul
-del "!HT_ANIM!" >nul 2>&1
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$e=[char]27;$cr=[char]13;try{$host.UI.RawUI.CursorVisible=$false}catch{};function W($ms){Start-Sleep -Milliseconds $ms};function CLS{[Console]::Clear()};CLS;W 400;1..3|ForEach-Object{CLS;Write-Host('  '+$e+'[1;93m*  *  *  *  *  *  *  *  *  *  *  *  *'+$e+'[0m');Write-Host('  '+$e+'[1;93m  *  *  *  *  *  *  *  *  *  *  *  *  '+$e+'[0m');W 70;CLS;W 50};CLS;Write-Host '';Write-Host('          '+$e+'[90m.-~~~-.'+$e+'[0m');Write-Host('        '+$e+'[90m( o   o )'+$e+'[0m');Write-Host('         '+$e+'[90m \ --- /'+$e+'[0m');Write-Host('          '+$e+'[90m.-----.'+$e+'[0m');Write-Host('            '+$e+'[90m|'+$e+'[0m');Write-Host('     '+$e+'[90m.-----++++-----.'+$e+'[0m');Write-Host('    '+$e+'[90m/ ++++++++++++++ \'+$e+'[0m');Write-Host('   '+$e+'[90m/ ++++++++++++++++ \'+$e+'[0m');W 500;CLS;Write-Host '';Write-Host('  '+$e+'[90m,--------.__'+$e+'[0m');Write-Host(' '+$e+'[90m/            `.'+$e+'[0m');Write-Host('          '+$e+'[90m.-~~~-.'+$e+'[0m');Write-Host('        '+$e+'[90m( X   X )'+$e+'[0m');Write-Host('         '+$e+'[90m \ --- /'+$e+'[0m');Write-Host('          '+$e+'[90m.-----.'+$e+'[0m');Write-Host('            '+$e+'[90m|'+$e+'[0m');Write-Host('     '+$e+'[90m.-----++++-----.'+$e+'[0m');Write-Host('    '+$e+'[90m/ ++++++++++++++ \'+$e+'[0m');W 350;CLS;Write-Host '';Write-Host('       '+$e+'[91m__________'+$e+'[0m');Write-Host(' '+$e+'[91m,-/          \-.'+$e+'[0m');Write-Host($e+'[91m/               \'+$e+'[0m');Write-Host('          '+$e+'[90m.-~~~-.'+$e+'[0m');Write-Host('        '+$e+'[90m( X   X )'+$e+'[0m');Write-Host('         '+$e+'[90m \ --- /'+$e+'[0m');Write-Host('          '+$e+'[90m.-----.'+$e+'[0m');Write-Host('            '+$e+'[90m|'+$e+'[0m');Write-Host('     '+$e+'[90m.-----++++-----.'+$e+'[0m');W 250;1..3|ForEach-Object{CLS;Write-Host '';Write-Host('      '+$e+'[1;91m     \\  //    '+$e+'[0m');Write-Host('      '+$e+'[1;91m      \\//     '+$e+'[0m');Write-Host('      '+$e+'[1;91m  S L A S H   '+$e+'[0m');Write-Host('      '+$e+'[1;91m      //\\     '+$e+'[0m');Write-Host('      '+$e+'[1;91m     //  \\    '+$e+'[0m');W 80;CLS;W 55};W 200;CLS;W 100;Write-Host '';Write-Host('  '+$e+'[1;96m ___  ___  ___  ___  ___     ___  ___  ___  __  ___   '+$e+'[0m');W 110;Write-Host('  '+$e+'[1;96m| . \| . \| . \| . \| . \   |_ _|| . \| . \| .||_ _|  '+$e+'[0m');W 110;Write-Host('  '+$e+'[1;96m|  _/|  _/|  _/|___/|   /     | | |   /|   /| . || |   '+$e+'[0m');W 110;Write-Host('  '+$e+'[1;96m|_|  |_|  |_|  |    |_|\_\    |_| |_|\_\|_|\_\|_|||_|   '+$e+'[0m');W 200;Write-Host '';$w=42;for($i=0;$i -le $w;$i++){$pct=[int](($i/$w)*100);$bar=([string][char]0x2588)*$i+$e+'[90m'+([string][char]0x2591)*($w-$i)+$e+'[0m';$col=if($pct -lt 35){$e+'[91m'}elseif($pct -lt 70){$e+'[93m'}else{$e+'[92m'};Write-Host -NoNewline([string]$cr+'  '+$col+$bar+'  '+[string]$pct+'%  '+$e+'[0m');W 16};Write-Host;Write-Host;Write-Host -NoNewline '  ';'HOME TOOLS  v!HT_VERSION!  ONLINE'.ToCharArray()|ForEach-Object{Write-Host -NoNewline($e+'[1;92m'+$_+$e+'[0m');W 42};Write-Host;W 800;CLS"
 goto MENU
 
 
