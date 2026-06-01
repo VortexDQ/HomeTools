@@ -866,21 +866,24 @@ if /i "!WPSC_URL!"=="q"    goto WPSC_DONE
 if /i "!WPSC_URL!"=="back" goto WPSC_DONE
 if /i "!WPSC_URL!"=="menu" goto WPSC_DONE
 echo.
-REM Try wpscan directly first (fast if PATH is fine), fallback to PowerShell wrapper
+REM Try to run wpscan. If it fails, show helpful guidance
+wpscan --url "!WPSC_URL!" --enumerate u,p,t --random-user-agent 2>nul
+set "WPSC_EXIT=!ERRORLEVEL!"
+if "!WPSC_EXIT!"=="0" goto WPSC_SCAN_OK
+REM If errorlevel not 0, check if wpscan is even available
 where wpscan >nul 2>&1
-if not errorlevel 1 (
-    wpscan --url "!WPSC_URL!" --enumerate u,p,t --random-user-agent
-) else (
-    echo  %DG%  Using PowerShell wrapper to run WPScan...%R%
-    powershell -NoProfile -ExecutionPolicy Bypass -Command "& {try { $gems=ruby -e 'puts Gem.user_dir'; $exe=\"$gems/bin/wpscan.bat\"; if(Test-Path $exe){ & $exe --url '!WPSC_URL!' --enumerate u,p,t --random-user-agent } else { Write-Host 'WPScan executable not found even in gem directory. Try: gem install wpscan --no-document' -ForegroundColor Red; exit 1 } } catch { Write-Host 'Error running WPScan. Try closing/reopening HOME TOOLS.' -ForegroundColor Yellow; exit 1 } }"
-)
 if errorlevel 1 (
     echo.
-    echo  %YW%  WPScan error. Possible causes:^%R%
-    echo  %DG%  1. URL is incorrect or site is not reachable%R%
-    echo  %DG%  2. Ruby/gem PATH not refreshed - close/reopen HOME TOOLS%R%
-    echo  %DG%  3. WPScan gem is corrupted - run: gem install wpscan --force%R%
+    echo  %RD%  WPScan command not found. Possible fixes:%R%
+    echo  %DG%  - Close ALL terminals and reopen HOME TOOLS%R%
+    echo  %DG%  - Run: gem install wpscan --no-document%R%
+    echo  %DG%  - Make sure Ruby is installed: https://rubyinstaller.org%R%
+) else (
+    echo.
+    echo  %YW%  WPScan error (check URL and site reachability)%R%
+    echo  %DG%  Verify the target is a WordPress site and is reachable%R%
 )
+:WPSC_SCAN_OK
 echo.
 echo  %DG%  Press any key to scan another target, or close to stop...%R%
 pause >nul
