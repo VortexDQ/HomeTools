@@ -1,6 +1,6 @@
 @echo off
 :: ============================================================
-::  HOME TOOLS  |  OSINT Launcher  |  v4.6
+::  HOME TOOLS  |  OSINT Launcher  |  v4.7
 ::  A self-installing OSINT toolkit launcher for Windows.
 ::
 ::  Tools clone and install automatically on first launch.
@@ -11,7 +11,7 @@
 ::  Install locations: C:\OSINT\   and   C:\Tools\exiftool\
 ::  Made with love by vortexdq.com
 :: ============================================================
-:: HOMETOOLS_VERSION:4.6
+:: HOMETOOLS_VERSION:4.7
 if "%~1"=="-k" goto :INIT
 cmd /k "%~f0" -k
 exit /b
@@ -19,7 +19,7 @@ exit /b
 
 setlocal enabledelayedexpansion
 chcp 65001 >nul 2>&1
-title HOME TOOLS v4.6
+title HOME TOOLS v4.7
 
 :: ============================================================
 ::  ANSI COLORS
@@ -44,7 +44,7 @@ set "ORB=%E%[1;33m"
 :: ============================================================
 ::  VERSION
 :: ============================================================
-set "HT_VERSION=4.6"
+set "HT_VERSION=4.7"
 
 :: ============================================================
 ::  TOOL PATHS
@@ -86,7 +86,7 @@ goto STARTUP
 cls
 echo.
 echo  %CB%  =======================================================%R%
-echo  %CB%           HOME TOOLS v4.6  -  First Launch             %R%
+echo  %CB%           HOME TOOLS v4.7  -  First Launch             %R%
 echo  %CB%       Self-installing OSINT Toolkit for Windows         %R%
 echo  %CB%  =======================================================%R%
 echo.
@@ -815,16 +815,16 @@ echo.
 echo  %YW%  REMINDER: Only scan WordPress sites you own or have permission to test.%R%
 echo  %DG%  License: Free for personal/non-commercial use. Commercial use requires a paid plan.%R%
 echo.
-REM Resolve wpscan (auto-installs Ruby + WPScan if missing). Flat logic, no parse traps.
+REM Resolve wpscan (auto-installs Ruby + WPScan + libcurl if missing). Flat logic, no parse traps.
 call :WPSC_FIND
-if defined WPSC_EXE goto WPSC_READY
+if defined WPSC_EXE goto WPSC_HAVE
 echo  %WH%  WPScan is not installed yet - setting it up automatically.%R%
 echo  %DG%  First time only: this installs Ruby + WPScan (3-6 minutes).%R%
 echo  %DG%  Please leave this window open until it finishes.%R%
 echo.
 call :WPSC_SETUP
 call :WPSC_FIND
-if defined WPSC_EXE goto WPSC_READY
+if defined WPSC_EXE goto WPSC_HAVE
 echo.
 echo  %RD%  WPScan setup could not complete automatically.%R%
 echo  %DG%  Make sure you are online, then try tool 18 again.%R%
@@ -832,6 +832,9 @@ echo  %DG%  Manual guide: https://github.com/wpscanteam/wpscan%R%
 echo.
 pause
 goto MENU
+:WPSC_HAVE
+REM Ensure libcurl.dll is present (WPScan needs it to run on Windows)
+call :WPSC_ENSURE_CURL
 :WPSC_READY
 title HOME TOOLS  ^|  WPScan
 echo  %GN%  WPScan ready.%R%
@@ -2248,6 +2251,12 @@ goto :EOF
 
 :WPSC_SETUP
 powershell -NoProfile -ExecutionPolicy Bypass -Command "$ErrorActionPreference='SilentlyContinue';function FW{$p=(Get-Command wpscan).Source;if(-not $p){foreach($g in @('C:\Ruby*\bin\wpscan.bat',($env:LOCALAPPDATA+'\Programs\Ruby*\bin\wpscan.bat'),'C:\tools\ruby*\bin\wpscan.bat')){$f=Get-ChildItem $g|Select-Object -First 1;if($f){return $f.FullName}}};return $p};$w=FW;if($w){[IO.File]::WriteAllText($env:TEMP+'\ht_wpsc.txt',$w);Write-Host '    WPScan already installed.' -ForegroundColor Green;exit};$ruby=(Get-Command ruby).Source;if(-not $ruby){foreach($g in @('C:\Ruby*\bin\ruby.exe',($env:LOCALAPPDATA+'\Programs\Ruby*\bin\ruby.exe'))){$f=Get-ChildItem $g|Select-Object -First 1;if($f){$ruby=$f.FullName;break}}};if(-not $ruby){Write-Host '    Installing Ruby via winget (a few minutes)...' -ForegroundColor Yellow;winget install -e --id RubyInstallerTeam.RubyWithDevKit.3.3 --accept-source-agreements --accept-package-agreements;foreach($g in @('C:\Ruby*\bin\ruby.exe',($env:LOCALAPPDATA+'\Programs\Ruby*\bin\ruby.exe'))){$f=Get-ChildItem $g|Select-Object -First 1;if($f){$ruby=$f.FullName;break}}};if(-not $ruby){Write-Host '    Ruby auto-install failed. Manual: https://rubyinstaller.org' -ForegroundColor Red;exit};$rbin=Split-Path $ruby;$gem=Join-Path $rbin 'gem.cmd';if(-not(Test-Path $gem)){$gem=Join-Path $rbin 'gem.bat'};if(-not(Test-Path $gem)){$gem=Join-Path $rbin 'gem'};Write-Host '    Installing WPScan gem (longest step - please wait)...' -ForegroundColor Yellow;& $gem install wpscan --no-document;$w=FW;if(-not $w){$wf=Get-ChildItem (Join-Path $rbin 'wpscan*')|Select-Object -First 1;if($wf){$w=$wf.FullName}};if($w){[IO.File]::WriteAllText($env:TEMP+'\ht_wpsc.txt',$w);Write-Host '    WPScan installed successfully!' -ForegroundColor Green}else{Write-Host '    WPScan install did not complete.' -ForegroundColor Red}"
+goto :EOF
+
+:WPSC_ENSURE_CURL
+REM WPScan on Windows needs libcurl.dll next to its ruby bin or it crashes with a LoadError.
+if not defined WPSC_EXE goto :EOF
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$ErrorActionPreference='SilentlyContinue';$ProgressPreference='SilentlyContinue';$bin=Split-Path '!WPSC_EXE!';$dll=Join-Path $bin 'libcurl.dll';if(Test-Path $dll){exit};Write-Host '    Installing libcurl (one-time, required for WPScan on Windows)...' -ForegroundColor Yellow;$tmp=Join-Path $env:TEMP 'ht_curl';New-Item -ItemType Directory -Force $tmp|Out-Null;try{Invoke-WebRequest 'https://curl.se/windows/latest.cgi?p=win64-mingw.zip' -OutFile (Join-Path $tmp 'c.zip') -UseBasicParsing -TimeoutSec 120;Expand-Archive (Join-Path $tmp 'c.zip') $tmp -Force;$f=Get-ChildItem $tmp -Recurse -Filter 'libcurl-x64.dll'|Select-Object -First 1;if(-not $f){$f=Get-ChildItem $tmp -Recurse -Filter 'libcurl.dll'|Select-Object -First 1};if($f){Copy-Item $f.FullName $dll -Force;Write-Host '    libcurl installed.' -ForegroundColor Green}else{Write-Host '    Could not find libcurl in package.' -ForegroundColor Red}}catch{Write-Host '    libcurl download failed - check your connection.' -ForegroundColor Red};Remove-Item $tmp -Recurse -Force -EA SilentlyContinue"
 goto :EOF
 
 
