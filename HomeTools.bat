@@ -1,6 +1,6 @@
 @echo off
 :: ============================================================
-::  HOME TOOLS  |  OSINT Launcher  |  v3.9
+::  HOME TOOLS  |  OSINT Launcher  |  v4.0
 ::  A self-installing OSINT toolkit launcher for Windows.
 ::
 ::  Tools clone and install automatically on first launch.
@@ -11,7 +11,7 @@
 ::  Install locations: C:\OSINT\   and   C:\Tools\exiftool\
 ::  Made with love by vortexdq.com
 :: ============================================================
-:: HOMETOOLS_VERSION:3.9
+:: HOMETOOLS_VERSION:4.0
 if "%~1"=="-k" goto :INIT
 cmd /k "%~f0" -k
 exit /b
@@ -19,7 +19,7 @@ exit /b
 
 setlocal enabledelayedexpansion
 chcp 65001 >nul 2>&1
-title HOME TOOLS v3.9
+title HOME TOOLS v4.0
 
 :: ============================================================
 ::  ANSI COLORS
@@ -44,7 +44,7 @@ set "ORB=%E%[1;33m"
 :: ============================================================
 ::  VERSION
 :: ============================================================
-set "HT_VERSION=3.9"
+set "HT_VERSION=4.0"
 
 :: ============================================================
 ::  TOOL PATHS
@@ -86,7 +86,7 @@ goto STARTUP
 cls
 echo.
 echo  %CB%  =======================================================%R%
-echo  %CB%           HOME TOOLS v3.9  -  First Launch             %R%
+echo  %CB%           HOME TOOLS v4.0  -  First Launch             %R%
 echo  %CB%       Self-installing OSINT Toolkit for Windows         %R%
 echo  %CB%  =======================================================%R%
 echo.
@@ -334,7 +334,7 @@ if exist "%P_PWND%\pwnedornot.py"                set "S14=%GN%[OK] %R%"
 if exist "%P_GHNT%\ghunt"                        set "S15=%GN%[OK] %R%"
 if exist "%P_RECN%\recon-ng"                     set "S16=%GN%[OK] %R%"
 if exist "%P_ZAP%\zap.bat"                       set "S17=%GN%[OK] %R%"
-for /f "delims=" %%W in ('where wpscan 2^>nul') do set "S18=%GN%[OK] %R%"
+where wpscan >nul 2>&1 && set "S18=%GN%[OK] %R%"
 
 echo  %WB%  DEVICE / LOCAL%R%
 echo  %DG%  --------------------------------------------------------%R%
@@ -844,7 +844,7 @@ echo  %WB%  Recon-ng  ^|  Web Reconnaissance Framework%R%
 echo  %CB%  =======================================================%R%
 echo.
 if not exist "%P_RECN%\recon-ng" echo  %RD%  Not ready. Type R on the menu to repair.%R% & pause & goto MENU
-set "HV_PATH=%P_RECN%" & set "HV_REQS=%P_RECN%\requirements.txt"
+set "HV_PATH=%P_RECN%" & set "HV_REQS=%P_RECN%\REQUIREMENTS"
 call :HEALTH_VENV
 title HOME TOOLS  ^|  Recon-ng
 powershell -NoProfile -Command "Set-Location 'C:\OSINT\recon-ng';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;96m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;96m  Recon-ng  |  Web Reconnaissance Framework'+$e+'[0m');Write-Host('  '+$e+'[1;96m'+$sep+$e+'[0m');Write-Host '  Interactive OSINT framework. Type help inside for all commands.' -ForegroundColor DarkGray;Write-Host '  Tip: workspaces create <name>  then  modules search <topic>' -ForegroundColor DarkGray;Write-Host '  Type exit inside recon-ng to return here.' -ForegroundColor DarkGray;Write-Host;$p=if(Test-Path 'venv\Scripts\python.exe'){'.\venv\Scripts\python.exe'}else{'python'};&$p recon-ng"
@@ -861,11 +861,13 @@ echo.
 echo  %YW%  REMINDER: Only scan applications you own or have permission to test.%R%
 echo.
 if not exist "%P_ZAP%\zap.bat" echo  %RD%  Not ready. Type R on the menu to repair.%R% & pause & goto MENU
-echo  %GN%  Launching OWASP ZAP...%R%
-echo  %DG%  ZAP opens its own GUI window. Close it when done.%R%
+java -version >nul 2>&1 || (echo  %RD%  Java is required to run ZAP.%R% & echo  %CY%  Download Java at: https://adoptium.net%R% & echo. & pause & goto MENU)
+echo  %GN%  Launching ZAP by Checkmarx...%R%
+echo  %DG%  ZAP opens in its own GUI window.%R%
+echo  %DG%  Close the ZAP window when done - it does not run in this terminal.%R%
 echo.
-start "OWASP ZAP" "%P_ZAP%\zap.bat"
-echo  %WH%  Press any key to return to menu (ZAP keeps running)...%R%
+start "ZAP" "%P_ZAP%\zap.bat"
+echo  %WH%  Press any key to return to menu (ZAP keeps running in background)...%R%
 pause >nul
 goto MENU
 
@@ -877,9 +879,10 @@ echo  %WB%  WPScan  ^|  WordPress Vulnerability Scanner%R%
 echo  %MGB%  =======================================================%R%
 echo.
 echo  %YW%  REMINDER: Only scan WordPress sites you own or have permission to test.%R%
+echo  %DG%  License: Free for personal/non-commercial use. Commercial use requires a paid plan.%R%
 echo.
 title HOME TOOLS  ^|  WPScan
-powershell -NoProfile -Command "$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;35m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;35m  WPScan  |  WordPress Vulnerability Scanner'+$e+'[0m');Write-Host('  '+$e+'[1;35m'+$sep+$e+'[0m');Write-Host '  Scans WordPress sites for vulnerabilities, users, plugins, themes.' -ForegroundColor DarkGray;Write-Host '  Tip: add --api-token YOUR_TOKEN for vulnerability data (free at wpscan.com)' -ForegroundColor DarkGray;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;do{$u=Read-Host '  Target URL (https://example.com)';if($u){wpscan --url $u --enumerate u,p,t --random-user-agent}}while($u)"
+powershell -NoProfile -Command "$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;35m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;35m  WPScan  |  WordPress Vulnerability Scanner'+$e+'[0m');Write-Host('  '+$e+'[1;35m'+$sep+$e+'[0m');Write-Host '  Scans WordPress sites for vulnerabilities, users, plugins and themes.' -ForegroundColor DarkGray;Write-Host '  Tip: get a free API token at wpscan.com and add --api-token YOUR_TOKEN' -ForegroundColor DarkGray;Write-Host '  Tip: use --enumerate u to find usernames, p for plugins, t for themes' -ForegroundColor DarkGray;Write-Host '  Leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;do{$u=Read-Host '  Target URL (https://wordpress-site.com)';if($u){wpscan --url $u --enumerate u,p,t --random-user-agent}}while($u)"
 title HOME TOOLS v!HT_VERSION!
 goto MENU
 
@@ -1622,55 +1625,70 @@ goto STARTUP
 cls
 echo.
 echo  %CB%  =======================================================%R%
-echo  %WB%  HELP  ^|  HOME TOOLS v!HT_VERSION!%R%
+echo  %WB%       HELP  ^|  HOME TOOLS v!HT_VERSION!%R%
 echo  %CB%  =======================================================%R%
 echo.
-echo  %WB%  HOW TO USE%R%
+echo  %WB%  QUICK START%R%
+echo  %DG%  --------------------------------------------------------%R%
 echo  %DG%  Type a number 1-18 and press ENTER to launch a tool.%R%
-echo  %DG%  Tools install automatically on first launch.%R%
-echo  %DG%  Type [C] for the Command Center - full commands for every tool.%R%
-echo  %DG%  Type [I] to set or update your Instagram credentials.%R%
+echo  %DG%  Every tool installs and updates itself automatically.%R%
+echo  %DG%  Leave input blank inside any tool to return to this menu.%R%
 echo.
-echo  %WB%  TOOLS%R%
+echo  %WB%  DEVICE / LOCAL  %DG%(1-2)%R%
 echo  %DG%  --------------------------------------------------------%R%
-echo  %CB%  1%R%   JLT Edge Wireless   %DG%OemDrv device manager%R%
+echo  %CB%  1%R%   JLT Edge Wireless   %DG%OemDrv wireless device manager%R%
 echo  %CB%  2%R%   Scanners            %DG%ESET / F-Secure / HitmanPro submenu%R%
-echo  %BB%  3%R%   SpiderFoot          %DG%OSINT web UI at http://127.0.0.1:5001%R%
-echo  %MB%  4%R%   ExifTool            %DG%Read/write/strip file metadata%R%
-echo  %YB%  5%R%   Sherlock            %DG%Username hunt across 400+ sites%R%
-echo  %GB%  6%R%   Osintgram           %DG%Instagram OSINT (requires burner account)%R%
-echo  %ORB%  7%R%   theHarvester        %DG%Email/subdomain recon for a domain%R%
-echo  %MGB%  8%R%   Holehe              %DG%Check email against 120+ sites%R%
-echo  %CY%  9%R%   Maigret             %DG%Deep username OSINT with HTML reports%R%
-echo  %WB% 10%R%   Photon              %DG%Web crawler: emails, URLs, API keys%R%
-echo  %RD% 11%R%   SQLMap              %DG%SQL injection scanner%R%
-echo  %CB% 12%R%   Scavenger           %DG%Pastebin leak and credential monitor%R%
-echo  %BB% 13%R%   LinkedIn Gatherer   %DG%LinkedIn profile and network OSINT%R%
-echo  %YB% 14%R%   pwnedOrNot          %DG%Email breach checker via HIBP API%R%
-echo  %GB% 15%R%   GHunt               %DG%Google account OSINT - email and location%R%
-echo  %CB% 16%R%   Recon-ng            %DG%Modular web reconnaissance framework%R%
-echo  %RD% 17%R%   OWASP ZAP           %DG%Web application security scanner (GUI)%R%
-echo  %MGB% 18%R%   WPScan              %DG%WordPress vulnerability scanner%R%
 echo.
-echo  %WB%  MENU OPTIONS%R%
+echo  %WB%  OSINT TOOLS  %DG%(3-14)%R%
 echo  %DG%  --------------------------------------------------------%R%
-echo  %CY%  C%R%   Command Center - every command for every tool
-echo  %CY%  R%R%   Repair - force reinstall and update all tools
-echo  %CY%  I%R%   Instagram - set or update Osintgram credentials
-echo  %CY%  Q%R%   Quit
+echo  %BB%  3%R%   SpiderFoot          %DG%Automated OSINT framework - opens browser at :5001%R%
+echo  %MB%  4%R%   ExifTool            %DG%Read, write and strip metadata from any file%R%
+echo  %YB%  5%R%   Sherlock            %DG%Find a username across 400+ social media sites%R%
+echo  %GB%  6%R%   Osintgram           %DG%Instagram OSINT  ^| needs burner account + no 2FA%R%
+echo  %ORB%  7%R%   theHarvester        %DG%Harvest emails, subdomains and IPs from a domain%R%
+echo  %MGB%  8%R%   Holehe              %DG%Check if an email is registered on 120+ sites%R%
+echo  %CY%  9%R%   Maigret             %DG%Deep username OSINT across 3000+ sites + HTML report%R%
+echo  %WB% 10%R%   Photon              %DG%Web crawler - extracts emails, URLs, API keys, JS%R%
+echo  %RD% 11%R%   SQLMap              %DG%Automated SQL injection scanner and exploiter%R%
+echo  %CB% 12%R%   Scavenger           %DG%Pastebin leak monitor and credential scraper%R%
+echo  %BB% 13%R%   LinkedIn Gatherer   %DG%LinkedIn employee and profile OSINT%R%
+echo  %YB% 14%R%   pwnedOrNot          %DG%Email breach checker - finds leaked passwords too%R%
+echo.
+echo  %WB%  ADVANCED TOOLS  %DG%(15-18)%R%
+echo  %DG%  --------------------------------------------------------%R%
+echo  %GB% 15%R%   GHunt               %DG%Google account OSINT - email, location, Maps, Drive%R%
+echo  %DG%              %YW%First use: run tool then type  ghunt login%R%
+echo  %CB% 16%R%   Recon-ng            %DG%Modular web recon framework with its own console%R%
+echo  %RD% 17%R%   ZAP by Checkmarx    %DG%Web app security scanner - opens full GUI%R%
+echo  %DG%              %YW%Requires Java (https://adoptium.net)%R%
+echo  %MGB% 18%R%   WPScan              %DG%WordPress vulnerability scanner - plugins, users, CVEs%R%
+echo  %DG%              %YW%Requires Ruby (https://rubyinstaller.org)%R%
+echo  %DG%              Free for personal use. Commercial use needs paid plan.%R%
+echo.
+echo  %WB%  MENU KEYS%R%
+echo  %DG%  --------------------------------------------------------%R%
+echo  %CY%  R%R%  Repair      Re-run all installs and updates
+echo  %CY%  C%R%  Commands    Full command reference for every tool
+echo  %CY%  I%R%  Instagram   Set or update Osintgram account credentials
+echo  %CY%  H%R%  Help        This screen
+echo  %CY%  Q%R%  Quit        Close HOME TOOLS
 echo.
 echo  %WB%  REQUIREMENTS%R%
-echo  %DG%  Python 3.10+  and  git  must both be in PATH.%R%
-echo  %DG%  Internet access needed for first install and updates.%R%
+echo  %DG%  --------------------------------------------------------%R%
+echo  %DG%  Python 3.10+  git  -  required for most tools (add both to PATH)%R%
+echo  %DG%  Java          -  required for ZAP only   (https://adoptium.net)%R%
+echo  %DG%  Ruby + gem    -  required for WPScan     (https://rubyinstaller.org)%R%
 echo.
 echo  %WB%  INSTALL LOCATIONS%R%
-echo  %DG%  OSINT tools:  C:\OSINT\%R%
+echo  %DG%  --------------------------------------------------------%R%
+echo  %DG%  OSINT tools:  C:\OSINT\        ZAP: C:\Tools\ZAP\%R%
 echo  %DG%  ExifTool:     C:\Tools\exiftool\%R%
 echo.
 echo  %WB%  STATUS INDICATORS%R%
-echo  %DG%  %GN%[OK]%DG% = Tool ready to use%R%
-echo  %DG%  %RD%[--]%DG% = Not installed yet (runs at startup / use Repair)%R%
-echo  %DG%  %RD%[!!]%DG% = Local file missing (check your Stuff folder)%R%
+echo  %DG%  --------------------------------------------------------%R%
+echo  %DG%  %GN%[OK]%DG% = Installed and ready%R%
+echo  %DG%  %RD%[--]%DG% = Not yet installed (auto-installs on startup)%R%
+echo  %DG%  %RD%[!!]%DG% = Local file missing (check path in bat file)%R%
 echo.
 pause
 goto MENU
@@ -1961,11 +1979,13 @@ goto :EOF
 :SC_ZAP
 echo.
 echo  %RD%  [17] OWASP ZAP%R%
-if exist "%P_ZAP%\zap.bat" goto :SC_ZAP_END
+if exist "%P_ZAP%\zap.bat" goto :SC_ZAP_JCHK
 if "!HAS_NET!"=="0" (echo  %DG%    Offline - not installed.%R%    & goto :SC_ZAP_END)
 echo  %WH%    Not installed - downloading...%R%
 call :INSTALL_ZAP_FUNC
 goto :SC_ZAP_END
+:SC_ZAP_JCHK
+java -version >nul 2>&1 || echo  %YW%    WARNING: Java not found. ZAP needs Java - get it at: https://adoptium.net%R%
 :SC_ZAP_END
 if exist "%P_ZAP%\zap.bat" (echo  %GN%    Status: Ready%R%) else (echo  %RD%    Status: NOT READY%R%)
 goto :EOF
@@ -1976,9 +1996,9 @@ echo  %MGB%  [18] WPScan%R%
 where wpscan >nul 2>&1 && (echo  %GN%    Status: Ready%R% & goto :EOF)
 if "!HAS_NET!"=="0" (echo  %DG%    Offline - not installed.%R%    & goto :SC_WPSC_END)
 where ruby >nul 2>&1 || (echo  %YW%    Needs Ruby in PATH. Get it at: https://rubyinstaller.org%R% & goto :SC_WPSC_END)
-echo  %WH%    Installing WPScan gem...%R%
-gem install wpscan --quiet 2>nul
-where wpscan >nul 2>&1 && (echo  %GN%    WPScan installed.%R%) || (echo  %RD%    Install failed - check Ruby and gem.%R%)
+echo  %WH%    Installing WPScan gem (may take 1-2 min)...%R%
+gem install wpscan --no-document 2>nul
+where wpscan >nul 2>&1 && (echo  %GN%    WPScan installed.%R%) || (echo  %RD%    Install failed - check Ruby and gem are in PATH.%R%)
 :SC_WPSC_END
 where wpscan >nul 2>&1 && (echo  %GN%    Status: Ready%R%) || (echo  %RD%    Status: NOT READY%R%)
 goto :EOF
@@ -2326,8 +2346,8 @@ goto :EOF
 
 :INSTALL_WPSC_FUNC
 where ruby >nul 2>&1 || (echo  %YW%    Ruby not in PATH - get it at: https://rubyinstaller.org%R% & goto :EOF)
-echo  %WH%    Installing WPScan via gem...%R%
-gem install wpscan --quiet 2>nul
+echo  %WH%    Installing WPScan via gem (may take 1-2 min)...%R%
+gem install wpscan --no-document 2>nul
 where wpscan >nul 2>&1 && echo  %GN%    WPScan installed.%R% || echo  %RD%    gem install failed.%R%
 goto :EOF
 
