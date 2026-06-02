@@ -1,6 +1,6 @@
 @echo off
 :: ============================================================
-::  HOME TOOLS  |  OSINT Launcher  |  v5.4
+::  HOME TOOLS  |  OSINT Launcher  |  v5.5
 ::  A self-installing OSINT toolkit launcher for Windows.
 ::
 ::  Tools clone and install automatically on first launch.
@@ -11,7 +11,7 @@
 ::  Install locations: C:\OSINT\   and   C:\Tools\exiftool\
 ::  Made with love by vortexdq.com
 :: ============================================================
-:: HOMETOOLS_VERSION:5.4
+:: HOMETOOLS_VERSION:5.5
 if "%~1"=="-k" goto :INIT
 cmd /k "%~f0" -k
 exit /b
@@ -19,7 +19,7 @@ exit /b
 
 setlocal enabledelayedexpansion
 chcp 65001 >nul 2>&1
-title HOME TOOLS v5.4
+title HOME TOOLS v5.5
 
 :: ============================================================
 ::  ANSI COLORS
@@ -44,7 +44,7 @@ set "ORB=%E%[1;33m"
 :: ============================================================
 ::  VERSION
 :: ============================================================
-set "HT_VERSION=5.4"
+set "HT_VERSION=5.5"
 
 :: ============================================================
 ::  TOOL PATHS
@@ -87,7 +87,7 @@ goto STARTUP
 cls
 echo.
 echo  %CB%  =======================================================%R%
-echo  %CB%           HOME TOOLS v5.4  -  First Launch             %R%
+echo  %CB%           HOME TOOLS v5.5  -  First Launch             %R%
 echo  %CB%       Self-installing OSINT Toolkit for Windows         %R%
 echo  %CB%  =======================================================%R%
 echo.
@@ -228,7 +228,7 @@ echo  %GB%  =======================================================%R%
 echo  %GN%  All checks complete.%R%
 echo  %GB%  =======================================================%R%
 echo.
-powershell -NoProfile -ExecutionPolicy Bypass -Command "$e=[char]27;$ErrorActionPreference='SilentlyContinue';try{$host.UI.RawUI.CursorVisible=$false}catch{};function B($f,$d){try{[console]::Beep($f,$d)}catch{Start-Sleep -Milliseconds $d}};function W($ms){Start-Sleep -Milliseconds $ms};function CL{try{[Console]::Clear()}catch{try{Clear-Host}catch{}}};$W=try{[Console]::WindowWidth}catch{80};$H=try{[Console]::WindowHeight}catch{25};if($W -lt 20){$W=80};if($H -lt 10){$H=25};function Mid($lines,$col){CL;$max=0;foreach($l in $lines){if($l.Length -gt $max){$max=$l.Length}};$hp=[Math]::Max(0,[int](($W-$max)/2));$vp=[Math]::Max(0,[int](($H-$lines.Count)/2));for($i=0;$i -lt $vp;$i++){Write-Host ''};$pad=' '*$hp;foreach($l in $lines){Write-Host($pad+$e+'['+$col+'m'+$l+$e+'[0m')}};function Flash($col){CL;$vp=[int]($H/2)-1;for($i=0;$i -lt $vp;$i++){Write-Host ''};$bar=$e+'['+$col+'m'+([string][char]0x2588)*[Math]::Min($W,100)+$e+'[0m';Write-Host $bar;Write-Host $bar;Write-Host $bar};$R=@('  ___   ',' /   \  ',' | x x| ',' \ - /=}','  |_|   ');$S=@('   ___  ','  /   \ ',' |o o | ','{=\ - / ','   |_|  ');CL;W 200;B 55 150;B 55 150;B 65 200;B 55 150;foreach($g in 28,20,12,6){$gap=' '*$g;$scene=@();for($i=0;$i -lt $R.Count;$i++){$scene+=($R[$i]+$gap+$S[$i])};Mid $scene '1;90';B 55 75;B 311 70};$m=@('   ',' ^ ','<*>','>X<',' v ');$cl=@();for($i=0;$i -lt $R.Count;$i++){$cl+=($R[$i]+$m[$i]+$S[$i])};Mid $cl '1;93';B 110 60;B 370 80;Flash '91';B 98 70;$gap=' '*18;$rec=@();for($i=0;$i -lt $R.Count;$i++){$rec+=($R[$i]+$gap+$S[$i])};Mid $rec '1;90';B 65 75;B 277 70;B 55 75;B 247 70;$m2=@(' /\  ',' /**\ ','<****>',' \XX/ ','  \/  ');$cl2=@();for($i=0;$i -lt $R.Count;$i++){$cl2+=($R[$i]+$m2[$i]+$S[$i])};Mid $cl2 '1;91';B 123 70;B 370 90;Flash '91';B 110 60;Flash '97';B 87 80;Mid @('      \\      ','       \\     ','   ===  SLASH  ===','       //     ','      //      ') '1;91';B 1318 70;Flash '91';B 1046 60;Flash '91';B 52 450;CL;W 120;Mid @(' ___  ___  ___  ___  ___     ___  ___  ___  __  ___','| . \| . \| . \| . \| . \   |_ _|| . \| . \| .||_ _|','|  _/|  _/|  _/|___/|   /     | | |   /|   /| . || |','|_|  |_|  |_|  |    |_|\_\    |_| |_|\_\|_|\_\|_|||_|') '1;96';B 277 90;B 370 90;B 466 90;B 622 260;W 200;$ol='HOME TOOLS  v!HT_VERSION!  ONLINE';$pad=' '*[Math]::Max(0,[int](($W-$ol.Length)/2));$vp=[int]($H/2);CL;for($i=0;$i -lt $vp;$i++){Write-Host ''};Write-Host -NoNewline $pad;$ol.ToCharArray()|ForEach-Object{Write-Host -NoNewline($e+'[1;92m'+$_+$e+'[0m');W 32};B 523 110;B 659 110;B 784 380;W 450;CL"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$e=[char]27;$ErrorActionPreference='SilentlyContinue';try{$host.UI.RawUI.CursorVisible=$false}catch{};function B($f,$d){try{[console]::Beep($f,$d)}catch{Start-Sleep -Milliseconds $d}};function W($ms){Start-Sleep -Milliseconds $ms};function CL{try{[Console]::Clear()}catch{try{Clear-Host}catch{}}};$W=try{[Console]::WindowWidth}catch{80};$H=try{[Console]::WindowHeight}catch{25};if($W -lt 20){$W=80};if($H -lt 10){$H=25};function Mid($lines,$col,$dx){if($null -eq $dx){$dx=0};CL;$max=0;foreach($l in $lines){if($l.Length -gt $max){$max=$l.Length}};$hp=[Math]::Max(0,[int](($W-$max)/2)+$dx);$vp=[Math]::Max(0,[int](($H-$lines.Count)/2));for($i=0;$i -lt $vp;$i++){Write-Host ''};$pad=' '*$hp;foreach($l in $lines){Write-Host($pad+$e+'['+$col+'m'+$l+$e+'[0m')}};function Flash($col){CL;$vp=[int]($H/2)-2;for($i=0;$i -lt $vp;$i++){Write-Host ''};$bar=$e+'['+$col+'m'+([string][char]0x2588)*[Math]::Min($W,110)+$e+'[0m';Write-Host $bar;Write-Host $bar;Write-Host $bar;Write-Host $bar};function Beat{B 110 65;B 55 55;B 131 65;B 110 55;B 165 70;B 55 55;B 147 65;B 196 75};function Lead{B 880 55;B 784 55;B 659 55;B 587 95};$R=@('    ____    ','   /----\   ','  | o  o |  ','  |  /\  |  ','   \ -- /   ','   /|##|\   ','  //_||_\\  ','  || |  ||  ');$S=@('    ____    ','   /----\   ','  | o  o |  ','  |  --  |  ','   \ ~~ /   ','   /|##|\   ','  //_||_\\  ','  || |  ||  ');$cols=@('1;97','1;95','1;96','1;91','1;93');CL;W 150;Beat;Beat;$gi=0;foreach($g in 34,22,12){$gap=' '*$g;$sc=@();for($i=0;$i -lt $R.Count;$i++){$sc+=($R[$i]+$gap+$S[$i])};Mid $sc $cols[$gi];$gi++;Beat};$m=@('     ','  )  ',' (X) ','>*#*<',' (X) ','  )  ','     ','     ');$cl=@();for($i=0;$i -lt $R.Count;$i++){$cl+=($R[$i]+$m[$i]+$S[$i])};Mid $cl '1;93' 0;Lead;Flash '1;91';B 98 70;$gap=' '*20;$rc=@();for($i=0;$i -lt $R.Count;$i++){$rc+=($R[$i]+$gap+$S[$i])};Mid $rc '1;95' 0;Beat;$m2=@('  /\  ',' /##\ ','<#**#>','>****<','<#XX#>',' \##/ ','  \/  ','      ');$cl2=@();for($i=0;$i -lt $R.Count;$i++){$cl2+=($R[$i]+$m2[$i]+$S[$i])};Mid $cl2 '1;91' -2;Lead;Mid $cl2 '1;97' 2;B 123 70;Flash '1;91';B 110 60;Flash '1;97';B 90 70;Beat;Mid @('       \\          ','        \\         ','     ===  S L A S H  ===','        //         ','       //          ') '1;91' 0;B 1318 70;Flash '1;91';B 1046 60;Flash '1;93';B 880 60;Flash '1;91';B 45 500;CL;W 120;Mid @(' ___  ___  ___  ___  ___     ___  ___  ___  __  ___','| . \| . \| . \| . \| . \   |_ _|| . \| . \| .||_ _|','|  _/|  _/|  _/|___/|   /     | | |   /|   /| . || |','|_|  |_|  |_|  |    |_|\_\    |_| |_|\_\|_|\_\|_|||_|') '1;96' 0;B 277 90;B 370 90;B 466 90;Lead;B 622 240;W 160;$ol='HOME TOOLS  v!HT_VERSION!  ONLINE';$pad=' '*[Math]::Max(0,[int](($W-$ol.Length)/2));$vp=[int]($H/2);CL;for($i=0;$i -lt $vp;$i++){Write-Host ''};Write-Host -NoNewline $pad;$ol.ToCharArray()|ForEach-Object{Write-Host -NoNewline($e+'[1;92m'+$_+$e+'[0m');W 30};B 523 110;B 659 110;B 784 380;W 420;CL"
 goto MENU
 
 
