@@ -1,6 +1,6 @@
 @echo off
 :: ============================================================
-::  HOME TOOLS  |  OSINT Launcher  |  v5.3
+::  HOME TOOLS  |  OSINT Launcher  |  v5.4
 ::  A self-installing OSINT toolkit launcher for Windows.
 ::
 ::  Tools clone and install automatically on first launch.
@@ -11,7 +11,7 @@
 ::  Install locations: C:\OSINT\   and   C:\Tools\exiftool\
 ::  Made with love by vortexdq.com
 :: ============================================================
-:: HOMETOOLS_VERSION:5.3
+:: HOMETOOLS_VERSION:5.4
 if "%~1"=="-k" goto :INIT
 cmd /k "%~f0" -k
 exit /b
@@ -19,7 +19,7 @@ exit /b
 
 setlocal enabledelayedexpansion
 chcp 65001 >nul 2>&1
-title HOME TOOLS v5.3
+title HOME TOOLS v5.4
 
 :: ============================================================
 ::  ANSI COLORS
@@ -44,7 +44,7 @@ set "ORB=%E%[1;33m"
 :: ============================================================
 ::  VERSION
 :: ============================================================
-set "HT_VERSION=5.3"
+set "HT_VERSION=5.4"
 
 :: ============================================================
 ::  TOOL PATHS
@@ -87,7 +87,7 @@ goto STARTUP
 cls
 echo.
 echo  %CB%  =======================================================%R%
-echo  %CB%           HOME TOOLS v5.3  -  First Launch             %R%
+echo  %CB%           HOME TOOLS v5.4  -  First Launch             %R%
 echo  %CB%       Self-installing OSINT Toolkit for Windows         %R%
 echo  %CB%  =======================================================%R%
 echo.
@@ -228,7 +228,7 @@ echo  %GB%  =======================================================%R%
 echo  %GN%  All checks complete.%R%
 echo  %GB%  =======================================================%R%
 echo.
-powershell -NoProfile -ExecutionPolicy Bypass -Command "$e=[char]27;$ErrorActionPreference='SilentlyContinue';try{$host.UI.RawUI.CursorVisible=$false}catch{};function B($f,$d){try{[console]::Beep($f,$d)}catch{Start-Sleep -Milliseconds $d}};function W($ms){Start-Sleep -Milliseconds $ms};function CL{try{[Console]::Clear()}catch{try{Clear-Host}catch{}}};function L($s,$c){Write-Host(' '+$e+'['+$c+'m'+$s+$e+'[0m')};CL;W 250;B 73 300;B 69 300;B 62 450;W 100;1..3|ForEach-Object{CL;L '   *   *   *   *   *   *   *   *   *   *' '1;97';L '     *   *   *   *   *   *   *   *   * ' '1;97';B 1245 45;CL;B 1568 35;W 45};CL;Write-Host '';L '            .-~~~~~-.' '90';L '          (  o     o  )' '90';L '           \   ^^^   /' '90';L '            .-------.' '90';L '         .-/  +++++  \-.' '90';L '        / ++++++++++++ \' '90';L '       / ++++++++++++++ \' '90';B 98 350;W 200;CL;Write-Host '';L '          ,-------.        |' '90';L '         /  _   _  \       |' '90';L '        (  o     o  )      |' '90';L '         \   ^^^   /      )|' '90';L '          .-------.      / |' '90';L '       .-/  +++++  \-.  /  |' '90';L '      / ++++++++++++ \_/   |' '90';B 110 300;W 150;CL;Write-Host '';L '          ,-------.    \   |' '1;91';L '         /  X   X  \    \  |' '1;91';L '        (    ___    )    \ |' '1;91';L '         \  ~~~~~  /      \|' '1;91';L '          .-------.        )' '1;91';L '       .-/  +++++  \-.    / ' '1;91';L '      / ++++++++++++ \_/   ' '1;91';B 147 250;B 175 200;W 120;1..3|ForEach-Object{CL;Write-Host '';Write-Host '';L '             \         /' '1;91';L '              \       /' '1;91';L '           ===  S L A S H  ===' '1;91';L '              /       \' '1;91';L '             /         \' '1;91';B 1318 60;CL;B 110 110;W 35};B 55 500;CL;W 150;L ' ___  ___  ___  ___  ___     ___  ___  ___  __  ___' '1;96';B 262 120;L '| . \| . \| . \| . \| . \   |_ _|| . \| . \| .||_ _|' '1;96';B 330 120;L '|  _/|  _/|  _/|___/|   /     | | |   /|   /| . || |' '1;96';B 392 120;L '|_|  |_|  |_|  |    |_|\_\    |_| |_|\_\|_|\_\|_|||_|' '1;96';B 523 240;W 200;Write-Host '';$w=40;for($i=0;$i -le $w;$i++){$p=[int](($i/$w)*100);$bar=([string][char]0x2588)*$i+$e+'[90m'+([string][char]0x2591)*($w-$i)+$e+'[0m';$col=if($p -lt 35){'91'}elseif($p -lt 70){'93'}else{'92'};Write-Host -NoNewline([char]13+'  '+$e+'['+$col+'m'+$bar+'  '+[string]$p+([char]37)+'  '+$e+'[0m');if(($i -band 3) -eq 0){B (320+$i*14) 22}else{W 12}};Write-Host;W 150;CL;Write-Host '';Write-Host '';0..6|ForEach-Object{$k=$_*4;CL;Write-Host '';Write-Host '';L ((' '*$k)+'.-.') '1;95';L ((' '*$k)+'(o.o)') '1;95';L ((' '*$k)+'/|||\') '1;95';if($_ -band 1){B 98 90}else{B 73 90}};W 80;CL;Write-Host '';Write-Host '';Write-Host -NoNewline '  ';'HOME TOOLS  v!HT_VERSION!  ONLINE'.ToCharArray()|ForEach-Object{Write-Host -NoNewline($e+'[1;92m'+$_+$e+'[0m');W 35};B 523 120;B 659 120;B 784 380;W 500;CL"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$e=[char]27;$ErrorActionPreference='SilentlyContinue';try{$host.UI.RawUI.CursorVisible=$false}catch{};function B($f,$d){try{[console]::Beep($f,$d)}catch{Start-Sleep -Milliseconds $d}};function W($ms){Start-Sleep -Milliseconds $ms};function CL{try{[Console]::Clear()}catch{try{Clear-Host}catch{}}};$W=try{[Console]::WindowWidth}catch{80};$H=try{[Console]::WindowHeight}catch{25};if($W -lt 20){$W=80};if($H -lt 10){$H=25};function Mid($lines,$col){CL;$max=0;foreach($l in $lines){if($l.Length -gt $max){$max=$l.Length}};$hp=[Math]::Max(0,[int](($W-$max)/2));$vp=[Math]::Max(0,[int](($H-$lines.Count)/2));for($i=0;$i -lt $vp;$i++){Write-Host ''};$pad=' '*$hp;foreach($l in $lines){Write-Host($pad+$e+'['+$col+'m'+$l+$e+'[0m')}};function Flash($col){CL;$vp=[int]($H/2)-1;for($i=0;$i -lt $vp;$i++){Write-Host ''};$bar=$e+'['+$col+'m'+([string][char]0x2588)*[Math]::Min($W,100)+$e+'[0m';Write-Host $bar;Write-Host $bar;Write-Host $bar};$R=@('  ___   ',' /   \  ',' | x x| ',' \ - /=}','  |_|   ');$S=@('   ___  ','  /   \ ',' |o o | ','{=\ - / ','   |_|  ');CL;W 200;B 55 150;B 55 150;B 65 200;B 55 150;foreach($g in 28,20,12,6){$gap=' '*$g;$scene=@();for($i=0;$i -lt $R.Count;$i++){$scene+=($R[$i]+$gap+$S[$i])};Mid $scene '1;90';B 55 75;B 311 70};$m=@('   ',' ^ ','<*>','>X<',' v ');$cl=@();for($i=0;$i -lt $R.Count;$i++){$cl+=($R[$i]+$m[$i]+$S[$i])};Mid $cl '1;93';B 110 60;B 370 80;Flash '91';B 98 70;$gap=' '*18;$rec=@();for($i=0;$i -lt $R.Count;$i++){$rec+=($R[$i]+$gap+$S[$i])};Mid $rec '1;90';B 65 75;B 277 70;B 55 75;B 247 70;$m2=@(' /\  ',' /**\ ','<****>',' \XX/ ','  \/  ');$cl2=@();for($i=0;$i -lt $R.Count;$i++){$cl2+=($R[$i]+$m2[$i]+$S[$i])};Mid $cl2 '1;91';B 123 70;B 370 90;Flash '91';B 110 60;Flash '97';B 87 80;Mid @('      \\      ','       \\     ','   ===  SLASH  ===','       //     ','      //      ') '1;91';B 1318 70;Flash '91';B 1046 60;Flash '91';B 52 450;CL;W 120;Mid @(' ___  ___  ___  ___  ___     ___  ___  ___  __  ___','| . \| . \| . \| . \| . \   |_ _|| . \| . \| .||_ _|','|  _/|  _/|  _/|___/|   /     | | |   /|   /| . || |','|_|  |_|  |_|  |    |_|\_\    |_| |_|\_\|_|\_\|_|||_|') '1;96';B 277 90;B 370 90;B 466 90;B 622 260;W 200;$ol='HOME TOOLS  v!HT_VERSION!  ONLINE';$pad=' '*[Math]::Max(0,[int](($W-$ol.Length)/2));$vp=[int]($H/2);CL;for($i=0;$i -lt $vp;$i++){Write-Host ''};Write-Host -NoNewline $pad;$ol.ToCharArray()|ForEach-Object{Write-Host -NoNewline($e+'[1;92m'+$_+$e+'[0m');W 32};B 523 110;B 659 110;B 784 380;W 450;CL"
 goto MENU
 
 
