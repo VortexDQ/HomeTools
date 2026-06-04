@@ -1,6 +1,6 @@
 @echo off
 :: ============================================================
-::  HOME TOOLS  |  OSINT Launcher  |  v5.7
+::  HOME TOOLS  |  OSINT Launcher  |  v5.8
 ::  A self-installing OSINT toolkit launcher for Windows.
 ::
 ::  Tools clone and install automatically on first launch.
@@ -11,7 +11,7 @@
 ::  Install locations: C:\OSINT\   and   C:\Tools\exiftool\
 ::  Made with love by vortexdq.com
 :: ============================================================
-:: HOMETOOLS_VERSION:5.7
+:: HOMETOOLS_VERSION:5.8
 if "%~1"=="-k" goto :INIT
 cmd /k "%~f0" -k
 exit /b
@@ -19,7 +19,7 @@ exit /b
 
 setlocal enabledelayedexpansion
 chcp 65001 >nul 2>&1
-title HOME TOOLS v5.7
+title HOME TOOLS v5.8
 
 :: ============================================================
 ::  ANSI COLORS
@@ -44,7 +44,7 @@ set "ORB=%E%[1;33m"
 :: ============================================================
 ::  VERSION
 :: ============================================================
-set "HT_VERSION=5.7"
+set "HT_VERSION=5.8"
 
 :: ============================================================
 ::  TOOL PATHS
@@ -98,7 +98,7 @@ goto STARTUP
 cls
 echo.
 echo  %CB%  =======================================================%R%
-echo  %CB%           HOME TOOLS v5.7  -  First Launch             %R%
+echo  %CB%           HOME TOOLS v5.8  -  First Launch             %R%
 echo  %CB%       Self-installing OSINT Toolkit for Windows         %R%
 echo  %CB%  =======================================================%R%
 echo.
@@ -335,45 +335,51 @@ echo  %DG%  --------------------------------------------------------%R%
 echo  !S1!%CB% [1]%R%  %WH%JLT Edge Wireless         %DG%OemDrv device manager%R%
 echo  !S2!%CB% [2]%R%  %WH%Scanners                  %DG%ESET / F-Secure / HitmanPro%R%
 echo.
-echo  %WB%  OSINT TOOLS%R%
+echo  %WB%  OSINT  %DG%^>  PEOPLE ^& SOCIAL%R%
 echo  %DG%  --------------------------------------------------------%R%
-echo  !S3!%BB% [3]%R%  %WH%SpiderFoot                %DG%Automated OSINT framework (web UI)%R%
-echo  !S4!%MB% [4]%R%  %WH%ExifTool                  %DG%File metadata reader / writer%R%
 echo  !S5!%YB% [5]%R%  %WH%Sherlock                  %DG%Username hunt across 400+ sites%R%
 echo  !S6!%GB% [6]%R%  %WH%Osintgram                 %DG%Instagram OSINT collector%R%
-echo  !S7!%ORB% [7]%R%  %WH%theHarvester              %DG%Email / domain / subdomain recon%R%
-echo  !S8!%MGB% [8]%R%  %WH%Holehe                    %DG%Email to social accounts%R%
-echo  !S9!%CY% [9]%R%  %WH%Maigret                   %DG%Deep username OSINT with reports%R%
-echo  !S10!%WB%[10]%R%  %WH%Photon                    %DG%Web crawler / data extractor%R%
-echo  !S11!%RD%[11]%R%  %WH%SQLMap                    %DG%SQL injection scanner%R%
+echo  !S9!%CY% [9]%R%  %WH%Maigret                   %DG%Deep username OSINT + relationship graph%R%
+echo  !S13!%BB%[13]%R%  %WH%LinkedIn Gatherer          %DG%LinkedIn profile and company OSINT%R%
+echo  !S15!%GB%[15]%R%  %WH%GHunt                     %DG%Google account - email, Maps, Drive, YouTube%R%
+echo  !S20!%YB%[20]%R%  %WH%Phoneinfoga               %DG%Phone number - carrier, region, OSINT sources%R%
+echo.
+echo  %WB%  OSINT  %DG%^>  EMAIL ^& CREDENTIALS%R%
+echo  %DG%  --------------------------------------------------------%R%
+echo  !S8!%MGB% [8]%R%  %WH%Holehe                    %DG%Email registered on which 120+ sites%R%
 echo  !S12!%CB%[12]%R%  %WH%Scavenger                 %DG%Pastebin leak and credential monitor%R%
-echo  !S13!%BB%[13]%R%  %WH%LinkedIn Gatherer          %DG%LinkedIn profile and network OSINT%R%
-echo  !S14!%YB%[14]%R%  %WH%pwnedOrNot                %DG%Email breach checker with passwords%R%
+echo  !S14!%YB%[14]%R%  %WH%pwnedOrNot                %DG%Email breach checker - shows leaked passwords%R%
 echo.
-echo  %WB%  ADVANCED TOOLS%R%
+echo  %WB%  OSINT  %DG%^>  DOMAINS ^& NETWORKS%R%
 echo  %DG%  --------------------------------------------------------%R%
-echo  !S15!%GB%[15]%R%  %WH%GHunt                     %DG%Google account OSINT - email, location, more%R%
-echo  !S16!%CB%[16]%R%  %WH%Recon-ng                  %DG%Modular web reconnaissance framework%R%
-echo  !S17!%RD%[17]%R%  %WH%OWASP ZAP                 %DG%Web application security scanner%R%
-echo  !S18!%MGB%[18]%R%  %WH%WPScan                    %DG%WordPress vulnerability scanner%R%
-echo.
-echo  %WB%  OSINT EXTENDED%R%
-echo  %DG%  --------------------------------------------------------%R%
+echo  !S3!%BB% [3]%R%  %WH%SpiderFoot                %DG%Automated multi-source OSINT (web UI)%R%
+echo  !S7!%ORB% [7]%R%  %WH%theHarvester              %DG%Emails, subdomains, IPs from a domain%R%
+echo  !S10!%WB%[10]%R%  %WH%Photon                    %DG%Web crawler - extract URLs, keys, secrets%R%
+echo  !S16!%CB%[16]%R%  %WH%Recon-ng                  %DG%Modular recon framework with API modules%R%
 echo  !S19!%CB%[19]%R%  %WH%Amass                     %DG%Deep subdomain enumeration (OWASP)%R%
-echo  !S20!%YB%[20]%R%  %WH%Phoneinfoga               %DG%Phone number OSINT - carrier, region, sources%R%
-echo  !S21!%CY%[21]%R%  %WH%Shodan CLI                %DG%Internet-exposed services and IP recon%R%
-echo  !S22!%GB%[22]%R%  %WH%Maltego                   %DG%Visual link analysis and OSINT mapping%R%
+echo  !S21!%CY%[21]%R%  %WH%Shodan CLI                %DG%Find internet-exposed services, cams, IPs%R%
+echo  !S22!%GB%[22]%R%  %WH%Maltego                   %DG%Visual link analysis and relationship mapping%R%
+echo  !S25!%BB%[25]%R%  %WH%Subfinder                 %DG%Passive subdomain discovery%R%
 echo.
-echo  %WB%  PENTESTING%R%
+echo  %WB%  FILES ^& METADATA%R%
 echo  %DG%  --------------------------------------------------------%R%
+echo  !S4!%MB% [4]%R%  %WH%ExifTool                  %DG%Read, write and strip file metadata / GPS%R%
+echo.
+echo  %WB%  PENTESTING  %DG%^>  WEB%R%
+echo  %DG%  --------------------------------------------------------%R%
+echo  !S11!%RD%[11]%R%  %WH%SQLMap                    %DG%SQL injection detection and exploitation%R%
+echo  !S17!%RD%[17]%R%  %WH%OWASP ZAP                 %DG%Web app security scanner (full GUI)%R%
+echo  !S18!%MGB%[18]%R%  %WH%WPScan                    %DG%WordPress - users, plugins, themes, CVEs%R%
 echo  !S23!%RD%[23]%R%  %WH%Nuclei                    %DG%Template-based CVE and vulnerability scanner%R%
 echo  !S24!%ORB%[24]%R%  %WH%ffuf                      %DG%Fast web fuzzer - dirs, vhosts, parameters%R%
-echo  !S25!%BB%[25]%R%  %WH%Subfinder                 %DG%Passive subdomain discovery%R%
-echo  !S26!%MGB%[26]%R%  %WH%Netexec (nxc)             %DG%Network auth testing - SMB / WinRM / LDAP%R%
+echo.
+echo  %WB%  PENTESTING  %DG%^>  NETWORK%R%
+echo  %DG%  --------------------------------------------------------%R%
+echo  !S26!%MGB%[26]%R%  %WH%Netexec (nxc)             %DG%SMB / WinRM / LDAP / SSH auth testing%R%
 echo.
 echo  %WB%  UTILITIES%R%
 echo  %DG%  --------------------------------------------------------%R%
-echo  !S27!%WB%[27]%R%  %WH%CyberChef                 %DG%Encode / decode / hash / parse (offline)%R%
+echo  !S27!%WB%[27]%R%  %WH%CyberChef                 %DG%Encode / decode / hash / parse - offline%R%
 echo.
 echo  %DG%  --------------------------------------------------------%R%
 echo  %CY%  [R]%R% Repair   %CY%[C]%R% Commands   %CY%[D]%R% Dictionary   %CY%[H]%R% Help   %CY%[I]%R% Instagram   %CY%[Q]%R% Quit
