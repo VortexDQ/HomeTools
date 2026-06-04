@@ -2952,7 +2952,7 @@ goto :EOF
 echo.
 echo  %ORB%  [28] Nmap%R%
 where nmap.exe >nul 2>&1 && (echo  %GN%    Status: Ready%R% & goto :EOF)
-if exist "C:\Program Files\Nmap\nmap.exe" (echo  %GN%    Status: Installed (add to PATH)%R% & goto :EOF)
+if exist "C:\Program Files\Nmap\nmap.exe" (echo  %GN%    Status: Installed - add to PATH%R% & goto :EOF)
 if "!HAS_NET!"=="0" (echo  %DG%    Offline - not installed.%R%  & goto :EOF)
 echo  %WH%    Not installed - installing via winget...%R%
 call :INSTALL_NMAP_FUNC
@@ -3017,7 +3017,7 @@ goto :EOF
 echo.
 echo  %WB%  [35] Wireshark%R%
 where wireshark.exe >nul 2>&1 && (echo  %GN%    Status: Ready%R% & goto :EOF)
-if exist "C:\Program Files\Wireshark\wireshark.exe" (echo  %GN%    Status: Installed (add to PATH)%R% & goto :EOF)
+if exist "C:\Program Files\Wireshark\wireshark.exe" (echo  %GN%    Status: Installed - add to PATH%R% & goto :EOF)
 if "!HAS_NET!"=="0" (echo  %DG%    Offline - not installed.%R%  & goto :EOF)
 echo  %WH%    Not installed - installing via winget...%R%
 call :INSTALL_WIRE_FUNC
