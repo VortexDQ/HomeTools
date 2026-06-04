@@ -1,6 +1,6 @@
 @echo off
 :: ============================================================
-::  HOME TOOLS  |  OSINT Launcher  |  v5.8
+::  HOME TOOLS  |  OSINT Launcher  |  v5.9
 ::  A self-installing OSINT toolkit launcher for Windows.
 ::
 ::  Tools clone and install automatically on first launch.
@@ -11,7 +11,7 @@
 ::  Install locations: C:\OSINT\   and   C:\Tools\exiftool\
 ::  Made with love by vortexdq.com
 :: ============================================================
-:: HOMETOOLS_VERSION:5.8
+:: HOMETOOLS_VERSION:5.9
 if "%~1"=="-k" goto :INIT
 cmd /k "%~f0" -k
 exit /b
@@ -19,7 +19,7 @@ exit /b
 
 setlocal enabledelayedexpansion
 chcp 65001 >nul 2>&1
-title HOME TOOLS v5.8
+title HOME TOOLS v5.9
 
 :: ============================================================
 ::  ANSI COLORS
@@ -44,7 +44,7 @@ set "ORB=%E%[1;33m"
 :: ============================================================
 ::  VERSION
 :: ============================================================
-set "HT_VERSION=5.8"
+set "HT_VERSION=5.9"
 
 :: ============================================================
 ::  TOOL PATHS
@@ -98,7 +98,7 @@ goto STARTUP
 cls
 echo.
 echo  %CB%  =======================================================%R%
-echo  %CB%           HOME TOOLS v5.8  -  First Launch             %R%
+echo  %CB%           HOME TOOLS v5.9  -  First Launch             %R%
 echo  %CB%       Self-installing OSINT Toolkit for Windows         %R%
 echo  %CB%  =======================================================%R%
 echo.
@@ -326,7 +326,7 @@ if defined S22_TMP set "S22=%GN%[OK] %R%"
 if exist "%P_NUCL%\nuclei.exe"                      set "S23=%GN%[OK] %R%"
 if exist "%P_FFUF%\ffuf.exe"                        set "S24=%GN%[OK] %R%"
 if exist "%P_SUBF%\subfinder.exe"                   set "S25=%GN%[OK] %R%"
-if exist "%P_NXCE%\venv\Scripts\nxc.exe"            set "S26=%GN%[OK] %R%"
+if exist "%P_NXCE%\nxc.exe"                         set "S26=%GN%[OK] %R%"
 if exist "%P_CHEF%\CyberChef*.html" set "S27=%GN%[OK] %R%"
 for %%F in ("%P_CHEF%\CyberChef*.html") do if exist "%%F" set "S27=%GN%[OK] %R%"
 
@@ -1145,10 +1145,12 @@ echo  %WB%  Netexec (nxc)  ^|  Network Authentication Testing%R%
 echo  %MGB%  =======================================================%R%
 echo.
 echo  %YW%  REMINDER: Only test networks you own or have explicit permission to test.%R%
+echo  %DG%  NOTE: Windows Defender may flag nxc.exe (false positive - common for pentest tools).%R%
+echo  %DG%  If blocked: Settings -^> Windows Security -^> Virus protection -^> Exclusions -^> Add %P_NXCE%%R%
 echo.
-if not exist "%P_NXCE%\venv\Scripts\nxc.exe" echo  %RD%  Not ready. Type R on the menu to repair.%R% & call :SFX & pause & goto MENU
+if not exist "%P_NXCE%\nxc.exe" echo  %RD%  Not ready. Type R on the menu to repair.%R% & call :SFX & pause & goto MENU
 title HOME TOOLS  ^|  Netexec
-powershell -NoProfile -Command "Set-Location '%P_NXCE%';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;35m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;35m  Netexec (nxc)  |  Network Auth Testing'+$e+'[0m');Write-Host('  '+$e+'[1;35m'+$sep+$e+'[0m');Write-Host '  Successor to CrackMapExec. Enter nxc commands directly.' -ForegroundColor DarkGray;Write-Host;Write-Host '  COMMANDS' -ForegroundColor White;Write-Host '  smb 10.0.0.0/24                        Scan SMB hosts on subnet' -ForegroundColor DarkGray;Write-Host '  smb IP -u user -p pass                 SMB auth test' -ForegroundColor DarkGray;Write-Host '  smb IP -u user -p pass --shares        List shares' -ForegroundColor DarkGray;Write-Host '  winrm IP -u user -p pass              WinRM auth test' -ForegroundColor DarkGray;Write-Host '  ldap IP -u user -p pass --users        Dump LDAP users' -ForegroundColor DarkGray;Write-Host '  ssh IP -u user -p pass                SSH auth test' -ForegroundColor DarkGray;Write-Host;Write-Host '  Type  q  or leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$n=if(Test-Path 'venv\Scripts\nxc.exe'){'.\venv\Scripts\nxc.exe'}else{'nxc'};do{$cmd=Read-Host '  nxc command';if('q','back','menu','exit','home' -contains $cmd){break};if($cmd){$parts=$cmd -split ' ';& $n @parts;if($LASTEXITCODE -ne 0){try{(New-Object Media.SoundPlayer $env:HT_SFX).Play()}catch{};Write-Host '  Error. Press R on menu to repair if install is broken.' -ForegroundColor Yellow}}}while($cmd -and ('q','back','menu','exit','home' -notcontains $cmd))"
+powershell -NoProfile -Command "Set-Location '%P_NXCE%';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;35m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;35m  Netexec (nxc)  |  Network Auth Testing'+$e+'[0m');Write-Host('  '+$e+'[1;35m'+$sep+$e+'[0m');Write-Host '  Successor to CrackMapExec. Enter nxc commands directly.' -ForegroundColor DarkGray;Write-Host;Write-Host '  COMMANDS' -ForegroundColor White;Write-Host '  smb 10.0.0.0/24                        Scan SMB hosts on subnet' -ForegroundColor DarkGray;Write-Host '  smb IP -u user -p pass                 SMB auth test' -ForegroundColor DarkGray;Write-Host '  smb IP -u user -p pass --shares        List shares' -ForegroundColor DarkGray;Write-Host '  winrm IP -u user -p pass              WinRM auth test' -ForegroundColor DarkGray;Write-Host '  ldap IP -u user -p pass --users        Dump LDAP users' -ForegroundColor DarkGray;Write-Host '  ssh IP -u user -p pass                SSH auth test' -ForegroundColor DarkGray;Write-Host;Write-Host '  Type  q  or leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$n='%P_NXCE%\nxc.exe';do{$cmd=Read-Host '  nxc command';if('q','back','menu','exit','home' -contains $cmd){break};if($cmd){$parts=$cmd -split ' ';& $n @parts;if($LASTEXITCODE -ne 0){try{(New-Object Media.SoundPlayer $env:HT_SFX).Play()}catch{};Write-Host '  Error. Press R on menu to repair if install is broken.' -ForegroundColor Yellow}}}while($cmd -and ('q','back','menu','exit','home' -notcontains $cmd))"
 title HOME TOOLS v!HT_VERSION!
 goto MENU
 
@@ -2718,13 +2720,13 @@ goto :EOF
 :SC_NXCE
 echo.
 echo  %MGB%  [26] Netexec (nxc)%R%
-if exist "%P_NXCE%\venv\Scripts\nxc.exe" goto :SC_NXCE_END
+if exist "%P_NXCE%\nxc.exe" goto :SC_NXCE_END
 if "!HAS_NET!"=="0" (echo  %DG%    Offline - not installed.%R%    & goto :SC_NXCE_END)
 if "!HAS_PY!"=="0"  (echo  %YW%    Needs Python in PATH.%R%       & goto :SC_NXCE_END)
 echo  %WH%    Not installed - installing...%R%
 call :INSTALL_NXCE_FUNC
 :SC_NXCE_END
-if exist "%P_NXCE%\venv\Scripts\nxc.exe" (echo  %GN%    Status: Ready%R%) else (echo  %RD%    Status: NOT READY%R%)
+if exist "%P_NXCE%\nxc.exe" (echo  %GN%    Status: Ready%R%) else (echo  %RD%    Status: NOT READY%R%)
 goto :EOF
 
 :SC_CHEF
@@ -2742,7 +2744,7 @@ goto :EOF
 :: ============================================================
 :INSTALL_GO_BINARY
 if not exist "!GB_DIR!" mkdir "!GB_DIR!" >nul 2>&1
-powershell -NoProfile -ExecutionPolicy Bypass -Command "$ProgressPreference='SilentlyContinue';$ErrorActionPreference='Stop';try{$api=Invoke-RestMethod 'https://api.github.com/repos/!GB_REPO!/releases/latest' -TimeoutSec 20;$a=$api.assets|Where-Object{$_.name -match '(?i)windows.*amd64.*zip|amd64.*windows.*zip|windows_amd64.*zip'}|Select-Object -First 1;if(-not $a){$a=$api.assets|Where-Object{$_.name -match '(?i)windows.*zip'}|Select-Object -First 1};if($a){Invoke-WebRequest $a.browser_download_url -OutFile '!GB_DIR!\dl.zip' -UseBasicParsing -TimeoutSec 300;Expand-Archive '!GB_DIR!\dl.zip' '!GB_DIR!' -Force;$f=Get-ChildItem '!GB_DIR!' -Recurse -Filter '!GB_EXE!.exe' -EA SilentlyContinue|Select-Object -First 1;if($f -and $f.FullName -ne '!GB_DIR!\!GB_EXE!.exe'){Copy-Item $f.FullName '!GB_DIR!\!GB_EXE!.exe' -Force};Remove-Item '!GB_DIR!\dl.zip' -Force -EA SilentlyContinue;Write-Host('    '+$a.name+' installed.') -ForegroundColor Green}else{Write-Host '    No Windows asset found for this release.' -ForegroundColor Red}}catch{Write-Host('    Download failed: '+$_.Exception.Message) -ForegroundColor Red}"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$ProgressPreference='SilentlyContinue';$ErrorActionPreference='Stop';try{$api=Invoke-RestMethod 'https://api.github.com/repos/!GB_REPO!/releases/latest' -TimeoutSec 20;$a=$api.assets|Where-Object{$_.name -match '(?i)windows.*amd64|amd64.*windows|windows.*x86_64|x86_64.*windows'}|Where-Object{$_.name -match '\.(zip|tar\.gz)$'}|Select-Object -First 1;if(-not $a){$a=$api.assets|Where-Object{$_.name -match '(?i)windows.*\.(zip|tar\.gz)$'}|Select-Object -First 1};if($a){$ext=if($a.name -match '\.tar\.gz$'){'.tar.gz'}else{'.zip'};$dl='!GB_DIR!\dl'+$ext;Invoke-WebRequest $a.browser_download_url -OutFile $dl -UseBasicParsing -TimeoutSec 300;if($ext -eq '.zip'){Expand-Archive $dl '!GB_DIR!' -Force}else{tar -xzf $dl -C '!GB_DIR!' 2>$null};$f=Get-ChildItem '!GB_DIR!' -Recurse -Filter '!GB_EXE!.exe' -EA SilentlyContinue|Select-Object -First 1;if($f -and $f.FullName -ne '!GB_DIR!\!GB_EXE!.exe'){Copy-Item $f.FullName '!GB_DIR!\!GB_EXE!.exe' -Force};Remove-Item $dl -Force -EA SilentlyContinue;Write-Host('    '+$a.name+' installed.') -ForegroundColor Green}else{Write-Host '    No Windows asset found for this release.' -ForegroundColor Red}}catch{Write-Host('    Download failed: '+$_.Exception.Message) -ForegroundColor Red}"
 goto :EOF
 
 :INSTALL_AMAS_FUNC
@@ -2787,14 +2789,12 @@ call :INSTALL_GO_BINARY
 goto :EOF
 
 :INSTALL_NXCE_FUNC
-if exist "%P_NXCE%\venv\Scripts\nxc.exe" (echo  %GN%    Already installed.%R% & goto :EOF)
+if exist "%P_NXCE%\nxc.exe" (echo  %GN%    Already installed.%R% & goto :EOF)
 if not exist "%P_NXCE%" mkdir "%P_NXCE%" >nul 2>&1
-python -m venv "%P_NXCE%\venv" >nul 2>&1
-"%P_NXCE%\venv\Scripts\python.exe" -m ensurepip --upgrade >nul 2>&1
-"%P_NXCE%\venv\Scripts\python.exe" -m pip install --upgrade pip --quiet 2>nul
-echo  %DG%    Installing netexec (this takes a while - building impacket)...%R%
-"%P_NXCE%\venv\Scripts\python.exe" -m pip install netexec --quiet --prefer-binary
-if exist "%P_NXCE%\venv\Scripts\nxc.exe" (echo  %GN%    Netexec installed.%R%) else (echo  %RD%    Install failed. Try pressing R on the menu.%R%)
+echo  %DG%    Adding Windows Defender exclusion (required for pentest tools)...%R%
+powershell -NoProfile -ExecutionPolicy Bypass -Command "try{Add-MpPreference -ExclusionPath '%P_NXCE%' -EA Stop;Write-Host '    Defender exclusion added.' -ForegroundColor Green}catch{Write-Host '    Note: could not add exclusion - run as admin if nxc.exe gets blocked.' -ForegroundColor Yellow}" 2>nul
+echo  %DG%    Downloading Netexec Windows binary (nxc.exe)...%R%
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$ProgressPreference='SilentlyContinue';try{$rels=Invoke-RestMethod 'https://api.github.com/repos/Pennyw0rth/NetExec/releases?per_page=10' -TimeoutSec 20;$rel=$rels|Where-Object{$_.assets.Count -gt 0}|Select-Object -First 1;$a=$rel.assets|Where-Object{$_.name -match '(?i)windows'}|Select-Object -First 1;if($a){Invoke-WebRequest $a.browser_download_url -OutFile '%P_NXCE%\nxc_dl.zip' -UseBasicParsing -TimeoutSec 180;Expand-Archive '%P_NXCE%\nxc_dl.zip' '%P_NXCE%' -Force;$f=Get-ChildItem '%P_NXCE%' -Recurse -Filter 'nxc.exe' -EA SilentlyContinue|Select-Object -First 1;if($f -and $f.FullName -ne '%P_NXCE%\nxc.exe'){Copy-Item $f.FullName '%P_NXCE%\nxc.exe' -Force};Remove-Item '%P_NXCE%\nxc_dl.zip' -Force -EA SilentlyContinue;Write-Host('    Netexec '+$rel.tag_name+' installed.') -ForegroundColor Green}else{Write-Host '    No Windows asset found.' -ForegroundColor Red}}catch{Write-Host('    Download failed: '+$_.Exception.Message) -ForegroundColor Red}"
 goto :EOF
 
 :INSTALL_CHEF_FUNC
