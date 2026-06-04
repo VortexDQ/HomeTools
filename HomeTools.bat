@@ -1,6 +1,6 @@
 @echo off
 :: ============================================================
-::  HOME TOOLS  |  OSINT Launcher  |  v5.6
+::  HOME TOOLS  |  OSINT Launcher  |  v5.7
 ::  A self-installing OSINT toolkit launcher for Windows.
 ::
 ::  Tools clone and install automatically on first launch.
@@ -11,7 +11,7 @@
 ::  Install locations: C:\OSINT\   and   C:\Tools\exiftool\
 ::  Made with love by vortexdq.com
 :: ============================================================
-:: HOMETOOLS_VERSION:5.6
+:: HOMETOOLS_VERSION:5.7
 if "%~1"=="-k" goto :INIT
 cmd /k "%~f0" -k
 exit /b
@@ -19,7 +19,7 @@ exit /b
 
 setlocal enabledelayedexpansion
 chcp 65001 >nul 2>&1
-title HOME TOOLS v5.6
+title HOME TOOLS v5.7
 
 :: ============================================================
 ::  ANSI COLORS
@@ -44,7 +44,7 @@ set "ORB=%E%[1;33m"
 :: ============================================================
 ::  VERSION
 :: ============================================================
-set "HT_VERSION=5.6"
+set "HT_VERSION=5.7"
 
 :: ============================================================
 ::  TOOL PATHS
@@ -71,6 +71,15 @@ set "P_GHNT=C:\OSINT\GHunt"
 set "P_RECN=C:\OSINT\recon-ng"
 set "P_ZAP=C:\Tools\ZAP"
 set "P_WPSC=C:\OSINT\wpscan"
+set "P_AMAS=C:\Tools\amass"
+set "P_PIFG=C:\Tools\phoneinfoga"
+set "P_SHOD=C:\OSINT\shodan"
+set "P_MALT=C:\Tools\Maltego"
+set "P_NUCL=C:\Tools\nuclei"
+set "P_FFUF=C:\Tools\ffuf"
+set "P_SUBF=C:\Tools\subfinder"
+set "P_NXCE=C:\OSINT\netexec"
+set "P_CHEF=C:\Tools\CyberChef"
 
 :: ============================================================
 ::  FIRST RUN CHECK
@@ -89,7 +98,7 @@ goto STARTUP
 cls
 echo.
 echo  %CB%  =======================================================%R%
-echo  %CB%           HOME TOOLS v5.6  -  First Launch             %R%
+echo  %CB%           HOME TOOLS v5.7  -  First Launch             %R%
 echo  %CB%       Self-installing OSINT Toolkit for Windows         %R%
 echo  %CB%  =======================================================%R%
 echo.
@@ -226,6 +235,15 @@ call :SC_GHNT
 call :SC_RECN
 call :SC_ZAP
 call :SC_WPSC
+call :SC_AMAS
+call :SC_PIFG
+call :SC_SHOD
+call :SC_MALT
+call :SC_NUCL
+call :SC_FFUF
+call :SC_SUBF
+call :SC_NXCE
+call :SC_CHEF
 call :FIX_OSINTGRAM
 
 echo.
@@ -290,6 +308,27 @@ if exist "%P_GHNT%\ghunt"                        set "S15=%GN%[OK] %R%"
 if exist "%P_RECN%\recon-ng"                     set "S16=%GN%[OK] %R%"
 if exist "%P_ZAP%\zap.bat"                       set "S17=%GN%[OK] %R%"
 where wpscan >nul 2>&1 && set "S18=%GN%[OK] %R%"
+set "S19=%RD%[--] %R%"
+set "S20=%RD%[--] %R%"
+set "S21=%RD%[--] %R%"
+set "S22=%RD%[--] %R%"
+set "S23=%RD%[--] %R%"
+set "S24=%RD%[--] %R%"
+set "S25=%RD%[--] %R%"
+set "S26=%RD%[--] %R%"
+set "S27=%RD%[--] %R%"
+if exist "%P_AMAS%\amass.exe"                       set "S19=%GN%[OK] %R%"
+if exist "%P_PIFG%\phoneinfoga.exe"                 set "S20=%GN%[OK] %R%"
+if exist "%P_SHOD%\venv\Scripts\shodan.exe"         set "S21=%GN%[OK] %R%"
+set "S22_TMP="
+for /d %%D in ("C:\Program Files\Maltego*" "C:\Program Files (x86)\Maltego*" "%P_MALT%") do if exist "%%D" set "S22_TMP=1"
+if defined S22_TMP set "S22=%GN%[OK] %R%"
+if exist "%P_NUCL%\nuclei.exe"                      set "S23=%GN%[OK] %R%"
+if exist "%P_FFUF%\ffuf.exe"                        set "S24=%GN%[OK] %R%"
+if exist "%P_SUBF%\subfinder.exe"                   set "S25=%GN%[OK] %R%"
+if exist "%P_NXCE%\venv\Scripts\nxc.exe"            set "S26=%GN%[OK] %R%"
+if exist "%P_CHEF%\CyberChef*.html" set "S27=%GN%[OK] %R%"
+for %%F in ("%P_CHEF%\CyberChef*.html") do if exist "%%F" set "S27=%GN%[OK] %R%"
 
 echo  %WB%  DEVICE / LOCAL%R%
 echo  %DG%  --------------------------------------------------------%R%
@@ -318,6 +357,24 @@ echo  !S16!%CB%[16]%R%  %WH%Recon-ng                  %DG%Modular web reconnaiss
 echo  !S17!%RD%[17]%R%  %WH%OWASP ZAP                 %DG%Web application security scanner%R%
 echo  !S18!%MGB%[18]%R%  %WH%WPScan                    %DG%WordPress vulnerability scanner%R%
 echo.
+echo  %WB%  OSINT EXTENDED%R%
+echo  %DG%  --------------------------------------------------------%R%
+echo  !S19!%CB%[19]%R%  %WH%Amass                     %DG%Deep subdomain enumeration (OWASP)%R%
+echo  !S20!%YB%[20]%R%  %WH%Phoneinfoga               %DG%Phone number OSINT - carrier, region, sources%R%
+echo  !S21!%CY%[21]%R%  %WH%Shodan CLI                %DG%Internet-exposed services and IP recon%R%
+echo  !S22!%GB%[22]%R%  %WH%Maltego                   %DG%Visual link analysis and OSINT mapping%R%
+echo.
+echo  %WB%  PENTESTING%R%
+echo  %DG%  --------------------------------------------------------%R%
+echo  !S23!%RD%[23]%R%  %WH%Nuclei                    %DG%Template-based CVE and vulnerability scanner%R%
+echo  !S24!%ORB%[24]%R%  %WH%ffuf                      %DG%Fast web fuzzer - dirs, vhosts, parameters%R%
+echo  !S25!%BB%[25]%R%  %WH%Subfinder                 %DG%Passive subdomain discovery%R%
+echo  !S26!%MGB%[26]%R%  %WH%Netexec (nxc)             %DG%Network auth testing - SMB / WinRM / LDAP%R%
+echo.
+echo  %WB%  UTILITIES%R%
+echo  %DG%  --------------------------------------------------------%R%
+echo  !S27!%WB%[27]%R%  %WH%CyberChef                 %DG%Encode / decode / hash / parse (offline)%R%
+echo.
 echo  %DG%  --------------------------------------------------------%R%
 echo  %CY%  [R]%R% Repair   %CY%[C]%R% Commands   %CY%[D]%R% Dictionary   %CY%[H]%R% Help   %CY%[I]%R% Instagram   %CY%[Q]%R% Quit
 echo  %DG%  --------------------------------------------------------%R%
@@ -344,6 +401,15 @@ if /i "%CHO%"=="15"        goto LAUNCH_GHNT
 if /i "%CHO%"=="16"        goto LAUNCH_RECN
 if /i "%CHO%"=="17"        goto LAUNCH_ZAP
 if /i "%CHO%"=="18"        goto LAUNCH_WPSC
+if /i "%CHO%"=="19"        goto LAUNCH_AMAS
+if /i "%CHO%"=="20"        goto LAUNCH_PIFG
+if /i "%CHO%"=="21"        goto LAUNCH_SHOD
+if /i "%CHO%"=="22"        goto LAUNCH_MALT
+if /i "%CHO%"=="23"        goto LAUNCH_NUCL
+if /i "%CHO%"=="24"        goto LAUNCH_FFUF
+if /i "%CHO%"=="25"        goto LAUNCH_SUBF
+if /i "%CHO%"=="26"        goto LAUNCH_NXCE
+if /i "%CHO%"=="27"        goto LAUNCH_CHEF
 if /i "%CHO%"=="R"         goto REPAIR
 if /i "%CHO%"=="repair"    goto REPAIR
 if /i "%CHO%"=="C"         goto COMMAND_CENTER
@@ -359,7 +425,7 @@ if /i "%CHO%"=="creds"     goto OGRAM_SETUP_MENU
 if /i "%CHO%"=="Q"         goto QUIT
 if /i "%CHO%"=="quit"      goto QUIT
 if /i "%CHO%"=="exit"      goto QUIT
-echo  %RD%  Unknown option. Type 1-18, R, C, D, H, I, or Q.%R%
+echo  %RD%  Unknown option. Type 1-27, R, C, D, H, I, or Q.%R%
 call :SFX
 timeout /t 1 /nobreak >nul
 goto MENU
@@ -923,6 +989,190 @@ pause >nul
 goto WPSC_LOOP
 :WPSC_DONE
 title HOME TOOLS v!HT_VERSION!
+goto MENU
+
+
+:: ============================================================
+::  LAUNCHERS  19-27
+:: ============================================================
+:LAUNCH_AMAS
+cls
+echo.
+echo  %CB%  =======================================================%R%
+echo  %WB%  Amass  ^|  Subdomain Enumeration (OWASP)%R%
+echo  %CB%  =======================================================%R%
+echo.
+echo  %YW%  REMINDER: Only scan domains you own or have permission to test.%R%
+echo.
+if not exist "%P_AMAS%\amass.exe" echo  %RD%  Not ready. Type R on the menu to repair.%R% & call :SFX & pause & goto MENU
+title HOME TOOLS  ^|  Amass
+powershell -NoProfile -Command "Set-Location '%P_AMAS%';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;96m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;96m  Amass  |  Deep Subdomain Enumeration'+$e+'[0m');Write-Host('  '+$e+'[1;96m'+$sep+$e+'[0m');Write-Host '  COMMANDS' -ForegroundColor White;Write-Host '  enum -d example.com              Basic enumeration' -ForegroundColor DarkGray;Write-Host '  enum -d example.com -passive     Passive only (no direct contact)' -ForegroundColor DarkGray;Write-Host '  enum -d example.com -o out.txt   Save results' -ForegroundColor DarkGray;Write-Host '  intel -d example.com             Find root domains and ASNs' -ForegroundColor DarkGray;Write-Host '  viz -d3 -dir /amass              Visualize results' -ForegroundColor DarkGray;Write-Host;Write-Host '  Type  q  or leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;do{$cmd=Read-Host '  amass command';if('q','back','menu','exit','home' -contains $cmd){break};if($cmd){.\amass.exe $cmd;if($LASTEXITCODE -ne 0){try{(New-Object Media.SoundPlayer $env:HT_SFX).Play()}catch{};Write-Host '  Amass exited with an error. Check the command syntax.' -ForegroundColor Yellow}}}while($cmd -and ('q','back','menu','exit','home' -notcontains $cmd))"
+title HOME TOOLS v!HT_VERSION!
+goto MENU
+
+:LAUNCH_PIFG
+cls
+echo.
+echo  %YB%  =======================================================%R%
+echo  %WB%  Phoneinfoga  ^|  Phone Number OSINT%R%
+echo  %YB%  =======================================================%R%
+echo.
+if not exist "%P_PIFG%\phoneinfoga.exe" echo  %RD%  Not ready. Type R on the menu to repair.%R% & call :SFX & pause & goto MENU
+title HOME TOOLS  ^|  Phoneinfoga
+powershell -NoProfile -Command "Set-Location '%P_PIFG%';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;93m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;93m  Phoneinfoga  |  Phone Number OSINT'+$e+'[0m');Write-Host('  '+$e+'[1;93m'+$sep+$e+'[0m');Write-Host '  Enter a phone number in E.164 format. Include country code.' -ForegroundColor DarkGray;Write-Host;Write-Host '  EXAMPLES' -ForegroundColor White;Write-Host '  +47 90000000     Norwegian number' -ForegroundColor DarkGray;Write-Host '  +1 2025551234    US number' -ForegroundColor DarkGray;Write-Host;Write-Host '  WHAT IT FINDS' -ForegroundColor White;Write-Host '  Carrier, line type, region, country, OSINT source results' -ForegroundColor DarkGray;Write-Host;Write-Host '  Type  q  or leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;do{$n=Read-Host '  Phone number (e.g. +4790000000)';if('q','back','menu','exit','home' -contains $n){break};if($n){.\phoneinfoga.exe scan -n $n;if($LASTEXITCODE -ne 0){try{(New-Object Media.SoundPlayer $env:HT_SFX).Play()}catch{};Write-Host '  Error. Check number format: must include + and country code.' -ForegroundColor Yellow}}}while($n -and ('q','back','menu','exit','home' -notcontains $n))"
+title HOME TOOLS v!HT_VERSION!
+goto MENU
+
+:LAUNCH_SHOD
+cls
+echo.
+echo  %CY%  =======================================================%R%
+echo  %WB%  Shodan CLI  ^|  Internet Recon%R%
+echo  %CY%  =======================================================%R%
+echo.
+if not exist "%P_SHOD%\venv\Scripts\shodan.exe" echo  %RD%  Not ready. Type R on the menu to repair.%R% & call :SFX & pause & goto MENU
+REM Check API key
+set "SHOD_KEY=0"
+if exist "%USERPROFILE%\.shodan\api_key" set "SHOD_KEY=1"
+if "!SHOD_KEY!"=="0" goto SHOD_SETUP
+goto SHOD_LAUNCH
+:SHOD_SETUP
+cls
+echo.
+echo  %CY%  =======================================================%R%
+echo  %WB%  Shodan CLI  ^|  API Key Setup%R%
+echo  %CY%  =======================================================%R%
+echo.
+echo  %WH%  Shodan needs a free API key to query the database.%R%
+echo  %DG%  Get your free key at: https://shodan.io/dashboard (register, click API Key)%R%
+echo.
+echo  %WH%  No key yet? Press ENTER to SKIP - you can add one later.%R%
+echo.
+set "SHOD_API="
+set /p "SHOD_API=   Paste API key (or Enter to skip) >> "
+if not defined SHOD_API goto SHOD_LAUNCH
+"%P_SHOD%\venv\Scripts\shodan.exe" init "!SHOD_API!" >nul 2>&1
+echo  %GN%  Shodan key saved.%R%
+timeout /t 1 /nobreak >nul
+:SHOD_LAUNCH
+title HOME TOOLS  ^|  Shodan CLI
+powershell -NoProfile -Command "Set-Location '%P_SHOD%';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;96m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;96m  Shodan CLI  |  Internet Recon'+$e+'[0m');Write-Host('  '+$e+'[1;96m'+$sep+$e+'[0m');Write-Host '  Query Shodan directly from the terminal.' -ForegroundColor DarkGray;Write-Host;Write-Host '  COMMANDS' -ForegroundColor White;Write-Host '  shodan host IP              All info on an IP address' -ForegroundColor DarkGray;Write-Host '  shodan search ""apache""    Search across all Shodan data' -ForegroundColor DarkGray;Write-Host '  shodan count ""nginx""      Count matching hosts' -ForegroundColor DarkGray;Write-Host '  shodan domain example.com  Subdomains and DNS info' -ForegroundColor DarkGray;Write-Host '  shodan myip                Your own external IP' -ForegroundColor DarkGray;Write-Host;Write-Host '  Type  q  or leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$sh=if(Test-Path 'venv\Scripts\shodan.exe'){'.\venv\Scripts\shodan.exe'}else{'shodan'};do{$cmd=Read-Host '  shodan command';if('q','back','menu','exit','home' -contains $cmd){break};if($cmd){$parts=$cmd -split ' ';& $sh @parts;if($LASTEXITCODE -ne 0){try{(New-Object Media.SoundPlayer $env:HT_SFX).Play()}catch{};Write-Host '  Error. Check your API key is set (re-run tool 21 to enter it).' -ForegroundColor Yellow}}}while($cmd -and ('q','back','menu','exit','home' -notcontains $cmd))"
+title HOME TOOLS v!HT_VERSION!
+goto MENU
+
+:LAUNCH_MALT
+cls
+echo.
+echo  %GB%  =======================================================%R%
+echo  %WB%  Maltego  ^|  Visual OSINT Mapping%R%
+echo  %GB%  =======================================================%R%
+echo.
+call :MALT_FIND
+if defined MALT_EXE goto MALT_RUN
+echo  %WH%  Maltego not found - attempting install via winget...%R%
+winget install -e --id Maltego.Maltego --accept-source-agreements --accept-package-agreements >nul 2>&1
+call :MALT_FIND
+if defined MALT_EXE goto MALT_RUN
+echo  %RD%  Auto-install failed. Download the Community Edition from:%R%
+echo  %CY%  https://www.maltego.com/downloads/%R%
+echo.
+call :SFX
+pause
+goto MENU
+:MALT_RUN
+echo  %GN%  Launching Maltego (GUI - opens separately)...%R%
+echo  %DG%  Register or sign in with a free Community Edition account.%R%
+echo.
+powershell -NoProfile -ExecutionPolicy Bypass -Command "Start-Process -FilePath '!MALT_EXE!'"
+echo  %WH%  Press any key to return to menu (Maltego keeps running)...%R%
+pause >nul
+goto MENU
+
+:LAUNCH_NUCL
+cls
+echo.
+echo  %RD%  =======================================================%R%
+echo  %WB%  Nuclei  ^|  Template-Based Vulnerability Scanner%R%
+echo  %RD%  =======================================================%R%
+echo.
+echo  %YW%  REMINDER: Only scan targets you own or have permission to test.%R%
+echo.
+if not exist "%P_NUCL%\nuclei.exe" echo  %RD%  Not ready. Type R on the menu to repair.%R% & call :SFX & pause & goto MENU
+title HOME TOOLS  ^|  Nuclei
+powershell -NoProfile -Command "Set-Location '%P_NUCL%';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;91m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;91m  Nuclei  |  CVE and Vulnerability Scanner'+$e+'[0m');Write-Host('  '+$e+'[1;91m'+$sep+$e+'[0m');Write-Host '  Template-driven scanner - fast, CVE database updated daily.' -ForegroundColor DarkGray;Write-Host;Write-Host '  COMMANDS' -ForegroundColor White;Write-Host '  -u https://example.com                  Scan a URL' -ForegroundColor DarkGray;Write-Host '  -u URL -t cves/                          CVE templates only' -ForegroundColor DarkGray;Write-Host '  -u URL -t exposures/                     Exposed files/panels' -ForegroundColor DarkGray;Write-Host '  -u URL -severity critical,high           High+ severity only' -ForegroundColor DarkGray;Write-Host '  -update                                  Update templates' -ForegroundColor DarkGray;Write-Host;Write-Host '  Type  q  or leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;do{$cmd=Read-Host '  nuclei flags';if('q','back','menu','exit','home' -contains $cmd){break};if($cmd){$parts=$cmd -split ' ';.\nuclei.exe @parts;if($LASTEXITCODE -ne 0){try{(New-Object Media.SoundPlayer $env:HT_SFX).Play()}catch{};Write-Host '  Nuclei error. Check the URL and your network.' -ForegroundColor Yellow}}}while($cmd -and ('q','back','menu','exit','home' -notcontains $cmd))"
+title HOME TOOLS v!HT_VERSION!
+goto MENU
+
+:LAUNCH_FFUF
+cls
+echo.
+echo  %ORB%  =======================================================%R%
+echo  %WB%  ffuf  ^|  Fast Web Fuzzer%R%
+echo  %ORB%  =======================================================%R%
+echo.
+echo  %YW%  REMINDER: Only fuzz targets you own or have permission to test.%R%
+echo.
+if not exist "%P_FFUF%\ffuf.exe" echo  %RD%  Not ready. Type R on the menu to repair.%R% & call :SFX & pause & goto MENU
+title HOME TOOLS  ^|  ffuf
+powershell -NoProfile -Command "Set-Location '%P_FFUF%';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;33m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;33m  ffuf  |  Fast Web Fuzzer'+$e+'[0m');Write-Host('  '+$e+'[1;33m'+$sep+$e+'[0m');Write-Host '  Use FUZZ as the placeholder. Needs a wordlist.' -ForegroundColor DarkGray;Write-Host;Write-Host '  COMMANDS' -ForegroundColor White;Write-Host '  -u URL/FUZZ -w wordlist.txt              Directory discovery' -ForegroundColor DarkGray;Write-Host '  -u URL -H ""Host: FUZZ.example.com"" -w wl  Vhost fuzzing' -ForegroundColor DarkGray;Write-Host '  -u URL?param=FUZZ -w params.txt          Parameter fuzzing' -ForegroundColor DarkGray;Write-Host '  -u URL/FUZZ -w wl -mc 200,301            Match status codes' -ForegroundColor DarkGray;Write-Host '  Wordlists: C:\OSINT\wordlists\ (get SecLists from GitHub)' -ForegroundColor DarkGray;Write-Host;Write-Host '  Type  q  or leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;do{$cmd=Read-Host '  ffuf flags';if('q','back','menu','exit','home' -contains $cmd){break};if($cmd){$parts=$cmd -split ' ';.\ffuf.exe @parts;if($LASTEXITCODE -ne 0){try{(New-Object Media.SoundPlayer $env:HT_SFX).Play()}catch{};Write-Host '  ffuf error. Check URL and wordlist path.' -ForegroundColor Yellow}}}while($cmd -and ('q','back','menu','exit','home' -notcontains $cmd))"
+title HOME TOOLS v!HT_VERSION!
+goto MENU
+
+:LAUNCH_SUBF
+cls
+echo.
+echo  %BB%  =======================================================%R%
+echo  %WB%  Subfinder  ^|  Passive Subdomain Discovery%R%
+echo  %BB%  =======================================================%R%
+echo.
+if not exist "%P_SUBF%\subfinder.exe" echo  %RD%  Not ready. Type R on the menu to repair.%R% & call :SFX & pause & goto MENU
+title HOME TOOLS  ^|  Subfinder
+powershell -NoProfile -Command "Set-Location '%P_SUBF%';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;94m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;94m  Subfinder  |  Passive Subdomain Discovery'+$e+'[0m');Write-Host('  '+$e+'[1;94m'+$sep+$e+'[0m');Write-Host '  Passive only - no direct contact with target. Fast and quiet.' -ForegroundColor DarkGray;Write-Host;Write-Host '  COMMANDS' -ForegroundColor White;Write-Host '  -d example.com                   Basic subdomain discovery' -ForegroundColor DarkGray;Write-Host '  -d example.com -o subs.txt       Save to file' -ForegroundColor DarkGray;Write-Host '  -d example.com -all              All sources' -ForegroundColor DarkGray;Write-Host '  -d example.com -silent           Clean output (pipe to Nuclei/Amass)' -ForegroundColor DarkGray;Write-Host '  TIP: pipe to Nuclei: subfinder -d target -silent | nuclei -l -' -ForegroundColor DarkGray;Write-Host;Write-Host '  Type  q  or leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;do{$cmd=Read-Host '  subfinder flags';if('q','back','menu','exit','home' -contains $cmd){break};if($cmd){$parts=$cmd -split ' ';.\subfinder.exe @parts;if($LASTEXITCODE -ne 0){try{(New-Object Media.SoundPlayer $env:HT_SFX).Play()}catch{};Write-Host '  Error. Check domain format (no https://).' -ForegroundColor Yellow}}}while($cmd -and ('q','back','menu','exit','home' -notcontains $cmd))"
+title HOME TOOLS v!HT_VERSION!
+goto MENU
+
+:LAUNCH_NXCE
+cls
+echo.
+echo  %MGB%  =======================================================%R%
+echo  %WB%  Netexec (nxc)  ^|  Network Authentication Testing%R%
+echo  %MGB%  =======================================================%R%
+echo.
+echo  %YW%  REMINDER: Only test networks you own or have explicit permission to test.%R%
+echo.
+if not exist "%P_NXCE%\venv\Scripts\nxc.exe" echo  %RD%  Not ready. Type R on the menu to repair.%R% & call :SFX & pause & goto MENU
+title HOME TOOLS  ^|  Netexec
+powershell -NoProfile -Command "Set-Location '%P_NXCE%';$e=[char]27;$sep=([string][char]0x2550)*54;Write-Host('  '+$e+'[1;35m'+$sep+$e+'[0m');Write-Host('  '+$e+'[1;35m  Netexec (nxc)  |  Network Auth Testing'+$e+'[0m');Write-Host('  '+$e+'[1;35m'+$sep+$e+'[0m');Write-Host '  Successor to CrackMapExec. Enter nxc commands directly.' -ForegroundColor DarkGray;Write-Host;Write-Host '  COMMANDS' -ForegroundColor White;Write-Host '  smb 10.0.0.0/24                        Scan SMB hosts on subnet' -ForegroundColor DarkGray;Write-Host '  smb IP -u user -p pass                 SMB auth test' -ForegroundColor DarkGray;Write-Host '  smb IP -u user -p pass --shares        List shares' -ForegroundColor DarkGray;Write-Host '  winrm IP -u user -p pass              WinRM auth test' -ForegroundColor DarkGray;Write-Host '  ldap IP -u user -p pass --users        Dump LDAP users' -ForegroundColor DarkGray;Write-Host '  ssh IP -u user -p pass                SSH auth test' -ForegroundColor DarkGray;Write-Host;Write-Host '  Type  q  or leave blank to return to HOME TOOLS.' -ForegroundColor DarkGray;Write-Host;$n=if(Test-Path 'venv\Scripts\nxc.exe'){'.\venv\Scripts\nxc.exe'}else{'nxc'};do{$cmd=Read-Host '  nxc command';if('q','back','menu','exit','home' -contains $cmd){break};if($cmd){$parts=$cmd -split ' ';& $n @parts;if($LASTEXITCODE -ne 0){try{(New-Object Media.SoundPlayer $env:HT_SFX).Play()}catch{};Write-Host '  Error. Press R on menu to repair if install is broken.' -ForegroundColor Yellow}}}while($cmd -and ('q','back','menu','exit','home' -notcontains $cmd))"
+title HOME TOOLS v!HT_VERSION!
+goto MENU
+
+:LAUNCH_CHEF
+cls
+echo.
+echo  %WB%  =======================================================%R%
+echo  %WB%  CyberChef  ^|  Encode / Decode / Hash / Analyse%R%
+echo  %WB%  =======================================================%R%
+echo.
+if not exist "%P_CHEF%" mkdir "%P_CHEF%" >nul 2>&1
+call :CHEF_FIND
+if defined CHEF_HTML goto CHEF_RUN
+echo  %WH%  Downloading CyberChef (standalone, offline version)...%R%
+call :INSTALL_CHEF_FUNC
+call :CHEF_FIND
+if defined CHEF_HTML goto CHEF_RUN
+echo  %RD%  Download failed. Opening online version instead...%R%
+call :SFX
+start "" "https://gchq.github.io/CyberChef"
+echo  %DG%  Press any key to return to menu...%R%
+pause >nul
+goto MENU
+:CHEF_RUN
+echo  %GN%  Opening CyberChef in your browser (offline)...%R%
+echo  %DG%  Fully offline - no data leaves your machine.%R%
+echo.
+powershell -NoProfile -ExecutionPolicy Bypass -Command "Start-Process '!CHEF_HTML!'"
+echo  %WH%  Press any key to return to menu...%R%
+pause >nul
 goto MENU
 
 
@@ -2379,6 +2629,187 @@ echo  %RD%    Status: NOT READY%R%
 goto :EOF
 :SC_WPSC_RDY
 echo  %GN%    Status: Ready%R%
+goto :EOF
+
+
+:: ============================================================
+::  STARTUP CHECKS + INSTALL FUNCS  19-27
+:: ============================================================
+:SC_AMAS
+echo.
+echo  %CB%  [19] Amass%R%
+if exist "%P_AMAS%\amass.exe" goto :SC_AMAS_END
+if "!HAS_NET!"=="0" (echo  %DG%    Offline - not installed.%R%    & goto :SC_AMAS_END)
+echo  %WH%    Not installed - downloading...%R%
+call :INSTALL_AMAS_FUNC
+:SC_AMAS_END
+if exist "%P_AMAS%\amass.exe" (echo  %GN%    Status: Ready%R%) else (echo  %RD%    Status: NOT READY%R%)
+goto :EOF
+
+:SC_PIFG
+echo.
+echo  %YB%  [20] Phoneinfoga%R%
+if exist "%P_PIFG%\phoneinfoga.exe" goto :SC_PIFG_END
+if "!HAS_NET!"=="0" (echo  %DG%    Offline - not installed.%R%    & goto :SC_PIFG_END)
+echo  %WH%    Not installed - downloading...%R%
+call :INSTALL_PIFG_FUNC
+:SC_PIFG_END
+if exist "%P_PIFG%\phoneinfoga.exe" (echo  %GN%    Status: Ready%R%) else (echo  %RD%    Status: NOT READY%R%)
+goto :EOF
+
+:SC_SHOD
+echo.
+echo  %CY%  [21] Shodan CLI%R%
+if exist "%P_SHOD%\venv\Scripts\shodan.exe" goto :SC_SHOD_END
+if "!HAS_NET!"=="0" (echo  %DG%    Offline - not installed.%R%    & goto :SC_SHOD_END)
+if "!HAS_PY!"=="0"  (echo  %YW%    Needs Python in PATH.%R%       & goto :SC_SHOD_END)
+echo  %WH%    Not installed - installing...%R%
+call :INSTALL_SHOD_FUNC
+:SC_SHOD_END
+if exist "%P_SHOD%\venv\Scripts\shodan.exe" (echo  %GN%    Status: Ready%R%) else (echo  %RD%    Status: NOT READY%R%)
+goto :EOF
+
+:SC_MALT
+echo.
+echo  %GB%  [22] Maltego%R%
+call :MALT_FIND
+if defined MALT_EXE (echo  %GN%    Status: Ready%R%) else (echo  %YW%    Not found - open tool 22 to auto-install.%R%)
+goto :EOF
+
+:SC_NUCL
+echo.
+echo  %RD%  [23] Nuclei%R%
+if exist "%P_NUCL%\nuclei.exe" goto :SC_NUCL_END
+if "!HAS_NET!"=="0" (echo  %DG%    Offline - not installed.%R%    & goto :SC_NUCL_END)
+echo  %WH%    Not installed - downloading...%R%
+call :INSTALL_NUCL_FUNC
+:SC_NUCL_END
+if exist "%P_NUCL%\nuclei.exe" (echo  %GN%    Status: Ready%R%) else (echo  %RD%    Status: NOT READY%R%)
+goto :EOF
+
+:SC_FFUF
+echo.
+echo  %ORB%  [24] ffuf%R%
+if exist "%P_FFUF%\ffuf.exe" goto :SC_FFUF_END
+if "!HAS_NET!"=="0" (echo  %DG%    Offline - not installed.%R%    & goto :SC_FFUF_END)
+echo  %WH%    Not installed - downloading...%R%
+call :INSTALL_FFUF_FUNC
+:SC_FFUF_END
+if exist "%P_FFUF%\ffuf.exe" (echo  %GN%    Status: Ready%R%) else (echo  %RD%    Status: NOT READY%R%)
+goto :EOF
+
+:SC_SUBF
+echo.
+echo  %BB%  [25] Subfinder%R%
+if exist "%P_SUBF%\subfinder.exe" goto :SC_SUBF_END
+if "!HAS_NET!"=="0" (echo  %DG%    Offline - not installed.%R%    & goto :SC_SUBF_END)
+echo  %WH%    Not installed - downloading...%R%
+call :INSTALL_SUBF_FUNC
+:SC_SUBF_END
+if exist "%P_SUBF%\subfinder.exe" (echo  %GN%    Status: Ready%R%) else (echo  %RD%    Status: NOT READY%R%)
+goto :EOF
+
+:SC_NXCE
+echo.
+echo  %MGB%  [26] Netexec (nxc)%R%
+if exist "%P_NXCE%\venv\Scripts\nxc.exe" goto :SC_NXCE_END
+if "!HAS_NET!"=="0" (echo  %DG%    Offline - not installed.%R%    & goto :SC_NXCE_END)
+if "!HAS_PY!"=="0"  (echo  %YW%    Needs Python in PATH.%R%       & goto :SC_NXCE_END)
+echo  %WH%    Not installed - installing...%R%
+call :INSTALL_NXCE_FUNC
+:SC_NXCE_END
+if exist "%P_NXCE%\venv\Scripts\nxc.exe" (echo  %GN%    Status: Ready%R%) else (echo  %RD%    Status: NOT READY%R%)
+goto :EOF
+
+:SC_CHEF
+echo.
+echo  %WB%  [27] CyberChef%R%
+call :CHEF_FIND
+if defined CHEF_HTML (echo  %GN%    Status: Ready%R%) else (echo  %YW%    Not installed - open tool 27 to auto-install.%R%)
+goto :EOF
+
+
+:: ============================================================
+::  GO BINARY DOWNLOAD HELPER
+::  Set GB_REPO, GB_EXE, GB_DIR before calling.
+::  Downloads latest Windows amd64 release from GitHub.
+:: ============================================================
+:INSTALL_GO_BINARY
+if not exist "!GB_DIR!" mkdir "!GB_DIR!" >nul 2>&1
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$ProgressPreference='SilentlyContinue';$ErrorActionPreference='Stop';try{$api=Invoke-RestMethod 'https://api.github.com/repos/!GB_REPO!/releases/latest' -TimeoutSec 20;$a=$api.assets|Where-Object{$_.name -match '(?i)windows.*amd64.*zip|amd64.*windows.*zip|windows_amd64.*zip'}|Select-Object -First 1;if(-not $a){$a=$api.assets|Where-Object{$_.name -match '(?i)windows.*zip'}|Select-Object -First 1};if($a){Invoke-WebRequest $a.browser_download_url -OutFile '!GB_DIR!\dl.zip' -UseBasicParsing -TimeoutSec 300;Expand-Archive '!GB_DIR!\dl.zip' '!GB_DIR!' -Force;$f=Get-ChildItem '!GB_DIR!' -Recurse -Filter '!GB_EXE!.exe' -EA SilentlyContinue|Select-Object -First 1;if($f -and $f.FullName -ne '!GB_DIR!\!GB_EXE!.exe'){Copy-Item $f.FullName '!GB_DIR!\!GB_EXE!.exe' -Force};Remove-Item '!GB_DIR!\dl.zip' -Force -EA SilentlyContinue;Write-Host('    '+$a.name+' installed.') -ForegroundColor Green}else{Write-Host '    No Windows asset found for this release.' -ForegroundColor Red}}catch{Write-Host('    Download failed: '+$_.Exception.Message) -ForegroundColor Red}"
+goto :EOF
+
+:INSTALL_AMAS_FUNC
+if exist "%P_AMAS%\amass.exe" (echo  %GN%    Already installed.%R% & goto :EOF)
+set "GB_REPO=owasp-amass/amass" & set "GB_EXE=amass" & set "GB_DIR=%P_AMAS%"
+call :INSTALL_GO_BINARY
+goto :EOF
+
+:INSTALL_PIFG_FUNC
+if exist "%P_PIFG%\phoneinfoga.exe" (echo  %GN%    Already installed.%R% & goto :EOF)
+set "GB_REPO=sundowndev/phoneinfoga" & set "GB_EXE=phoneinfoga" & set "GB_DIR=%P_PIFG%"
+call :INSTALL_GO_BINARY
+goto :EOF
+
+:INSTALL_SHOD_FUNC
+if exist "%P_SHOD%\venv\Scripts\shodan.exe" (echo  %GN%    Already installed.%R% & goto :EOF)
+if not exist "%P_SHOD%" mkdir "%P_SHOD%" >nul 2>&1
+python -m venv "%P_SHOD%\venv" >nul 2>&1
+"%P_SHOD%\venv\Scripts\python.exe" -m ensurepip --upgrade >nul 2>&1
+"%P_SHOD%\venv\Scripts\python.exe" -m pip install --upgrade pip --quiet 2>nul
+"%P_SHOD%\venv\Scripts\python.exe" -m pip install shodan --quiet --prefer-binary
+if exist "%P_SHOD%\venv\Scripts\shodan.exe" (echo  %GN%    Shodan CLI installed.%R%) else (echo  %RD%    Install failed.%R%)
+goto :EOF
+
+:INSTALL_NUCL_FUNC
+if exist "%P_NUCL%\nuclei.exe" (echo  %GN%    Already installed.%R% & goto :EOF)
+set "GB_REPO=projectdiscovery/nuclei" & set "GB_EXE=nuclei" & set "GB_DIR=%P_NUCL%"
+call :INSTALL_GO_BINARY
+if exist "%P_NUCL%\nuclei.exe" "%P_NUCL%\nuclei.exe" -update-templates >nul 2>&1
+goto :EOF
+
+:INSTALL_FFUF_FUNC
+if exist "%P_FFUF%\ffuf.exe" (echo  %GN%    Already installed.%R% & goto :EOF)
+set "GB_REPO=ffuf/ffuf" & set "GB_EXE=ffuf" & set "GB_DIR=%P_FFUF%"
+call :INSTALL_GO_BINARY
+goto :EOF
+
+:INSTALL_SUBF_FUNC
+if exist "%P_SUBF%\subfinder.exe" (echo  %GN%    Already installed.%R% & goto :EOF)
+set "GB_REPO=projectdiscovery/subfinder" & set "GB_EXE=subfinder" & set "GB_DIR=%P_SUBF%"
+call :INSTALL_GO_BINARY
+goto :EOF
+
+:INSTALL_NXCE_FUNC
+if exist "%P_NXCE%\venv\Scripts\nxc.exe" (echo  %GN%    Already installed.%R% & goto :EOF)
+if not exist "%P_NXCE%" mkdir "%P_NXCE%" >nul 2>&1
+python -m venv "%P_NXCE%\venv" >nul 2>&1
+"%P_NXCE%\venv\Scripts\python.exe" -m ensurepip --upgrade >nul 2>&1
+"%P_NXCE%\venv\Scripts\python.exe" -m pip install --upgrade pip --quiet 2>nul
+echo  %DG%    Installing netexec (this takes a while - building impacket)...%R%
+"%P_NXCE%\venv\Scripts\python.exe" -m pip install netexec --quiet --prefer-binary
+if exist "%P_NXCE%\venv\Scripts\nxc.exe" (echo  %GN%    Netexec installed.%R%) else (echo  %RD%    Install failed. Try pressing R on the menu.%R%)
+goto :EOF
+
+:INSTALL_CHEF_FUNC
+if not exist "%P_CHEF%" mkdir "%P_CHEF%" >nul 2>&1
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$ProgressPreference='SilentlyContinue';try{$api=Invoke-RestMethod 'https://api.github.com/repos/gchq/CyberChef/releases/latest' -TimeoutSec 20;$a=$api.assets|Where-Object{$_.name -match 'CyberChef.*zip'}|Select-Object -First 1;if($a){Invoke-WebRequest $a.browser_download_url -OutFile '%P_CHEF%\cc.zip' -UseBasicParsing -TimeoutSec 300;Expand-Archive '%P_CHEF%\cc.zip' '%P_CHEF%' -Force;Remove-Item '%P_CHEF%\cc.zip' -Force -EA SilentlyContinue;Write-Host '    CyberChef installed.' -ForegroundColor Green}else{Write-Host '    Asset not found.' -ForegroundColor Red}}catch{Write-Host('    Download failed: '+$_.Exception.Message) -ForegroundColor Red}"
+goto :EOF
+
+
+:: ============================================================
+::  MALTEGO + CYBERCHEF HELPERS
+:: ============================================================
+:MALT_FIND
+set "MALT_EXE="
+for /d %%D in ("C:\Program Files\Maltego*" "C:\Program Files (x86)\Maltego*" "%P_MALT%") do (
+  for /r "%%D" %%F in (maltego.exe Maltego.exe) do if exist "%%F" if not defined MALT_EXE set "MALT_EXE=%%F"
+)
+goto :EOF
+
+:CHEF_FIND
+set "CHEF_HTML="
+for %%F in ("%P_CHEF%\CyberChef*.html") do if exist "%%F" set "CHEF_HTML=%%F"
 goto :EOF
 
 
