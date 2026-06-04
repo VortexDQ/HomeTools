@@ -1,6 +1,6 @@
 @echo off
 :: ============================================================
-::  HOME TOOLS  |  OSINT Launcher  |  v5.9
+::  HOME TOOLS  |  OSINT Launcher  |  v6.0
 ::  A self-installing OSINT toolkit launcher for Windows.
 ::
 ::  Tools clone and install automatically on first launch.
@@ -11,7 +11,7 @@
 ::  Install locations: C:\OSINT\   and   C:\Tools\exiftool\
 ::  Made with love by vortexdq.com
 :: ============================================================
-:: HOMETOOLS_VERSION:5.9
+:: HOMETOOLS_VERSION:6.0
 if "%~1"=="-k" goto :INIT
 cmd /k "%~f0" -k
 exit /b
@@ -19,7 +19,7 @@ exit /b
 
 setlocal enabledelayedexpansion
 chcp 65001 >nul 2>&1
-title HOME TOOLS v5.9
+title HOME TOOLS v6.0
 
 :: ============================================================
 ::  ANSI COLORS
@@ -80,6 +80,14 @@ set "P_FFUF=C:\Tools\ffuf"
 set "P_SUBF=C:\Tools\subfinder"
 set "P_NXCE=C:\OSINT\netexec"
 set "P_CHEF=C:\Tools\CyberChef"
+set "P_NMAP=C:\Tools\nmap"
+set "P_RSCN=C:\Tools\rustscan"
+set "P_TRVK=C:\Tools\trivy"
+set "P_KSNA=C:\Tools\katana"
+set "P_HTTPX=C:\Tools\httpx"
+set "P_SLVR=C:\Tools\sliver"
+set "P_IMPK=C:\OSINT\impacket"
+set "P_WIRE=C:\Tools\wireshark"
 
 :: ============================================================
 ::  FIRST RUN CHECK
@@ -98,7 +106,7 @@ goto STARTUP
 cls
 echo.
 echo  %CB%  =======================================================%R%
-echo  %CB%           HOME TOOLS v5.9  -  First Launch             %R%
+echo  %CB%           HOME TOOLS v6.0  -  First Launch             %R%
 echo  %CB%       Self-installing OSINT Toolkit for Windows         %R%
 echo  %CB%  =======================================================%R%
 echo.
@@ -244,6 +252,14 @@ call :SC_FFUF
 call :SC_SUBF
 call :SC_NXCE
 call :SC_CHEF
+call :SC_NMAP
+call :SC_RSCN
+call :SC_TRVK
+call :SC_KSNA
+call :SC_HTTPX
+call :SC_SLVR
+call :SC_IMPK
+call :SC_WIRE
 call :FIX_OSINTGRAM
 
 echo.
@@ -317,6 +333,14 @@ set "S24=%RD%[--] %R%"
 set "S25=%RD%[--] %R%"
 set "S26=%RD%[--] %R%"
 set "S27=%RD%[--] %R%"
+set "S28=%RD%[--] %R%"
+set "S29=%RD%[--] %R%"
+set "S30=%RD%[--] %R%"
+set "S31=%RD%[--] %R%"
+set "S32=%RD%[--] %R%"
+set "S33=%RD%[--] %R%"
+set "S34=%RD%[--] %R%"
+set "S35=%RD%[--] %R%"
 if exist "%P_AMAS%\amass.exe"                       set "S19=%GN%[OK] %R%"
 if exist "%P_PIFG%\phoneinfoga.exe"                 set "S20=%GN%[OK] %R%"
 if exist "%P_SHOD%\venv\Scripts\shodan.exe"         set "S21=%GN%[OK] %R%"
@@ -329,57 +353,79 @@ if exist "%P_SUBF%\subfinder.exe"                   set "S25=%GN%[OK] %R%"
 if exist "%P_NXCE%\nxc.exe"                         set "S26=%GN%[OK] %R%"
 if exist "%P_CHEF%\CyberChef*.html" set "S27=%GN%[OK] %R%"
 for %%F in ("%P_CHEF%\CyberChef*.html") do if exist "%%F" set "S27=%GN%[OK] %R%"
+where nmap.exe >nul 2>&1 && set "S28=%GN%[OK] %R%"
+if exist "%P_RSCN%\rustscan.exe"                    set "S29=%GN%[OK] %R%"
+if exist "%P_TRVK%\trivy.exe"                       set "S30=%GN%[OK] %R%"
+if exist "%P_KSNA%\katana.exe"                      set "S31=%GN%[OK] %R%"
+if exist "%P_HTTPX%\httpx.exe"                      set "S32=%GN%[OK] %R%"
+if exist "%P_SLVR%\sliver-client.exe"               set "S33=%GN%[OK] %R%"
+if exist "%P_IMPK%\venv\Scripts\impacket-*" set "S34=%GN%[OK] %R%"
+where wireshark.exe >nul 2>&1 && set "S35=%GN%[OK] %R%"
 
-echo  %WB%  DEVICE / LOCAL%R%
-echo  %DG%  --------------------------------------------------------%R%
-echo  !S1!%CB% [1]%R%  %WH%JLT Edge Wireless         %DG%OemDrv device manager%R%
-echo  !S2!%CB% [2]%R%  %WH%Scanners                  %DG%ESET / F-Secure / HitmanPro%R%
+echo  %WB%  ^| LOCAL TOOLS%R%
+echo  %DG%  =========================================================%R%
+echo  !S1!%CB% [1]%R%  %WH%JLT Edge Wireless%20%20%20%20%20%20%20%20%DG%OemDrv device manager%R%
+echo  !S2!%CB% [2]%R%  %WH%Scanners%20%20%20%20%20%20%20%20%20%20%20%20%20%DG%ESET / F-Secure / HitmanPro%R%
+echo  !S4!%MB% [4]%R%  %WH%ExifTool%20%20%20%20%20%20%20%20%20%20%20%20%DG%File metadata - read, write, strip%R%
 echo.
-echo  %WB%  OSINT  %DG%^>  PEOPLE ^& SOCIAL%R%
-echo  %DG%  --------------------------------------------------------%R%
-echo  !S5!%YB% [5]%R%  %WH%Sherlock                  %DG%Username hunt across 400+ sites%R%
-echo  !S6!%GB% [6]%R%  %WH%Osintgram                 %DG%Instagram OSINT collector%R%
-echo  !S9!%CY% [9]%R%  %WH%Maigret                   %DG%Deep username OSINT + relationship graph%R%
-echo  !S13!%BB%[13]%R%  %WH%LinkedIn Gatherer          %DG%LinkedIn profile and company OSINT%R%
-echo  !S15!%GB%[15]%R%  %WH%GHunt                     %DG%Google account - email, Maps, Drive, YouTube%R%
-echo  !S20!%YB%[20]%R%  %WH%Phoneinfoga               %DG%Phone number - carrier, region, OSINT sources%R%
+echo  %WB%  ^| NETWORK DISCOVERY%R%
+echo  %DG%  =========================================================%R%
+echo  !S28!%ORB%[28]%R%  %WH%Nmap%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%DG%Port scanning, service detection, NSE scripts%R%
+echo  !S29!%ORB%[29]%R%  %WH%RustScan%20%20%20%20%20%20%20%20%20%20%20%DG%Extremely fast host scanner (pairs with Nmap)%R%
+echo  !S19!%CB%[19]%R%  %WH%Amass%20%20%20%20%20%20%20%20%20%20%20%20%20%20%DG%Deep subdomain enumeration (OWASP)%R%
+echo  !S25!%BB%[25]%R%  %WH%Subfinder%20%20%20%20%20%20%20%20%20%20%DG%Passive subdomain discovery%R%
+echo  !S21!%CY%[21]%R%  %WH%Shodan CLI%20%20%20%20%20%20%20%20%20%DG%Internet-exposed services, cams, IPs%R%
 echo.
-echo  %WB%  OSINT  %DG%^>  EMAIL ^& CREDENTIALS%R%
-echo  %DG%  --------------------------------------------------------%R%
-echo  !S8!%MGB% [8]%R%  %WH%Holehe                    %DG%Email registered on which 120+ sites%R%
-echo  !S12!%CB%[12]%R%  %WH%Scavenger                 %DG%Pastebin leak and credential monitor%R%
-echo  !S14!%YB%[14]%R%  %WH%pwnedOrNot                %DG%Email breach checker - shows leaked passwords%R%
+echo  %WB%  ^| OSINT - PEOPLE %26 SOCIAL%R%
+echo  %DG%  =========================================================%R%
+echo  !S5!%YB% [5]%R%  %WH%Sherlock%20%20%20%20%20%20%20%20%20%20%20%DG%Username hunt across 400+ sites%R%
+echo  !S6!%GB% [6]%R%  %WH%Osintgram%20%20%20%20%20%20%20%20%20%DG%Instagram OSINT collector%R%
+echo  !S9!%CY% [9]%R%  %WH%Maigret%20%20%20%20%20%20%20%20%20%20%DG%Deep username OSINT + relationship graph%R%
+echo  !S13!%BB%[13]%R%  %WH%LinkedIn Gatherer%20%20%20%DG%LinkedIn profiles and company OSINT%R%
+echo  !S15!%GB%[15]%R%  %WH%GHunt%20%20%20%20%20%20%20%20%20%20%20%20%DG%Google account - email, Maps, Drive, YouTube%R%
+echo  !S20!%YB%[20]%R%  %WH%Phoneinfoga%20%20%20%20%20%20%20%DG%Phone number carrier, region, OSINT sources%R%
 echo.
-echo  %WB%  OSINT  %DG%^>  DOMAINS ^& NETWORKS%R%
-echo  %DG%  --------------------------------------------------------%R%
-echo  !S3!%BB% [3]%R%  %WH%SpiderFoot                %DG%Automated multi-source OSINT (web UI)%R%
-echo  !S7!%ORB% [7]%R%  %WH%theHarvester              %DG%Emails, subdomains, IPs from a domain%R%
-echo  !S10!%WB%[10]%R%  %WH%Photon                    %DG%Web crawler - extract URLs, keys, secrets%R%
-echo  !S16!%CB%[16]%R%  %WH%Recon-ng                  %DG%Modular recon framework with API modules%R%
-echo  !S19!%CB%[19]%R%  %WH%Amass                     %DG%Deep subdomain enumeration (OWASP)%R%
-echo  !S21!%CY%[21]%R%  %WH%Shodan CLI                %DG%Find internet-exposed services, cams, IPs%R%
-echo  !S22!%GB%[22]%R%  %WH%Maltego                   %DG%Visual link analysis and relationship mapping%R%
-echo  !S25!%BB%[25]%R%  %WH%Subfinder                 %DG%Passive subdomain discovery%R%
+echo  %WB%  ^| OSINT - EMAIL %26 CREDENTIALS%R%
+echo  %DG%  =========================================================%R%
+echo  !S8!%MGB% [8]%R%  %WH%Holehe%20%20%20%20%20%20%20%20%20%20%20%20%DG%Email registered on which 120+ sites%R%
+echo  !S12!%CB%[12]%R%  %WH%Scavenger%20%20%20%20%20%20%20%20%20%DG%Pastebin leak and credential monitor%R%
+echo  !S14!%YB%[14]%R%  %WH%pwnedOrNot%20%20%20%20%20%20%20%DG%Email breach checker - shows leaked passwords%R%
 echo.
-echo  %WB%  FILES ^& METADATA%R%
-echo  %DG%  --------------------------------------------------------%R%
-echo  !S4!%MB% [4]%R%  %WH%ExifTool                  %DG%Read, write and strip file metadata / GPS%R%
+echo  %WB%  ^| OSINT - INFRASTRUCTURE%R%
+echo  %DG%  =========================================================%R%
+echo  !S3!%BB% [3]%R%  %WH%SpiderFoot%20%20%20%20%20%20%20%20%DG%Automated multi-source OSINT (web UI)%R%
+echo  !S7!%ORB% [7]%R%  %WH%theHarvester%20%20%20%20%20%DG%Emails, subdomains, IPs from a domain%R%
+echo  !S10!%WB%[10]%R%  %WH%Photon%20%20%20%20%20%20%20%20%20%20%20%DG%Web crawler - extract URLs, keys, secrets%R%
+echo  !S16!%CB%[16]%R%  %WH%Recon-ng%20%20%20%20%20%20%20%20%20%DG%Modular recon framework with API modules%R%
+echo  !S22!%GB%[22]%R%  %WH%Maltego%20%20%20%20%20%20%20%20%20%20%DG%Visual link analysis and relationship mapping%R%
 echo.
-echo  %WB%  PENTESTING  %DG%^>  WEB%R%
-echo  %DG%  --------------------------------------------------------%R%
-echo  !S11!%RD%[11]%R%  %WH%SQLMap                    %DG%SQL injection detection and exploitation%R%
-echo  !S17!%RD%[17]%R%  %WH%OWASP ZAP                 %DG%Web app security scanner (full GUI)%R%
-echo  !S18!%MGB%[18]%R%  %WH%WPScan                    %DG%WordPress - users, plugins, themes, CVEs%R%
-echo  !S23!%RD%[23]%R%  %WH%Nuclei                    %DG%Template-based CVE and vulnerability scanner%R%
-echo  !S24!%ORB%[24]%R%  %WH%ffuf                      %DG%Fast web fuzzer - dirs, vhosts, parameters%R%
+echo  %WB%  ^| WEB APPLICATION SECURITY%R%
+echo  %DG%  =========================================================%R%
+echo  !S11!%RD%[11]%R%  %WH%SQLMap%20%20%20%20%20%20%20%20%20%20%20%DG%SQL injection detection and exploitation%R%
+echo  !S17!%RD%[17]%R%  %WH%OWASP ZAP%20%20%20%20%20%20%20%DG%Web app security scanner (full GUI)%R%
+echo  !S18!%MGB%[18]%R%  %WH%WPScan%20%20%20%20%20%20%20%20%20%20%DG%WordPress - users, plugins, themes, CVEs%R%
+echo  !S23!%RD%[23]%R%  %WH%Nuclei%20%20%20%20%20%20%20%20%20%20%20%DG%Template-based CVE and vulnerability scanner%R%
+echo  !S24!%ORB%[24]%R%  %WH%ffuf%20%20%20%20%20%20%20%20%20%20%20%20%DG%Fast web fuzzer - dirs, vhosts, parameters%R%
+echo  !S31!%CY%[31]%R%  %WH%Katana%20%20%20%20%20%20%20%20%20%20%20%DG%Modern web crawler from ProjectDiscovery%R%
+echo  !S32!%CY%[32]%R%  %WH%httpx%20%20%20%20%20%20%20%20%20%20%20%20%DG%Fast host and web service enumeration%R%
 echo.
-echo  %WB%  PENTESTING  %DG%^>  NETWORK%R%
-echo  %DG%  --------------------------------------------------------%R%
-echo  !S26!%MGB%[26]%R%  %WH%Netexec (nxc)             %DG%SMB / WinRM / LDAP / SSH auth testing%R%
+echo  %WB%  ^| NETWORK TESTING%R%
+echo  %DG%  =========================================================%R%
+echo  !S26!%MGB%[26]%R%  %WH%Netexec (nxc)%20%20%20%20%20%20%20%DG%SMB / WinRM / LDAP / SSH auth testing%R%
+echo  !S34!%MGB%[34]%R%  %WH%Impacket%20%20%20%20%20%20%20%20%20%DG%AD protocols, admin utils, exploitation%R%
+echo  !S35!%WB%[35]%R%  %WH%Wireshark%20%20%20%20%20%20%20%20%DG%Network traffic analysis and packet capture%R%
 echo.
-echo  %WB%  UTILITIES%R%
-echo  %DG%  --------------------------------------------------------%R%
-echo  !S27!%WB%[27]%R%  %WH%CyberChef                 %DG%Encode / decode / hash / parse - offline%R%
+echo  %WB%  ^| CONTAINER SECURITY%R%
+echo  %DG%  =========================================================%R%
+echo  !S30!%BB%[30]%R%  %WH%Trivy%20%20%20%20%20%20%20%20%20%20%20%20%20%DG%Container/image scanning for vulnerabilities%R%
+echo.
+echo  %WB%  ^| RED TEAM INFRASTRUCTURE%R%
+echo  %DG%  =========================================================%R%
+echo  !S33!%RD%[33]%R%  %WH%Sliver%20%20%20%20%20%20%20%20%20%20%20%20%DG%Command and control framework for red ops%R%
+echo.
+echo  %WB%  ^| UTILITIES%R%
+echo  %DG%  =========================================================%R%
+echo  !S27!%WB%[27]%R%  %WH%CyberChef%20%20%20%20%20%20%20%20%20%DG%Encode / decode / hash / parse - offline%R%
 echo.
 echo  %DG%  --------------------------------------------------------%R%
 echo  %CY%  [R]%R% Repair   %CY%[C]%R% Commands   %CY%[D]%R% Dictionary   %CY%[H]%R% Help   %CY%[I]%R% Instagram   %CY%[Q]%R% Quit
@@ -416,6 +462,14 @@ if /i "%CHO%"=="24"        goto LAUNCH_FFUF
 if /i "%CHO%"=="25"        goto LAUNCH_SUBF
 if /i "%CHO%"=="26"        goto LAUNCH_NXCE
 if /i "%CHO%"=="27"        goto LAUNCH_CHEF
+if /i "%CHO%"=="28"        goto LAUNCH_NMAP
+if /i "%CHO%"=="29"        goto LAUNCH_RSCN
+if /i "%CHO%"=="30"        goto LAUNCH_TRVK
+if /i "%CHO%"=="31"        goto LAUNCH_KSNA
+if /i "%CHO%"=="32"        goto LAUNCH_HTTPX
+if /i "%CHO%"=="33"        goto LAUNCH_SLVR
+if /i "%CHO%"=="34"        goto LAUNCH_IMPK
+if /i "%CHO%"=="35"        goto LAUNCH_WIRE
 if /i "%CHO%"=="R"         goto REPAIR
 if /i "%CHO%"=="repair"    goto REPAIR
 if /i "%CHO%"=="C"         goto COMMAND_CENTER
@@ -431,7 +485,7 @@ if /i "%CHO%"=="creds"     goto OGRAM_SETUP_MENU
 if /i "%CHO%"=="Q"         goto QUIT
 if /i "%CHO%"=="quit"      goto QUIT
 if /i "%CHO%"=="exit"      goto QUIT
-echo  %RD%  Unknown option. Type 1-27, R, C, D, H, I, or Q.%R%
+echo  %RD%  Unknown option. Type 1-35, R, C, D, H, I, or Q.%R%
 call :SFX
 timeout /t 1 /nobreak >nul
 goto MENU
@@ -1181,6 +1235,164 @@ echo.
 powershell -NoProfile -ExecutionPolicy Bypass -Command "Start-Process '!CHEF_HTML!'"
 echo  %WH%  Press any key to return to menu...%R%
 pause >nul
+goto MENU
+
+
+:: ============================================================
+::  NMAP - Port Scanner
+:: ============================================================
+:LAUNCH_NMAP
+cls
+echo.
+echo  %BB%  =======================================================%R%
+echo  %WB%  Nmap  ^|  Port Scanning and Service Detection%R%
+echo  %BB%  =======================================================%R%
+echo.
+if not exist "C:\Program Files\Nmap" (
+  echo  %DG%    Installing Nmap via winget...%R%
+  call :SC_NMAP
+) else (
+  echo  %GN%    Nmap is ready. Type nmap -h for help.%R%
+)
+echo.
+title HOME TOOLS  ^|  Nmap
+powershell -NoProfile -Command "nmap.exe" & pause & goto MENU
+
+
+:: ============================================================
+::  RUSTSCAN - Fast Host Scanner
+:: ============================================================
+:LAUNCH_RSCN
+cls
+echo.
+echo  %BB%  =======================================================%R%
+echo  %WB%  RustScan  ^|  Extremely Fast Host Scanner%R%
+echo  %BB%  =======================================================%R%
+echo.
+if not exist "%P_RSCN%\rustscan.exe" echo  %RD%  Not ready. Type R on menu to install.%R% & call :SFX & pause & goto MENU
+title HOME TOOLS  ^|  RustScan
+echo  %DG%  USAGE: rustscan -a target.com -- -A (pairs with nmap)%R%
+echo.
+powershell -NoProfile -Command "cd '%P_RSCN%';& '.\rustscan.exe'" & pause & goto MENU
+
+
+:: ============================================================
+::  TRIVY - Container Security Scanner
+:: ============================================================
+:LAUNCH_TRVK
+cls
+echo.
+echo  %BB%  =======================================================%R%
+echo  %WB%  Trivy  ^|  Container and Image Vulnerability Scanner%R%
+echo  %BB%  =======================================================%R%
+echo.
+if not exist "%P_TRVK%\trivy.exe" echo  %RD%  Not ready. Type R on menu to install.%R% & call :SFX & pause & goto MENU
+title HOME TOOLS  ^|  Trivy
+echo  %DG%  USAGE: trivy image ubuntu:latest  (scan Docker image)%R%
+echo  %DG%        trivy fs /path/to/dir      (scan filesystem)%R%
+echo.
+powershell -NoProfile -Command "& '%P_TRVK%\trivy.exe'" & pause & goto MENU
+
+
+:: ============================================================
+::  KATANA - Web Crawler
+:: ============================================================
+:LAUNCH_KSNA
+cls
+echo.
+echo  %BB%  =======================================================%R%
+echo  %WB%  Katana  ^|  Modern Web Crawler from ProjectDiscovery%R%
+echo  %BB%  =======================================================%R%
+echo.
+if not exist "%P_KSNA%\katana.exe" echo  %RD%  Not ready. Type R on menu to install.%R% & call :SFX & pause & goto MENU
+title HOME TOOLS  ^|  Katana
+echo  %DG%  USAGE: katana -u https://example.com -o urls.txt%R%
+echo.
+powershell -NoProfile -Command "& '%P_KSNA%\katana.exe'" & pause & goto MENU
+
+
+:: ============================================================
+::  HTTPX - Web Service Enumeration
+:: ============================================================
+:LAUNCH_HTTPX
+cls
+echo.
+echo  %BB%  =======================================================%R%
+echo  %WB%  httpx  ^|  Fast Host and Web Service Enumeration%R%
+echo  %BB%  =======================================================%R%
+echo.
+if not exist "%P_HTTPX%\httpx.exe" echo  %RD%  Not ready. Type R on menu to install.%R% & call :SFX & pause & goto MENU
+title HOME TOOLS  ^|  httpx
+echo  %DG%  USAGE: cat hosts.txt | httpx -o live.txt$R%
+echo  %DG%        httpx -u https://example.com%R%
+echo.
+powershell -NoProfile -Command "& '%P_HTTPX%\httpx.exe'" & pause & goto MENU
+
+
+:: ============================================================
+::  SLIVER - Command and Control
+:: ============================================================
+:LAUNCH_SLVR
+cls
+echo.
+echo  %RD%  =======================================================%R%
+echo  %WB%  Sliver  ^|  Command and Control Framework%R%
+echo  %RD%  =======================================================%R%
+echo.
+echo  %YW%  LEGAL: Only use in authorized lab environments with%R%
+echo  %YW%  explicit permission. Unauthorized use is illegal.%R%
+echo.
+if not exist "%P_SLVR%\sliver-client.exe" echo  %RD%  Not ready. Type R on menu to install.%R% & call :SFX & pause & goto MENU
+title HOME TOOLS  ^|  Sliver
+echo  %DG%  Type help for command list. Type exit to quit.%R%
+echo.
+cd /d "%P_SLVR%"
+"%P_SLVR%\sliver-client.exe"
+goto MENU
+
+
+:: ============================================================
+::  IMPACKET - Network Protocol Tools
+:: ============================================================
+:LAUNCH_IMPK
+cls
+echo.
+echo  %MGB%  =======================================================%R%
+echo  %WB%  Impacket  ^|  AD Protocols, Admin Utils, Exploitation%R%
+echo  %MGB%  =======================================================%R%
+echo.
+if not exist "%P_IMPK%\venv\Scripts\impacket-*" echo  %RD%  Not ready. Type R on menu to install.%R% & call :SFX & pause & goto MENU
+title HOME TOOLS  ^|  Impacket
+echo  %DG%  USAGE: impacket-smbclient //target/share -u user -p pass%R%
+echo  %DG%        impacket-psexec domain/user:pass@target%R%
+echo  %DG%        impacket-secretsdump domain/user:pass@target%R%
+echo.
+echo  %YW%  Type any impacket command, or q to return to menu.%R%
+echo.
+powershell -NoProfile -Command "cd '%P_IMPK%\venv\Scripts';do{$cmd=Read-Host '  impacket';if('q','quit','exit' -contains $cmd){break};if($cmd -match '^impacket-'){& $cmd;$LASTEXITCODE}elseif($cmd){Write-Host 'Use: impacket-<tool>'}}while($true)"
+goto MENU
+
+
+:: ============================================================
+::  WIRESHARK - Network Traffic Analysis
+:: ============================================================
+:LAUNCH_WIRE
+cls
+echo.
+echo  %WB%  =======================================================%R%
+echo  %WB%  Wireshark  ^|  Network Traffic Analysis%R%
+echo  %WB%  =======================================================%R%
+echo.
+if not exist "C:\Program Files*\Wireshark\wireshark.exe" (
+  echo  %DG%    Installing Wireshark via winget...%R%
+  call :SC_WIRE
+) else (
+  echo  %GN%    Wireshark is ready.%R%
+)
+echo.
+title HOME TOOLS  ^|  Wireshark
+echo  %DG%    Launching Wireshark...%R%
+wireshark.exe
 goto MENU
 
 
@@ -2736,6 +2948,79 @@ call :CHEF_FIND
 if defined CHEF_HTML (echo  %GN%    Status: Ready%R%) else (echo  %YW%    Not installed - open tool 27 to auto-install.%R%)
 goto :EOF
 
+:SC_NMAP
+echo.
+echo  %ORB%  [28] Nmap%R%
+where nmap.exe >nul 2>&1 && (echo  %GN%    Status: Ready%R% & goto :EOF)
+if "!HAS_NET!"=="0" (echo  %DG%    Offline - not installed.%R%  & goto :EOF)
+echo  %WH%    Not installed - installing via winget...%R%
+call :INSTALL_NMAP_FUNC
+goto :EOF
+
+:SC_RSCN
+echo.
+echo  %ORB%  [29] RustScan%R%
+if exist "%P_RSCN%\rustscan.exe" (echo  %GN%    Status: Ready%R% & goto :EOF)
+if "!HAS_NET!"=="0" (echo  %DG%    Offline - not installed.%R%  & goto :EOF)
+echo  %WH%    Not installed - downloading...%R%
+call :INSTALL_RSCN_FUNC
+goto :EOF
+
+:SC_TRVK
+echo.
+echo  %BB%  [30] Trivy%R%
+if exist "%P_TRVK%\trivy.exe" (echo  %GN%    Status: Ready%R% & goto :EOF)
+if "!HAS_NET!"=="0" (echo  %DG%    Offline - not installed.%R%  & goto :EOF)
+echo  %WH%    Not installed - downloading...%R%
+call :INSTALL_TRVK_FUNC
+goto :EOF
+
+:SC_KSNA
+echo.
+echo  %CY%  [31] Katana%R%
+if exist "%P_KSNA%\katana.exe" (echo  %GN%    Status: Ready%R% & goto :EOF)
+if "!HAS_NET!"=="0" (echo  %DG%    Offline - not installed.%R%  & goto :EOF)
+echo  %WH%    Not installed - downloading...%R%
+call :INSTALL_KSNA_FUNC
+goto :EOF
+
+:SC_HTTPX
+echo.
+echo  %CY%  [32] httpx%R%
+if exist "%P_HTTPX%\httpx.exe" (echo  %GN%    Status: Ready%R% & goto :EOF)
+if "!HAS_NET!"=="0" (echo  %DG%    Offline - not installed.%R%  & goto :EOF)
+echo  %WH%    Not installed - downloading...%R%
+call :INSTALL_HTTPX_FUNC
+goto :EOF
+
+:SC_SLVR
+echo.
+echo  %RD%  [33] Sliver%R%
+if exist "%P_SLVR%\sliver-client.exe" (echo  %GN%    Status: Ready%R% & goto :EOF)
+if "!HAS_NET!"=="0" (echo  %DG%    Offline - not installed.%R%  & goto :EOF)
+echo  %WH%    Not installed - downloading...%R%
+call :INSTALL_SLVR_FUNC
+goto :EOF
+
+:SC_IMPK
+echo.
+echo  %MGB%  [34] Impacket%R%
+if exist "%P_IMPK%\venv\Scripts\impacket-*" (echo  %GN%    Status: Ready%R% & goto :EOF)
+if "!HAS_NET!"=="0" (echo  %DG%    Offline - not installed.%R%  & goto :EOF)
+if "!HAS_PY!"=="0"  (echo  %YW%    Needs Python in PATH.%R%       & goto :EOF)
+echo  %WH%    Not installed - installing...%R%
+call :INSTALL_IMPK_FUNC
+goto :EOF
+
+:SC_WIRE
+echo.
+echo  %WB%  [35] Wireshark%R%
+where wireshark.exe >nul 2>&1 && (echo  %GN%    Status: Ready%R% & goto :EOF)
+if "!HAS_NET!"=="0" (echo  %DG%    Offline - not installed.%R%  & goto :EOF)
+echo  %WH%    Not installed - installing via winget...%R%
+call :INSTALL_WIRE_FUNC
+goto :EOF
+
 
 :: ============================================================
 ::  GO BINARY DOWNLOAD HELPER
@@ -2800,6 +3085,50 @@ goto :EOF
 :INSTALL_CHEF_FUNC
 if not exist "%P_CHEF%" mkdir "%P_CHEF%" >nul 2>&1
 powershell -NoProfile -ExecutionPolicy Bypass -Command "$ProgressPreference='SilentlyContinue';try{$api=Invoke-RestMethod 'https://api.github.com/repos/gchq/CyberChef/releases/latest' -TimeoutSec 20;$a=$api.assets|Where-Object{$_.name -match 'CyberChef.*zip'}|Select-Object -First 1;if($a){Invoke-WebRequest $a.browser_download_url -OutFile '%P_CHEF%\cc.zip' -UseBasicParsing -TimeoutSec 300;Expand-Archive '%P_CHEF%\cc.zip' '%P_CHEF%' -Force;Remove-Item '%P_CHEF%\cc.zip' -Force -EA SilentlyContinue;Write-Host '    CyberChef installed.' -ForegroundColor Green}else{Write-Host '    Asset not found.' -ForegroundColor Red}}catch{Write-Host('    Download failed: '+$_.Exception.Message) -ForegroundColor Red}"
+goto :EOF
+
+:INSTALL_NMAP_FUNC
+powershell -NoProfile -ExecutionPolicy Bypass -Command "try{winget install -e --id Insecure.Nmap -h | Out-Null;Write-Host '    Nmap installed.' -ForegroundColor Green}catch{Write-Host('    Install failed: '+$_.Exception.Message) -ForegroundColor Red}"
+goto :EOF
+
+:INSTALL_RSCN_FUNC
+if not exist "%P_RSCN%" mkdir "%P_RSCN%" >nul 2>&1
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$ProgressPreference='SilentlyContinue';try{$api=Invoke-RestMethod 'https://api.github.com/repos/RustScan/RustScan/releases/latest' -TimeoutSec 20;$a=$api.assets|Where-Object{$_.name -match 'windows.*rustscan'}|Select-Object -First 1;if($a){Invoke-WebRequest $a.browser_download_url -OutFile '%P_RSCN%\rs.zip' -UseBasicParsing -TimeoutSec 300;Expand-Archive '%P_RSCN%\rs.zip' '%P_RSCN%' -Force;$f=Get-ChildItem '%P_RSCN%' -Filter 'rustscan.exe' -EA SilentlyContinue|Select-Object -First 1;if(-not $f){$f=Get-ChildItem '%P_RSCN%' -Recurse -Filter 'rustscan.exe' -EA SilentlyContinue|Select-Object -First 1;if($f){Copy-Item $f.FullName '%P_RSCN%\rustscan.exe' -Force}};Remove-Item '%P_RSCN%\rs.zip' -Force -EA SilentlyContinue;Write-Host '    RustScan installed.' -ForegroundColor Green}else{Write-Host '    Asset not found.' -ForegroundColor Red}}catch{Write-Host('    Download failed: '+$_.Exception.Message) -ForegroundColor Red}"
+goto :EOF
+
+:INSTALL_TRVK_FUNC
+if not exist "%P_TRVK%" mkdir "%P_TRVK%" >nul 2>&1
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$ProgressPreference='SilentlyContinue';try{$api=Invoke-RestMethod 'https://api.github.com/repos/aquasecurity/trivy/releases/latest' -TimeoutSec 20;$a=$api.assets|Where-Object{$_.name -match 'windows.*64bit.*zip'}|Select-Object -First 1;if($a){Invoke-WebRequest $a.browser_download_url -OutFile '%P_TRVK%\tv.zip' -UseBasicParsing -TimeoutSec 300;Expand-Archive '%P_TRVK%\tv.zip' '%P_TRVK%' -Force;$f=Get-ChildItem '%P_TRVK%' -Filter 'trivy.exe' -EA SilentlyContinue|Select-Object -First 1;if($f -and $f.FullName -ne '%P_TRVK%\trivy.exe'){Copy-Item $f.FullName '%P_TRVK%\trivy.exe' -Force};Remove-Item '%P_TRVK%\tv.zip' -Force -EA SilentlyContinue;Write-Host '    Trivy installed.' -ForegroundColor Green}else{Write-Host '    Asset not found.' -ForegroundColor Red}}catch{Write-Host('    Download failed: '+$_.Exception.Message) -ForegroundColor Red}"
+goto :EOF
+
+:INSTALL_KSNA_FUNC
+if not exist "%P_KSNA%" mkdir "%P_KSNA%" >nul 2>&1
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$ProgressPreference='SilentlyContinue';try{$api=Invoke-RestMethod 'https://api.github.com/repos/projectdiscovery/katana/releases/latest' -TimeoutSec 20;$a=$api.assets|Where-Object{$_.name -match 'windows.*amd64.*zip'}|Select-Object -First 1;if($a){Invoke-WebRequest $a.browser_download_url -OutFile '%P_KSNA%\kt.zip' -UseBasicParsing -TimeoutSec 300;Expand-Archive '%P_KSNA%\kt.zip' '%P_KSNA%' -Force;$f=Get-ChildItem '%P_KSNA%' -Filter 'katana.exe' -EA SilentlyContinue|Select-Object -First 1;if($f -and $f.FullName -ne '%P_KSNA%\katana.exe'){Copy-Item $f.FullName '%P_KSNA%\katana.exe' -Force};Remove-Item '%P_KSNA%\kt.zip' -Force -EA SilentlyContinue;Write-Host '    Katana installed.' -ForegroundColor Green}else{Write-Host '    Asset not found.' -ForegroundColor Red}}catch{Write-Host('    Download failed: '+$_.Exception.Message) -ForegroundColor Red}"
+goto :EOF
+
+:INSTALL_HTTPX_FUNC
+if not exist "%P_HTTPX%" mkdir "%P_HTTPX%" >nul 2>&1
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$ProgressPreference='SilentlyContinue';try{$api=Invoke-RestMethod 'https://api.github.com/repos/projectdiscovery/httpx/releases/latest' -TimeoutSec 20;$a=$api.assets|Where-Object{$_.name -match 'windows.*amd64.*zip'}|Select-Object -First 1;if($a){Invoke-WebRequest $a.browser_download_url -OutFile '%P_HTTPX%\hx.zip' -UseBasicParsing -TimeoutSec 300;Expand-Archive '%P_HTTPX%\hx.zip' '%P_HTTPX%' -Force;$f=Get-ChildItem '%P_HTTPX%' -Filter 'httpx.exe' -EA SilentlyContinue|Select-Object -First 1;if($f -and $f.FullName -ne '%P_HTTPX%\httpx.exe'){Copy-Item $f.FullName '%P_HTTPX%\httpx.exe' -Force};Remove-Item '%P_HTTPX%\hx.zip' -Force -EA SilentlyContinue;Write-Host '    httpx installed.' -ForegroundColor Green}else{Write-Host '    Asset not found.' -ForegroundColor Red}}catch{Write-Host('    Download failed: '+$_.Exception.Message) -ForegroundColor Red}"
+goto :EOF
+
+:INSTALL_SLVR_FUNC
+if not exist "%P_SLVR%" mkdir "%P_SLVR%" >nul 2>&1
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$ProgressPreference='SilentlyContinue';try{$api=Invoke-RestMethod 'https://api.github.com/repos/BishopFox/sliver/releases/latest' -TimeoutSec 20;$a=$api.assets|Where-Object{$_.name -match 'windows.*amd64.*exe$'}|Select-Object -First 1;if($a){Invoke-WebRequest $a.browser_download_url -OutFile '%P_SLVR%\sliver-client.exe' -UseBasicParsing -TimeoutSec 300;Write-Host '    Sliver installed.' -ForegroundColor Green}else{Write-Host '    Asset not found.' -ForegroundColor Red}}catch{Write-Host('    Download failed: '+$_.Exception.Message) -ForegroundColor Red}"
+goto :EOF
+
+:INSTALL_IMPK_FUNC
+if exist "%P_IMPK%\venv\Scripts\impacket-*" (echo  %GN%    Already installed.%R% & goto :EOF)
+if not exist "%P_IMPK%" mkdir "%P_IMPK%" >nul 2>&1
+python -m venv "%P_IMPK%\venv" >nul 2>&1
+"%P_IMPK%\venv\Scripts\python.exe" -m ensurepip --upgrade >nul 2>&1
+"%P_IMPK%\venv\Scripts\python.exe" -m pip install --upgrade pip --quiet 2>nul
+echo  %DG%    Installing Impacket...%R%
+"%P_IMPK%\venv\Scripts\python.exe" -m pip install impacket --quiet --prefer-binary
+if exist "%P_IMPK%\venv\Scripts\impacket-*" (echo  %GN%    Impacket installed.%R%) else (echo  %RD%    Install may have failed.%R%)
+goto :EOF
+
+:INSTALL_WIRE_FUNC
+powershell -NoProfile -ExecutionPolicy Bypass -Command "try{winget install -e --id WiresharkFoundation.Wireshark -h | Out-Null;Write-Host '    Wireshark installed.' -ForegroundColor Green}catch{Write-Host('    Install failed: '+$_.Exception.Message) -ForegroundColor Red}"
 goto :EOF
 
 
