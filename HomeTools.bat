@@ -1,6 +1,6 @@
 @echo off
 :: ============================================================
-::  HOME TOOLS  |  OSINT Launcher  |  v6.0
+::  HOME TOOLS  |  OSINT Launcher  |  v6.1
 ::  A self-installing OSINT toolkit launcher for Windows.
 ::
 ::  Tools clone and install automatically on first launch.
@@ -11,7 +11,7 @@
 ::  Install locations: C:\OSINT\   and   C:\Tools\exiftool\
 ::  Made with love by vortexdq.com
 :: ============================================================
-:: HOMETOOLS_VERSION:6.0
+:: HOMETOOLS_VERSION:6.1
 if "%~1"=="-k" goto :INIT
 cmd /k "%~f0" -k
 exit /b
@@ -19,7 +19,7 @@ exit /b
 
 setlocal enabledelayedexpansion
 chcp 65001 >nul 2>&1
-title HOME TOOLS v6.0
+title HOME TOOLS v6.1
 
 :: ============================================================
 ::  ANSI COLORS
@@ -106,7 +106,7 @@ goto STARTUP
 cls
 echo.
 echo  %CB%  =======================================================%R%
-echo  %CB%           HOME TOOLS v6.0  -  First Launch             %R%
+echo  %CB%           HOME TOOLS v6.1  -  First Launch             %R%
 echo  %CB%       Self-installing OSINT Toolkit for Windows         %R%
 echo  %CB%  =======================================================%R%
 echo.
@@ -359,73 +359,73 @@ if exist "%P_TRVK%\trivy.exe"                       set "S30=%GN%[OK] %R%"
 if exist "%P_KSNA%\katana.exe"                      set "S31=%GN%[OK] %R%"
 if exist "%P_HTTPX%\httpx.exe"                      set "S32=%GN%[OK] %R%"
 if exist "%P_SLVR%\sliver-client.exe"               set "S33=%GN%[OK] %R%"
-if exist "%P_IMPK%\venv\Scripts\impacket-*" set "S34=%GN%[OK] %R%"
+"%P_IMPK%\venv\Scripts\python.exe" -c "import impacket" >nul 2>&1 && set "S34=%GN%[OK] %R%"
 where wireshark.exe >nul 2>&1 && set "S35=%GN%[OK] %R%"
 
 echo  %WB%  ^| LOCAL TOOLS%R%
 echo  %DG%  =========================================================%R%
-echo  !S1!%CB% [1]%R%  %WH%JLT Edge Wireless%20%20%20%20%20%20%20%20%DG%OemDrv device manager%R%
-echo  !S2!%CB% [2]%R%  %WH%Scanners%20%20%20%20%20%20%20%20%20%20%20%20%20%DG%ESET / F-Secure / HitmanPro%R%
-echo  !S4!%MB% [4]%R%  %WH%ExifTool%20%20%20%20%20%20%20%20%20%20%20%20%DG%File metadata - read, write, strip%R%
+echo  !S1!%CB% [1]%R%  %WH%JLT Edge Wireless%DG%OemDrv device manager%R%
+echo  !S2!%CB% [2]%R%  %WH%Scanners%DG%ESET / F-Secure / HitmanPro%R%
+echo  !S4!%MB% [4]%R%  %WH%ExifTool%DG%File metadata - read, write, strip%R%
 echo.
 echo  %WB%  ^| NETWORK DISCOVERY%R%
 echo  %DG%  =========================================================%R%
-echo  !S28!%ORB%[28]%R%  %WH%Nmap%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%DG%Port scanning, service detection, NSE scripts%R%
-echo  !S29!%ORB%[29]%R%  %WH%RustScan%20%20%20%20%20%20%20%20%20%20%20%DG%Extremely fast host scanner (pairs with Nmap)%R%
-echo  !S19!%CB%[19]%R%  %WH%Amass%20%20%20%20%20%20%20%20%20%20%20%20%20%20%DG%Deep subdomain enumeration (OWASP)%R%
-echo  !S25!%BB%[25]%R%  %WH%Subfinder%20%20%20%20%20%20%20%20%20%20%DG%Passive subdomain discovery%R%
-echo  !S21!%CY%[21]%R%  %WH%Shodan CLI%20%20%20%20%20%20%20%20%20%DG%Internet-exposed services, cams, IPs%R%
+echo  !S28!%ORB%[28]%R%  %WH%Nmap%DG%Port scanning, service detection, NSE scripts%R%
+echo  !S29!%ORB%[29]%R%  %WH%RustScan%DG%Extremely fast host scanner (pairs with Nmap)%R%
+echo  !S19!%CB%[19]%R%  %WH%Amass%DG%Deep subdomain enumeration (OWASP)%R%
+echo  !S25!%BB%[25]%R%  %WH%Subfinder%DG%Passive subdomain discovery%R%
+echo  !S21!%CY%[21]%R%  %WH%Shodan CLI%DG%Internet-exposed services, cams, IPs%R%
 echo.
 echo  %WB%  ^| OSINT - PEOPLE %26 SOCIAL%R%
 echo  %DG%  =========================================================%R%
-echo  !S5!%YB% [5]%R%  %WH%Sherlock%20%20%20%20%20%20%20%20%20%20%20%DG%Username hunt across 400+ sites%R%
-echo  !S6!%GB% [6]%R%  %WH%Osintgram%20%20%20%20%20%20%20%20%20%DG%Instagram OSINT collector%R%
-echo  !S9!%CY% [9]%R%  %WH%Maigret%20%20%20%20%20%20%20%20%20%20%DG%Deep username OSINT + relationship graph%R%
-echo  !S13!%BB%[13]%R%  %WH%LinkedIn Gatherer%20%20%20%DG%LinkedIn profiles and company OSINT%R%
-echo  !S15!%GB%[15]%R%  %WH%GHunt%20%20%20%20%20%20%20%20%20%20%20%20%DG%Google account - email, Maps, Drive, YouTube%R%
-echo  !S20!%YB%[20]%R%  %WH%Phoneinfoga%20%20%20%20%20%20%20%DG%Phone number carrier, region, OSINT sources%R%
+echo  !S5!%YB% [5]%R%  %WH%Sherlock%DG%Username hunt across 400+ sites%R%
+echo  !S6!%GB% [6]%R%  %WH%Osintgram%DG%Instagram OSINT collector%R%
+echo  !S9!%CY% [9]%R%  %WH%Maigret%DG%Deep username OSINT + relationship graph%R%
+echo  !S13!%BB%[13]%R%  %WH%LinkedIn Gatherer%DG%LinkedIn profiles and company OSINT%R%
+echo  !S15!%GB%[15]%R%  %WH%GHunt%DG%Google account - email, Maps, Drive, YouTube%R%
+echo  !S20!%YB%[20]%R%  %WH%Phoneinfoga%DG%Phone number carrier, region, OSINT sources%R%
 echo.
 echo  %WB%  ^| OSINT - EMAIL %26 CREDENTIALS%R%
 echo  %DG%  =========================================================%R%
-echo  !S8!%MGB% [8]%R%  %WH%Holehe%20%20%20%20%20%20%20%20%20%20%20%20%DG%Email registered on which 120+ sites%R%
-echo  !S12!%CB%[12]%R%  %WH%Scavenger%20%20%20%20%20%20%20%20%20%DG%Pastebin leak and credential monitor%R%
-echo  !S14!%YB%[14]%R%  %WH%pwnedOrNot%20%20%20%20%20%20%20%DG%Email breach checker - shows leaked passwords%R%
+echo  !S8!%MGB% [8]%R%  %WH%Holehe%DG%Email registered on which 120+ sites%R%
+echo  !S12!%CB%[12]%R%  %WH%Scavenger%DG%Pastebin leak and credential monitor%R%
+echo  !S14!%YB%[14]%R%  %WH%pwnedOrNot%DG%Email breach checker - shows leaked passwords%R%
 echo.
 echo  %WB%  ^| OSINT - INFRASTRUCTURE%R%
 echo  %DG%  =========================================================%R%
-echo  !S3!%BB% [3]%R%  %WH%SpiderFoot%20%20%20%20%20%20%20%20%DG%Automated multi-source OSINT (web UI)%R%
-echo  !S7!%ORB% [7]%R%  %WH%theHarvester%20%20%20%20%20%DG%Emails, subdomains, IPs from a domain%R%
-echo  !S10!%WB%[10]%R%  %WH%Photon%20%20%20%20%20%20%20%20%20%20%20%DG%Web crawler - extract URLs, keys, secrets%R%
-echo  !S16!%CB%[16]%R%  %WH%Recon-ng%20%20%20%20%20%20%20%20%20%DG%Modular recon framework with API modules%R%
-echo  !S22!%GB%[22]%R%  %WH%Maltego%20%20%20%20%20%20%20%20%20%20%DG%Visual link analysis and relationship mapping%R%
+echo  !S3!%BB% [3]%R%  %WH%SpiderFoot%DG%Automated multi-source OSINT (web UI)%R%
+echo  !S7!%ORB% [7]%R%  %WH%theHarvester%DG%Emails, subdomains, IPs from a domain%R%
+echo  !S10!%WB%[10]%R%  %WH%Photon%DG%Web crawler - extract URLs, keys, secrets%R%
+echo  !S16!%CB%[16]%R%  %WH%Recon-ng%DG%Modular recon framework with API modules%R%
+echo  !S22!%GB%[22]%R%  %WH%Maltego%DG%Visual link analysis and relationship mapping%R%
 echo.
 echo  %WB%  ^| WEB APPLICATION SECURITY%R%
 echo  %DG%  =========================================================%R%
-echo  !S11!%RD%[11]%R%  %WH%SQLMap%20%20%20%20%20%20%20%20%20%20%20%DG%SQL injection detection and exploitation%R%
-echo  !S17!%RD%[17]%R%  %WH%OWASP ZAP%20%20%20%20%20%20%20%DG%Web app security scanner (full GUI)%R%
-echo  !S18!%MGB%[18]%R%  %WH%WPScan%20%20%20%20%20%20%20%20%20%20%DG%WordPress - users, plugins, themes, CVEs%R%
-echo  !S23!%RD%[23]%R%  %WH%Nuclei%20%20%20%20%20%20%20%20%20%20%20%DG%Template-based CVE and vulnerability scanner%R%
-echo  !S24!%ORB%[24]%R%  %WH%ffuf%20%20%20%20%20%20%20%20%20%20%20%20%DG%Fast web fuzzer - dirs, vhosts, parameters%R%
-echo  !S31!%CY%[31]%R%  %WH%Katana%20%20%20%20%20%20%20%20%20%20%20%DG%Modern web crawler from ProjectDiscovery%R%
-echo  !S32!%CY%[32]%R%  %WH%httpx%20%20%20%20%20%20%20%20%20%20%20%20%DG%Fast host and web service enumeration%R%
+echo  !S11!%RD%[11]%R%  %WH%SQLMap%DG%SQL injection detection and exploitation%R%
+echo  !S17!%RD%[17]%R%  %WH%OWASP ZAP%DG%Web app security scanner (full GUI)%R%
+echo  !S18!%MGB%[18]%R%  %WH%WPScan%DG%WordPress - users, plugins, themes, CVEs%R%
+echo  !S23!%RD%[23]%R%  %WH%Nuclei%DG%Template-based CVE and vulnerability scanner%R%
+echo  !S24!%ORB%[24]%R%  %WH%ffuf%DG%Fast web fuzzer - dirs, vhosts, parameters%R%
+echo  !S31!%CY%[31]%R%  %WH%Katana%DG%Modern web crawler from ProjectDiscovery%R%
+echo  !S32!%CY%[32]%R%  %WH%httpx%DG%Fast host and web service enumeration%R%
 echo.
 echo  %WB%  ^| NETWORK TESTING%R%
 echo  %DG%  =========================================================%R%
-echo  !S26!%MGB%[26]%R%  %WH%Netexec (nxc)%20%20%20%20%20%20%20%DG%SMB / WinRM / LDAP / SSH auth testing%R%
-echo  !S34!%MGB%[34]%R%  %WH%Impacket%20%20%20%20%20%20%20%20%20%DG%AD protocols, admin utils, exploitation%R%
-echo  !S35!%WB%[35]%R%  %WH%Wireshark%20%20%20%20%20%20%20%20%DG%Network traffic analysis and packet capture%R%
+echo  !S26!%MGB%[26]%R%  %WH%Netexec (nxc)%DG%SMB / WinRM / LDAP / SSH auth testing%R%
+echo  !S34!%MGB%[34]%R%  %WH%Impacket%DG%AD protocols, admin utils, exploitation%R%
+echo  !S35!%WB%[35]%R%  %WH%Wireshark%DG%Network traffic analysis and packet capture%R%
 echo.
 echo  %WB%  ^| CONTAINER SECURITY%R%
 echo  %DG%  =========================================================%R%
-echo  !S30!%BB%[30]%R%  %WH%Trivy%20%20%20%20%20%20%20%20%20%20%20%20%20%DG%Container/image scanning for vulnerabilities%R%
+echo  !S30!%BB%[30]%R%  %WH%Trivy%DG%Container/image scanning for vulnerabilities%R%
 echo.
 echo  %WB%  ^| RED TEAM INFRASTRUCTURE%R%
 echo  %DG%  =========================================================%R%
-echo  !S33!%RD%[33]%R%  %WH%Sliver%20%20%20%20%20%20%20%20%20%20%20%20%DG%Command and control framework for red ops%R%
+echo  !S33!%RD%[33]%R%  %WH%Sliver%DG%Command and control framework for red ops%R%
 echo.
 echo  %WB%  ^| UTILITIES%R%
 echo  %DG%  =========================================================%R%
-echo  !S27!%WB%[27]%R%  %WH%CyberChef%20%20%20%20%20%20%20%20%20%DG%Encode / decode / hash / parse - offline%R%
+echo  !S27!%WB%[27]%R%  %WH%CyberChef%DG%Encode / decode / hash / parse - offline%R%
 echo.
 echo  %DG%  --------------------------------------------------------%R%
 echo  %CY%  [R]%R% Repair   %CY%[C]%R% Commands   %CY%[D]%R% Dictionary   %CY%[H]%R% Help   %CY%[I]%R% Instagram   %CY%[Q]%R% Quit
@@ -1361,7 +1361,7 @@ echo  %MGB%  =======================================================%R%
 echo  %WB%  Impacket  ^|  AD Protocols, Admin Utils, Exploitation%R%
 echo  %MGB%  =======================================================%R%
 echo.
-if not exist "%P_IMPK%\venv\Scripts\impacket-*" echo  %RD%  Not ready. Type R on menu to install.%R% & call :SFX & pause & goto MENU
+"%P_IMPK%\venv\Scripts\python.exe" -c "import impacket" >nul 2>&1 || (echo  %RD%  Not ready. Type R on menu to install.%R% & call :SFX & pause & goto MENU)
 title HOME TOOLS  ^|  Impacket
 echo  %DG%  USAGE: impacket-smbclient //target/share -u user -p pass%R%
 echo  %DG%        impacket-psexec domain/user:pass@target%R%
@@ -2952,6 +2952,7 @@ goto :EOF
 echo.
 echo  %ORB%  [28] Nmap%R%
 where nmap.exe >nul 2>&1 && (echo  %GN%    Status: Ready%R% & goto :EOF)
+if exist "C:\Program Files\Nmap\nmap.exe" (echo  %GN%    Status: Installed (add to PATH)%R% & goto :EOF)
 if "!HAS_NET!"=="0" (echo  %DG%    Offline - not installed.%R%  & goto :EOF)
 echo  %WH%    Not installed - installing via winget...%R%
 call :INSTALL_NMAP_FUNC
@@ -3005,7 +3006,7 @@ goto :EOF
 :SC_IMPK
 echo.
 echo  %MGB%  [34] Impacket%R%
-if exist "%P_IMPK%\venv\Scripts\impacket-*" (echo  %GN%    Status: Ready%R% & goto :EOF)
+"%P_IMPK%\venv\Scripts\python.exe" -c "import impacket" >nul 2>&1 && (echo  %GN%    Status: Ready%R% & goto :EOF)
 if "!HAS_NET!"=="0" (echo  %DG%    Offline - not installed.%R%  & goto :EOF)
 if "!HAS_PY!"=="0"  (echo  %YW%    Needs Python in PATH.%R%       & goto :EOF)
 echo  %WH%    Not installed - installing...%R%
@@ -3016,6 +3017,7 @@ goto :EOF
 echo.
 echo  %WB%  [35] Wireshark%R%
 where wireshark.exe >nul 2>&1 && (echo  %GN%    Status: Ready%R% & goto :EOF)
+if exist "C:\Program Files\Wireshark\wireshark.exe" (echo  %GN%    Status: Installed (add to PATH)%R% & goto :EOF)
 if "!HAS_NET!"=="0" (echo  %DG%    Offline - not installed.%R%  & goto :EOF)
 echo  %WH%    Not installed - installing via winget...%R%
 call :INSTALL_WIRE_FUNC
@@ -3088,7 +3090,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command "$ProgressPreference='Sil
 goto :EOF
 
 :INSTALL_NMAP_FUNC
-powershell -NoProfile -ExecutionPolicy Bypass -Command "try{winget install -e --id Insecure.Nmap -h | Out-Null;Write-Host '    Nmap installed.' -ForegroundColor Green}catch{Write-Host('    Install failed: '+$_.Exception.Message) -ForegroundColor Red}"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "try{winget install -e --id Insecure.Nmap 2>&1 | Out-Null;Write-Host '    Nmap installed.' -ForegroundColor Green}catch{Write-Host '    Install failed - try: winget install Insecure.Nmap' -ForegroundColor Yellow}"
 goto :EOF
 
 :INSTALL_RSCN_FUNC
@@ -3117,18 +3119,20 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command "$ProgressPreference='Sil
 goto :EOF
 
 :INSTALL_IMPK_FUNC
-if exist "%P_IMPK%\venv\Scripts\impacket-*" (echo  %GN%    Already installed.%R% & goto :EOF)
 if not exist "%P_IMPK%" mkdir "%P_IMPK%" >nul 2>&1
+"%P_IMPK%\venv\Scripts\python.exe" -c "import impacket" >nul 2>&1
+if %errorlevel% equ 0 (echo  %GN%    Already installed.%R% & goto :EOF)
 python -m venv "%P_IMPK%\venv" >nul 2>&1
 "%P_IMPK%\venv\Scripts\python.exe" -m ensurepip --upgrade >nul 2>&1
 "%P_IMPK%\venv\Scripts\python.exe" -m pip install --upgrade pip --quiet 2>nul
 echo  %DG%    Installing Impacket...%R%
 "%P_IMPK%\venv\Scripts\python.exe" -m pip install impacket --quiet --prefer-binary
-if exist "%P_IMPK%\venv\Scripts\impacket-*" (echo  %GN%    Impacket installed.%R%) else (echo  %RD%    Install may have failed.%R%)
+"%P_IMPK%\venv\Scripts\python.exe" -c "import impacket" >nul 2>&1
+if %errorlevel% equ 0 (echo  %GN%    Impacket installed.%R%) else (echo  %RD%    Install may have failed.%R%)
 goto :EOF
 
 :INSTALL_WIRE_FUNC
-powershell -NoProfile -ExecutionPolicy Bypass -Command "try{winget install -e --id WiresharkFoundation.Wireshark -h | Out-Null;Write-Host '    Wireshark installed.' -ForegroundColor Green}catch{Write-Host('    Install failed: '+$_.Exception.Message) -ForegroundColor Red}"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "try{winget install -e --id WiresharkFoundation.Wireshark 2>&1 | Out-Null;Write-Host '    Wireshark installed.' -ForegroundColor Green}catch{Write-Host '    Install failed - try: winget install WiresharkFoundation.Wireshark' -ForegroundColor Yellow}"
 goto :EOF
 
 
