@@ -11,7 +11,7 @@
 ::  Install locations: C:\OSINT\   and   C:\Tools\exiftool\
 ::  Made with love by vortexdq.com
 :: ============================================================
-:: HOMETOOLS_VERSION:6.1
+:: HOMETOOLS_VERSION:6.1.1
 if "%~1"=="-k" goto :INIT
 cmd /k "%~f0" -k
 exit /b
@@ -364,68 +364,68 @@ where wireshark.exe >nul 2>&1 && set "S35=%GN%[OK] %R%"
 
 echo  %WB%  ^| LOCAL TOOLS%R%
 echo  %DG%  =========================================================%R%
-echo  !S1!%CB% [1]%R%  %WH%JLT Edge Wireless%DG%OemDrv device manager%R%
-echo  !S2!%CB% [2]%R%  %WH%Scanners%DG%ESET / F-Secure / HitmanPro%R%
-echo  !S4!%MB% [4]%R%  %WH%ExifTool%DG%File metadata - read, write, strip%R%
+echo  !S1!%CB% [1]%R%  %WH%JLT Edge Wireless        %DG%OemDrv device manager%R%
+echo  !S2!%CB% [2]%R%  %WH%Scanners                 %DG%ESET / F-Secure / HitmanPro%R%
+echo  !S4!%MB% [4]%R%  %WH%ExifTool                 %DG%File metadata - read, write, strip%R%
 echo.
 echo  %WB%  ^| NETWORK DISCOVERY%R%
 echo  %DG%  =========================================================%R%
-echo  !S28!%ORB%[28]%R%  %WH%Nmap%DG%Port scanning, service detection, NSE scripts%R%
-echo  !S29!%ORB%[29]%R%  %WH%RustScan%DG%Extremely fast host scanner (pairs with Nmap)%R%
-echo  !S19!%CB%[19]%R%  %WH%Amass%DG%Deep subdomain enumeration (OWASP)%R%
-echo  !S25!%BB%[25]%R%  %WH%Subfinder%DG%Passive subdomain discovery%R%
-echo  !S21!%CY%[21]%R%  %WH%Shodan CLI%DG%Internet-exposed services, cams, IPs%R%
+echo  !S28!%ORB%[28]%R%  %WH%Nmap                     %DG%Port scanning, service detection, NSE scripts%R%
+echo  !S29!%ORB%[29]%R%  %WH%RustScan                 %DG%Extremely fast host scanner (pairs with Nmap)%R%
+echo  !S19!%CB%[19]%R%  %WH%Amass                    %DG%Deep subdomain enumeration (OWASP)%R%
+echo  !S25!%BB%[25]%R%  %WH%Subfinder                %DG%Passive subdomain discovery%R%
+echo  !S21!%CY%[21]%R%  %WH%Shodan CLI               %DG%Internet-exposed services, cams, IPs%R%
 echo.
 echo  %WB%  ^| OSINT - PEOPLE %26 SOCIAL%R%
 echo  %DG%  =========================================================%R%
-echo  !S5!%YB% [5]%R%  %WH%Sherlock%DG%Username hunt across 400+ sites%R%
-echo  !S6!%GB% [6]%R%  %WH%Osintgram%DG%Instagram OSINT collector%R%
-echo  !S9!%CY% [9]%R%  %WH%Maigret%DG%Deep username OSINT + relationship graph%R%
-echo  !S13!%BB%[13]%R%  %WH%LinkedIn Gatherer%DG%LinkedIn profiles and company OSINT%R%
-echo  !S15!%GB%[15]%R%  %WH%GHunt%DG%Google account - email, Maps, Drive, YouTube%R%
-echo  !S20!%YB%[20]%R%  %WH%Phoneinfoga%DG%Phone number carrier, region, OSINT sources%R%
+echo  !S5!%YB% [5]%R%  %WH%Sherlock                 %DG%Username hunt across 400+ sites%R%
+echo  !S6!%GB% [6]%R%  %WH%Osintgram                %DG%Instagram OSINT collector%R%
+echo  !S9!%CY% [9]%R%  %WH%Maigret                  %DG%Deep username OSINT + relationship graph%R%
+echo  !S13!%BB%[13]%R%  %WH%LinkedIn Gatherer        %DG%LinkedIn profiles and company OSINT%R%
+echo  !S15!%GB%[15]%R%  %WH%GHunt                    %DG%Google account - email, Maps, Drive, YouTube%R%
+echo  !S20!%YB%[20]%R%  %WH%Phoneinfoga              %DG%Phone number carrier, region, OSINT sources%R%
 echo.
 echo  %WB%  ^| OSINT - EMAIL %26 CREDENTIALS%R%
 echo  %DG%  =========================================================%R%
-echo  !S8!%MGB% [8]%R%  %WH%Holehe%DG%Email registered on which 120+ sites%R%
-echo  !S12!%CB%[12]%R%  %WH%Scavenger%DG%Pastebin leak and credential monitor%R%
-echo  !S14!%YB%[14]%R%  %WH%pwnedOrNot%DG%Email breach checker - shows leaked passwords%R%
+echo  !S8!%MGB% [8]%R%  %WH%Holehe                   %DG%Email registered on which 120+ sites%R%
+echo  !S12!%CB%[12]%R%  %WH%Scavenger                %DG%Pastebin leak and credential monitor%R%
+echo  !S14!%YB%[14]%R%  %WH%pwnedOrNot               %DG%Email breach checker - shows leaked passwords%R%
 echo.
 echo  %WB%  ^| OSINT - INFRASTRUCTURE%R%
 echo  %DG%  =========================================================%R%
-echo  !S3!%BB% [3]%R%  %WH%SpiderFoot%DG%Automated multi-source OSINT (web UI)%R%
-echo  !S7!%ORB% [7]%R%  %WH%theHarvester%DG%Emails, subdomains, IPs from a domain%R%
-echo  !S10!%WB%[10]%R%  %WH%Photon%DG%Web crawler - extract URLs, keys, secrets%R%
-echo  !S16!%CB%[16]%R%  %WH%Recon-ng%DG%Modular recon framework with API modules%R%
-echo  !S22!%GB%[22]%R%  %WH%Maltego%DG%Visual link analysis and relationship mapping%R%
+echo  !S3!%BB% [3]%R%  %WH%SpiderFoot               %DG%Automated multi-source OSINT (web UI)%R%
+echo  !S7!%ORB% [7]%R%  %WH%theHarvester            %DG%Emails, subdomains, IPs from a domain%R%
+echo  !S10!%WB%[10]%R%  %WH%Photon                   %DG%Web crawler - extract URLs, keys, secrets%R%
+echo  !S16!%CB%[16]%R%  %WH%Recon-ng                 %DG%Modular recon framework with API modules%R%
+echo  !S22!%GB%[22]%R%  %WH%Maltego                  %DG%Visual link analysis and relationship mapping%R%
 echo.
 echo  %WB%  ^| WEB APPLICATION SECURITY%R%
 echo  %DG%  =========================================================%R%
-echo  !S11!%RD%[11]%R%  %WH%SQLMap%DG%SQL injection detection and exploitation%R%
-echo  !S17!%RD%[17]%R%  %WH%OWASP ZAP%DG%Web app security scanner (full GUI)%R%
-echo  !S18!%MGB%[18]%R%  %WH%WPScan%DG%WordPress - users, plugins, themes, CVEs%R%
-echo  !S23!%RD%[23]%R%  %WH%Nuclei%DG%Template-based CVE and vulnerability scanner%R%
-echo  !S24!%ORB%[24]%R%  %WH%ffuf%DG%Fast web fuzzer - dirs, vhosts, parameters%R%
-echo  !S31!%CY%[31]%R%  %WH%Katana%DG%Modern web crawler from ProjectDiscovery%R%
-echo  !S32!%CY%[32]%R%  %WH%httpx%DG%Fast host and web service enumeration%R%
+echo  !S11!%RD%[11]%R%  %WH%SQLMap                   %DG%SQL injection detection and exploitation%R%
+echo  !S17!%RD%[17]%R%  %WH%OWASP ZAP                %DG%Web app security scanner (full GUI)%R%
+echo  !S18!%MGB%[18]%R%  %WH%WPScan                  %DG%WordPress - users, plugins, themes, CVEs%R%
+echo  !S23!%RD%[23]%R%  %WH%Nuclei                   %DG%Template-based CVE and vulnerability scanner%R%
+echo  !S24!%ORB%[24]%R%  %WH%ffuf                    %DG%Fast web fuzzer - dirs, vhosts, parameters%R%
+echo  !S31!%CY%[31]%R%  %WH%Katana                   %DG%Modern web crawler from ProjectDiscovery%R%
+echo  !S32!%CY%[32]%R%  %WH%httpx                    %DG%Fast host and web service enumeration%R%
 echo.
 echo  %WB%  ^| NETWORK TESTING%R%
 echo  %DG%  =========================================================%R%
-echo  !S26!%MGB%[26]%R%  %WH%Netexec (nxc)%DG%SMB / WinRM / LDAP / SSH auth testing%R%
-echo  !S34!%MGB%[34]%R%  %WH%Impacket%DG%AD protocols, admin utils, exploitation%R%
-echo  !S35!%WB%[35]%R%  %WH%Wireshark%DG%Network traffic analysis and packet capture%R%
+echo  !S26!%MGB%[26]%R%  %WH%Netexec (nxc)            %DG%SMB / WinRM / LDAP / SSH auth testing%R%
+echo  !S34!%MGB%[34]%R%  %WH%Impacket                %DG%AD protocols, admin utils, exploitation%R%
+echo  !S35!%WB%[35]%R%  %WH%Wireshark                %DG%Network traffic analysis and packet capture%R%
 echo.
 echo  %WB%  ^| CONTAINER SECURITY%R%
 echo  %DG%  =========================================================%R%
-echo  !S30!%BB%[30]%R%  %WH%Trivy%DG%Container/image scanning for vulnerabilities%R%
+echo  !S30!%BB%[30]%R%  %WH%Trivy                    %DG%Container/image scanning for vulnerabilities%R%
 echo.
 echo  %WB%  ^| RED TEAM INFRASTRUCTURE%R%
 echo  %DG%  =========================================================%R%
-echo  !S33!%RD%[33]%R%  %WH%Sliver%DG%Command and control framework for red ops%R%
+echo  !S33!%RD%[33]%R%  %WH%Sliver                   %DG%Command and control framework for red ops%R%
 echo.
 echo  %WB%  ^| UTILITIES%R%
 echo  %DG%  =========================================================%R%
-echo  !S27!%WB%[27]%R%  %WH%CyberChef%DG%Encode / decode / hash / parse - offline%R%
+echo  !S27!%WB%[27]%R%  %WH%CyberChef                %DG%Encode / decode / hash / parse - offline%R%
 echo.
 echo  %DG%  --------------------------------------------------------%R%
 echo  %CY%  [R]%R% Repair   %CY%[C]%R% Commands   %CY%[D]%R% Dictionary   %CY%[H]%R% Help   %CY%[I]%R% Instagram   %CY%[Q]%R% Quit
