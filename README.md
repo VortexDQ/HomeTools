@@ -292,7 +292,7 @@ Requires **Ruby + gem** ([rubyinstaller.org](https://rubyinstaller.org))
 
 ## 📜 License
 
-MIT — See [LICENSE](LICENSE)
+MIT  See [LICENSE](LICENSE)
 
 ---
 
