@@ -11,7 +11,7 @@
 ::  Install locations: C:\OSINT\   and   C:\Tools\exiftool\
 ::  Made with love by vortexdq.com
 :: ============================================================
-:: HOMETOOLS_VERSION:6.1.1
+:: HOMETOOLS_VERSION:6.1.2
 if "%~1"=="-k" goto :INIT
 cmd /k "%~f0" -k
 exit /b
@@ -1383,9 +1383,11 @@ echo  %WB%  =======================================================%R%
 echo  %WB%  Wireshark  ^|  Network Traffic Analysis%R%
 echo  %WB%  =======================================================%R%
 echo.
-if not exist "C:\Program Files*\Wireshark\wireshark.exe" (
-  echo  %DG%    Installing Wireshark via winget...%R%
-  call :SC_WIRE
+where wireshark.exe >nul 2>&1
+if errorlevel 1 (
+  set "WIRE_OK=0"
+  for /d %%P in ("C:\Program Files*\Wireshark*") do if exist "%%P\wireshark.exe" set "WIRE_OK=1"
+  if !WIRE_OK! equ 0 (echo  %DG%    Installing Wireshark via winget...%R% & call :SC_WIRE)
 ) else (
   echo  %GN%    Wireshark is ready.%R%
 )
@@ -2893,7 +2895,7 @@ goto :EOF
 echo.
 echo  %GB%  [22] Maltego%R%
 call :MALT_FIND
-if defined MALT_EXE (echo  %GN%    Status: Ready%R%) else (echo  %YW%    Not found - open tool 22 to auto-install.%R%)
+if defined MALT_EXE (echo  %GN%    Status: Ready%R%) else (echo  %YW%    Manual download required - open tool 22 for instructions.%R%)
 goto :EOF
 
 :SC_NUCL
@@ -3017,7 +3019,7 @@ goto :EOF
 echo.
 echo  %WB%  [35] Wireshark%R%
 where wireshark.exe >nul 2>&1 && (echo  %GN%    Status: Ready%R% & goto :EOF)
-if exist "C:\Program Files\Wireshark\wireshark.exe" (echo  %GN%    Status: Installed - add to PATH%R% & goto :EOF)
+for /d %%P in ("C:\Program Files*\Wireshark*") do if exist "%%P\wireshark.exe" (echo  %GN%    Status: Installed - add to PATH%R% & goto :EOF)
 if "!HAS_NET!"=="0" (echo  %DG%    Offline - not installed.%R%  & goto :EOF)
 echo  %WH%    Not installed - installing via winget...%R%
 call :INSTALL_WIRE_FUNC
@@ -3132,7 +3134,7 @@ if %errorlevel% equ 0 (echo  %GN%    Impacket installed.%R%) else (echo  %RD%   
 goto :EOF
 
 :INSTALL_WIRE_FUNC
-powershell -NoProfile -ExecutionPolicy Bypass -Command "try{winget install -e --id WiresharkFoundation.Wireshark 2>&1 | Out-Null;Write-Host '    Wireshark installed.' -ForegroundColor Green}catch{Write-Host '    Install failed - try: winget install WiresharkFoundation.Wireshark' -ForegroundColor Yellow}"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "try{echo '    Attempting winget install...';winget install -e --id WiresharkFoundation.Wireshark --accept-source-agreements --accept-package-agreements 2>&1 | Out-Null;Start-Sleep -Seconds 2;if(Test-Path 'C:\Program Files\Wireshark\wireshark.exe' -or Test-Path 'C:\Program Files (x86)\Wireshark\wireshark.exe'){Write-Host '    Wireshark installed.' -ForegroundColor Green}else{Write-Host '    Install may have failed. Try: winget install Wireshark' -ForegroundColor Yellow}}catch{Write-Host '    Install failed. Try: winget install WiresharkFoundation.Wireshark' -ForegroundColor Yellow}"
 goto :EOF
 
 
