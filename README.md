@@ -12,15 +12,15 @@
 **A self-installing, self-updating OSINT & security toolkit launcher for Windows.**  
 Double-click. Everything installs, updates, and runs — automatically.
 
-[![Version](https://img.shields.io/badge/version-4.1-blue?style=for-the-badge&logo=github)](https://github.com/VortexDQ/HomeTools/releases)
+[![Version](https://img.shields.io/badge/version-6.2-blue?style=for-the-badge&logo=github)](https://github.com/VortexDQ/HomeTools/releases)
 [![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11-0078D4?style=for-the-badge&logo=windows)](https://github.com/VortexDQ/HomeTools)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python)](https://python.org/downloads)
 [![License](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)](LICENSE)
-[![Tools](https://img.shields.io/badge/tools-18-orange?style=for-the-badge)](#-tools-included)
+[![Tools](https://img.shields.io/badge/tools-35-orange?style=for-the-badge)](#-tools-included)
 
 ---
 
-[⚡ Quick Start](#-quick-start) · [🛠 Tools](#-tools-included) · [📦 How It Works](#-how-it-works) · [🎬 Boot Animation](#-boot-animation) · [🔧 Setup Guides](#-setup-guides) · [❓ FAQ](#-faq)
+[⚡ Quick Start](#-quick-start) · [🛠 Tools](#-tools-included) · [📦 How It Works](#-how-it-works) · [🔧 Setup Guides](#-setup-guides) · [❓ FAQ](#-faq)
 
 </div>
 
@@ -30,12 +30,12 @@ Double-click. Everything installs, updates, and runs — automatically.
 
 | Feature | Description |
 |---|---|
-| 🚀 **Auto-install** | Every tool clones from GitHub and installs into its own Python venv on first launch |
-| 🔄 **Auto-update** | All tools `git pull` on every startup — always fresh |
-| 🆙 **Self-update** | Checks GitHub for a new version of HomeTools itself — downloads and restarts automatically |
-| 🩹 **Self-heal** | Broken virtual environments detected and rebuilt without losing your data |
-| 🔒 **Secure** | Passwords masked with `SecureString`, cleared from memory after use, never logged |
-| 🎬 **Boot animation** | Grim reaper slashes its scythe then transitions into the menu — every launch |
+| 🚀 **Auto-install** | Every tool downloads from GitHub and installs on first launch |
+| 🔄 **Auto-update** | All tools git pull on every startup — always fresh |
+| 🆙 **Self-update** | Checks GitHub for HomeTools updates — downloads and restarts automatically |
+| 🩹 **Self-heal** | Broken venvs detected and rebuilt automatically without losing data |
+| 🔒 **Secure** | Passwords masked with SecureString, never logged, cleared after use |
+| 🎬 **Boot animation** | Grim reaper animation plays on every launch |
 | 📋 **Command Center** | Built-in quick-reference for every tool's most useful commands |
 | 🖱 **One file** | Entire toolkit is a single `.bat` — no installers, no admin rights needed |
 
@@ -48,8 +48,8 @@ Double-click. Everything installs, updates, and runs — automatically.
 | Requirement | Download | Used by |
 |---|---|---|
 | **Windows 10 or 11** | — | All tools |
-| **Python 3.10+** | [python.org/downloads](https://python.org/downloads) ✅ **Add to PATH** | Most tools |
-| **git** | [git-scm.com/download/win](https://git-scm.com/download/win) ✅ **Add to PATH** | All tools |
+| **Python 3.10+** | [python.org/downloads](https://python.org/downloads) ✅ **Add to PATH** | Most Python tools |
+| **git** | [git-scm.com/download/win](https://git-scm.com/download/win) ✅ **Add to PATH** | All cloned tools |
 | **Java** | [adoptium.net](https://adoptium.net) | OWASP ZAP only |
 | **Ruby + gem** | [rubyinstaller.org](https://rubyinstaller.org) | WPScan only |
 
@@ -67,35 +67,82 @@ No command line knowledge needed.
 
 ---
 
-## 🛠 Tools Included
+## 🛠 Tools Included (35 Tools)
 
-### OSINT Tools (3–14)
+### LOCAL TOOLS
+| # | Tool | Purpose |
+|---|---|---|
+| 1 | **JLT Edge Wireless** | OemDrv device manager (optional local tool) |
+| 2 | **Scanners** | ESET / F-Secure / HitmanPro shortcuts (optional local tools) |
+| 4 | **ExifTool** | Read, write, and strip file metadata |
 
-| # | Tool | What It Does | Source |
+### NETWORK DISCOVERY
+| # | Tool | Purpose | Source |
 |---|---|---|---|
-| 3 | **SpiderFoot** | Automated OSINT framework with web UI at `http://127.0.0.1:5001` | [smicallef/spiderfoot](https://github.com/smicallef/spiderfoot) |
-| 4 | **ExifTool** | Read, write and strip metadata from any file type | [exiftool.org](https://exiftool.org) |
-| 5 | **Sherlock** | Find a username across 400+ social media sites | [sherlock-project/sherlock](https://github.com/sherlock-project/sherlock) |
-| 6 | **Osintgram** | Instagram OSINT — followers, photos, locations, hashtags | [Datalux/Osintgram](https://github.com/Datalux/Osintgram) |
-| 7 | **theHarvester** | Harvest emails, subdomains and names from a target domain | [laramies/theHarvester](https://github.com/laramies/theHarvester) |
-| 8 | **Holehe** | Check if an email is registered on 120+ websites | [megadose/holehe](https://github.com/megadose/holehe) |
-| 9 | **Maigret** | Deep username OSINT across 3000+ sites with HTML reports | [soxoj/maigret](https://github.com/soxoj/maigret) |
-| 10 | **Photon** | Web crawler — extracts emails, URLs, API keys, JS secrets | [s0md3v/Photon](https://github.com/s0md3v/Photon) |
-| 11 | **SQLMap** | Automated SQL injection detection and exploitation | [sqlmapproject/sqlmap](https://github.com/sqlmapproject/sqlmap) |
-| 12 | **Scavenger** | Pastebin leak monitor and credential scraper | [rndinfosecguy/Scavenger](https://github.com/rndinfosecguy/Scavenger) |
-| 13 | **LinkedIn Gatherer** | LinkedIn profile and network OSINT | [DisK0nn3cT/linkedin-gatherer](https://github.com/DisK0nn3cT/linkedin-gatherer) |
-| 14 | **pwnedOrNot** | Email breach checker — finds exposed passwords via HIBP API | [thewhiteh4t/pwnedOrNot](https://github.com/thewhiteh4t/pwnedOrNot) |
+| 19 | **Amass** | Deep subdomain enumeration | [OWASP Amass](https://github.com/owasp-amass/amass) |
+| 21 | **Shodan CLI** | Find internet-exposed services and devices | [Shodan CLI](https://cli.shodan.io) |
+| 25 | **Subfinder** | Passive subdomain discovery | [Subfinder](https://github.com/projectdiscovery/subfinder) |
+| 28 | **Nmap** | Port scanning, service detection, NSE scripting | [nmap.org](https://nmap.org) |
+| 29 | **RustScan** | Extremely fast host scanner (pairs with Nmap) | [RustScan](https://github.com/RustScan/RustScan) |
 
-### Advanced Tools (15–18)
+### OSINT - PEOPLE & SOCIAL
+| # | Tool | Purpose | Source |
+|---|---|---|---|
+| 5 | **Sherlock** | Username hunt across 400+ social media sites | [Sherlock Project](https://github.com/sherlock-project/sherlock) |
+| 6 | **Osintgram** | Instagram OSINT collector | [Osintgram](https://github.com/Datalux/Osintgram) |
+| 9 | **Maigret** | Deep username OSINT + relationship graph | [Maigret](https://github.com/soxoj/maigret) |
+| 13 | **LinkedIn Gatherer** | LinkedIn profiles and company OSINT | [LinkedIn Gatherer](https://github.com/DisK0nn3cT/linkedin-gatherer) |
+| 15 | **GHunt** | Google account OSINT — email, Maps, Drive, YouTube | [GHunt](https://github.com/mxrch/GHunt) |
+| 20 | **Phoneinfoga** | Phone number carrier, region, and OSINT sources | [Phoneinfoga](https://github.com/sundowndev/phoneinfoga) |
 
-| # | Tool | What It Does | Source | Notes |
-|---|---|---|---|---|
-| 15 | **GHunt** | Google account OSINT — email, Maps reviews, Drive, location | [mxrch/GHunt](https://github.com/mxrch/GHunt) | Run `ghunt login` on first use |
-| 16 | **Recon-ng** | Modular web recon framework with interactive console | [lanmaster53/recon-ng](https://github.com/lanmaster53/recon-ng) | Type `help` inside |
-| 17 | **ZAP by Checkmarx** | Web application security scanner — full GUI | [zaproxy/zaproxy](https://github.com/zaproxy/zaproxy) | Requires Java |
-| 18 | **WPScan** | WordPress vulnerability scanner — CVEs, users, plugins, themes | [wpscanteam/wpscan](https://github.com/wpscanteam/wpscan) | Requires Ruby. Free for personal use |
+### OSINT - EMAIL & CREDENTIALS
+| # | Tool | Purpose | Source |
+|---|---|---|---|
+| 8 | **Holehe** | Email registered on which 120+ sites | [Holehe](https://github.com/megadose/holehe) |
+| 12 | **Scavenger** | Pastebin leak monitor and credential scraper | [Scavenger](https://github.com/rndinfosecguy/Scavenger) |
+| 14 | **pwnedOrNot** | Email breach checker — shows leaked passwords | [pwnedOrNot](https://github.com/thewhiteh4t/pwnedOrNot) |
 
-> Tools 1–2 are optional local shortcuts (JLT Edge Wireless, antivirus scanners). Configure paths at the top of the `.bat` file.
+### OSINT - INFRASTRUCTURE
+| # | Tool | Purpose | Source |
+|---|---|---|---|
+| 3 | **SpiderFoot** | Automated multi-source OSINT framework (web UI) | [SpiderFoot](https://github.com/smicallef/spiderfoot) |
+| 7 | **theHarvester** | Harvest emails, subdomains, IPs from domain | [theHarvester](https://github.com/laramies/theHarvester) |
+| 10 | **Photon** | Web crawler — extracts URLs, keys, secrets | [Photon](https://github.com/s0md3v/Photon) |
+| 16 | **Recon-ng** | Modular recon framework with API modules | [Recon-ng](https://github.com/lanmaster53/recon-ng) |
+| 22 | **Maltego** | Visual link analysis and relationship mapping | [Maltego](https://www.maltego.com) (Manual download) |
+
+### WEB APPLICATION SECURITY
+| # | Tool | Purpose | Source |
+|---|---|---|---|
+| 11 | **SQLMap** | SQL injection detection and exploitation | [SQLMap](https://github.com/sqlmapproject/sqlmap) |
+| 17 | **OWASP ZAP** | Web app security scanner with GUI | [ZAP](https://github.com/zaproxy/zaproxy) |
+| 18 | **WPScan** | WordPress scanner — plugins, themes, CVEs, users | [WPScan](https://github.com/wpscanteam/wpscan) |
+| 23 | **Nuclei** | Template-based vulnerability scanner | [Nuclei](https://github.com/projectdiscovery/nuclei) |
+| 24 | **ffuf** | Fast web fuzzer — dirs, vhosts, parameters | [ffuf](https://github.com/ffuf/ffuf) |
+| 31 | **Katana** | Modern web crawler from ProjectDiscovery | [Katana](https://github.com/projectdiscovery/katana) |
+| 32 | **httpx** | Fast host and web service enumeration | [httpx](https://github.com/projectdiscovery/httpx) |
+
+### NETWORK TESTING
+| # | Tool | Purpose | Source |
+|---|---|---|---|
+| 26 | **Netexec** | SMB / WinRM / LDAP / SSH auth testing | [NetExec](https://github.com/Pennyw0rth/NetExec) |
+| 34 | **Impacket** | AD protocols, admin utils, and exploitation | [Impacket](https://github.com/fortra/impacket) |
+| 35 | **Wireshark** | Network traffic analysis and packet capture | [Wireshark](https://www.wireshark.org) |
+
+### CONTAINER SECURITY
+| # | Tool | Purpose | Source |
+|---|---|---|---|
+| 30 | **Trivy** | Container/image scanning for vulnerabilities | [Trivy](https://github.com/aquasecurity/trivy) |
+
+### RED TEAM INFRASTRUCTURE
+| # | Tool | Purpose | Source |
+|---|---|---|---|
+| 33 | **Sliver** | Command and control framework | [Sliver](https://github.com/BishopFox/sliver) |
+
+### UTILITIES
+| # | Tool | Purpose | Source |
+|---|---|---|---|
+| 27 | **CyberChef** | Encode / decode / hash / parse — offline | [CyberChef](https://github.com/gchq/CyberChef) |
 
 ---
 
@@ -104,14 +151,10 @@ No command line knowledge needed.
 ### Install Locations
 
 ```
-C:\OSINT\spiderfoot\          C:\OSINT\sherlock\
-C:\OSINT\osintgram\           C:\OSINT\theHarvester\
-C:\OSINT\holehe\              C:\OSINT\maigret\
-C:\OSINT\Photon\              C:\OSINT\sqlmap\
-C:\OSINT\scavenger\           C:\OSINT\linkedin-gatherer\
-C:\OSINT\pwnedornot\          C:\OSINT\GHunt\
-C:\OSINT\recon-ng\            C:\OSINT\wpscan\
-C:\Tools\exiftool\            C:\Tools\ZAP\
+C:\OSINT\*                  All Python OSINT tools
+C:\Tools\*                  Binary tools, ZAP, ExifTool
+C:\Program Files\Nmap\      Nmap (via winget)
+C:\Program Files\Wireshark\ Wireshark (via winget)
 ```
 
 All paths are configurable at the top of `HomeTools.bat`.
@@ -120,47 +163,22 @@ All paths are configurable at the top of `HomeTools.bat`.
 
 ```
 1. Check internet, git, Python
-2. Check GitHub for a new HomeTools version → auto-update if found
+2. Check GitHub for HomeTools updates → auto-update if found
 3. For each tool:
-     Not installed?  →  git clone + python -m venv + pip install
+     Not installed?  →  git clone + venv + pip install, OR GitHub release download
      Already cloned? →  git pull --ff-only
-     venv broken?    →  detect missing .health marker → rebuild deps
+     venv broken?    →  detect + rebuild dependencies silently
 4. Grim reaper boot animation
-5. Main menu
+5. Main menu with organized category view
 ```
 
 ### Virtual Environment Health System
 
-Each Python tool runs in its own `venv/`. A `.health` marker file inside the venv signals that dependencies are current. When a `git pull` brings in new commits, the marker is deleted — dependencies reinstall silently before the next launch.
+Each Python tool runs in its own `venv/`. When `git pull` brings new commits, dependencies auto-reinstall.
 
-### 🆙 Self-Update System
+### Self-Update System
 
-Every launch, HomeTools fetches its own source file from GitHub and reads the embedded version marker (`HOMETOOLS_VERSION:X.Y`). If a newer version exists:
-
-1. Downloads `HomeTools.bat` to `%TEMP%\HT_update.bat`
-2. Writes a tiny runner script that swaps the file while the current window closes
-3. New version launches automatically
-
-**No manual updates ever needed.**
-
----
-
-## 🎬 Boot Animation
-
-Every launch plays a 10-phase grim reaper animation:
-
-```
-Phase 1  →  Darkness
-Phase 2  →  Lightning flashes (×3)
-Phase 3  →  Grim reaper materialises
-Phase 4  →  Scythe raises
-Phase 5  →  Scythe swings
-Phase 6  →  SLASH — red screen flash (×3)
-Phase 7  →  HOME TOOLS title reveals line by line
-Phase 8  →  Red → yellow → green progress bar
-Phase 9  →  HOME TOOLS v4.1 ONLINE character reveal
-Phase 10 →  Clean wipe → main menu
-```
+Every launch checks GitHub for newer HomeTools version. If found, downloads and restarts automatically.
 
 ---
 
@@ -170,216 +188,112 @@ Phase 10 →  Clean wipe → main menu
 
 | Key | Action |
 |---|---|
-| `1`–`18` | Launch a tool |
+| `1`–`35` | Launch a tool |
 | `R` | Repair — force re-run all installs and updates |
-| `C` | Command Center — full command reference for every tool |
-| `H` | Help — tool list, requirements, install locations |
-| `I` | Set or update Instagram credentials for Osintgram |
+| `C` | Commands — quick-reference for every tool |
+| `D` | Dictionary — glossary of OSINT & security terms |
+| `H` | Help — detailed tool list and requirements |
+| `I` | Instagram — set Osintgram credentials |
 | `Q` | Quit |
 
 ---
 
 ### 📸 Osintgram (Instagram OSINT)
 
-> ⚠️ Use a **secondary / burner account** — never your personal one.  
-> ⚠️ **2FA must be disabled** on the Instagram account.
+⚠️ Use a **secondary / burner account** — never your personal one.  
+⚠️ **2FA must be disabled** on the Instagram account.
 
-1. Press `I` on the main menu (or choose `6` — prompts automatically if no credentials found)
+1. Press `I` on main menu (or launch tool `6`)
 2. Enter username and password
-3. Password is **masked on screen** (SecureString) and never stored in plaintext
+3. Password is masked (SecureString) and never stored plaintext
 4. Credentials saved locally at `C:\OSINT\osintgram\config\credentials.ini`
 
 ---
 
 ### 🔍 GHunt (Google Account OSINT)
 
-GHunt requires a one-time authentication setup:
-
 1. Launch tool `15`
-2. Type `email` and enter your target to start — OR run `ghunt login` first to authenticate
-3. Follow the browser-based OAuth flow (uses your own Google account to query)
-4. After login, all subcommands work: `email`, `gaia`, `drive`, `youtube`
-
----
-
-### 🔗 LinkedIn Gatherer
-
-> ⚠️ Use a **secondary account** — not your personal LinkedIn.  
-> ⚠️ **Only research companies/people you have permission to investigate.**
-
-Choose option `13`. If credentials aren't set, the setup prompt appears automatically. Credentials stored in `C:\OSINT\linkedin-gatherer\config.py`.
+2. Type `email` and enter target — OR run `ghunt login` first
+3. Follow browser-based OAuth flow
+4. Subcommands: `email`, `gaia`, `drive`, `youtube`
 
 ---
 
 ### 📧 pwnedOrNot (Email Breach Checker)
 
-Get a free API key at **[haveibeenpwned.com/API/Key](https://haveibeenpwned.com/API/Key)** then enter it when prompted on first launch of tool `14`. Stored at `%USERPROFILE%\.config\pwnedornot\config.json`.
+Get a free API key at [haveibeenpwned.com/API/Key](https://haveibeenpwned.com/API/Key), then enter when prompted on first launch of tool `14`.
 
 ---
 
 ### 🌐 OWASP ZAP (Web App Scanner)
 
-> Requires **Java** — download at [adoptium.net](https://adoptium.net)
-
-ZAP is auto-downloaded from GitHub releases on first run and opens in its own GUI window. HomeTools checks for Java before launching and shows the download link if it's missing.
+Requires **Java** ([adoptium.net](https://adoptium.net))  
+Downloads on first run, opens in its own GUI window.
 
 ---
 
 ### 🔒 WPScan (WordPress Scanner)
 
-> Requires **Ruby + gem** — download at [rubyinstaller.org](https://rubyinstaller.org)  
-> **License:** Free for personal/non-commercial use. Commercial use requires a paid plan at [wpscan.com](https://wpscan.com)
-
-WPScan installs via `gem install wpscan` automatically when Ruby is detected. Get a free API token at [wpscan.com](https://wpscan.com) for vulnerability data and pass it with `--api-token YOUR_TOKEN`.
+Requires **Ruby + gem** ([rubyinstaller.org](https://rubyinstaller.org))  
+**License:** Free for personal use. Commercial use requires paid plan at [wpscan.com](https://wpscan.com)
 
 ---
 
-## 📋 Example Workflows
+## 🎯 Use Cases
 
-<details>
-<summary><strong>🕵️ Investigate a username</strong></summary>
+### Reconnaissance
+1. **[28] Nmap** — Port scan the target IP range
+2. **[29] RustScan** — Faster re-confirmation
+3. **[19] Amass** — Deep subdomain enumeration
+4. **[21] Shodan** — Find exposed services
 
-```
-[5]  Sherlock  →  johndoe          Check 400+ sites instantly
-[9]  Maigret   →  johndoe          Deep scan + HTML report with account network graph
-```
-</details>
+### OSINT on Person/Username
+1. **[5] Sherlock** — Quick 400+ site scan
+2. **[9] Maigret** — Deep dive + HTML report
+3. **[13] LinkedIn Gatherer** — Professional network mapping
 
-<details>
-<summary><strong>📧 Research an email address</strong></summary>
+### OSINT on Email
+1. **[8] Holehe** — Which sites the email is on
+2. **[14] pwnedOrNot** — Check breach databases
+3. **[12] Scavenger** — Monitor pastes
 
-```
-[8]  Holehe      →  target@gmail.com    Which sites have an account for this email
-[14] pwnedOrNot  →  target@gmail.com    Which breaches + leaked passwords
-[15] GHunt       →  target@gmail.com    Google account info, location, Maps activity
-```
-</details>
+### Web Application Testing
+1. **[11] SQLMap** — SQL injection detection
+2. **[31] Katana** — Crawl and map the app
+3. **[32] httpx** — Enumerate live hosts
+4. **[23] Nuclei** — Scan for known CVEs
+5. **[24] ffuf** — Fuzz directories and parameters
+6. **[17] ZAP** — Full GUI app scanner
 
-<details>
-<summary><strong>🌐 Recon a domain</strong></summary>
-
-```
-[7]  theHarvester  →  example.com    Emails, subdomains, employee names, IPs
-[10] Photon        →  https://...    Crawl site, extract URLs, API keys, JS secrets
-[3]  SpiderFoot    →  (web UI)       Automated multi-source OSINT scan
-[16] Recon-ng      →  (console)      Modular framework, run specific recon modules
-```
-</details>
-
-<details>
-<summary><strong>🔒 Security testing a web app</strong></summary>
-
-```
-[17] ZAP      →  (GUI)              Automated + manual web vuln scanning
-[11] SQLMap   →  http://site/p?id=1 SQL injection detection and exploitation
-```
-> Only test applications you own or have explicit written permission to test.
-</details>
-
-<details>
-<summary><strong>🔑 WordPress security audit</strong></summary>
-
-```
-[18] WPScan  →  https://wp-site.com    Enumerate users, plugins, themes, CVEs
-```
-> Only scan WordPress sites you own or have permission to test.
-</details>
-
-<details>
-<summary><strong>📁 Metadata analysis</strong></summary>
-
-```
-[4] ExifTool  →  photo.jpg    GPS coords, camera model, timestamps, software
-                               Strip all: exiftool -all= photo.jpg
-```
-</details>
+### Network Security Testing
+1. **[26] Netexec** — Domain/SMB authentication tests
+2. **[34] Impacket** — Protocol exploitation
+3. **[35] Wireshark** — Packet capture and analysis
 
 ---
 
-## ❓ FAQ
+## ✅ Version History
 
-<details>
-<summary><strong>First launch is slow — is something wrong?</strong></summary>
-
-No. The first run clones 16 git repositories and installs Python dependencies. This takes **5–20 minutes** depending on your connection. Every launch after is fast — only `git pull` checks run.
-</details>
-
-<details>
-<summary><strong>A tool shows [--] in the menu</strong></summary>
-
-Not installed yet, or install failed. Press `R` (Repair) to re-run all installs. Make sure `git` and `python` are both in your PATH (`where git` and `where python` in cmd to verify).
-</details>
-
-<details>
-<summary><strong>WPScan or ZAP show [--] even after installing Ruby/Java</strong></summary>
-
-Close and reopen HomeTools after installing Ruby or Java so the new PATH entries are picked up. Then press `R` to repair.
-</details>
-
-<details>
-<summary><strong>Can I add my own tools?</strong></summary>
-
-Yes. Each tool follows a three-section flat `goto` pattern:
-
-- `:SC_TOOLNAME` — startup check, auto-install/update
-- `:INSTALL_TOOLNAME_FUNC` — `git clone` + venv + `pip install` + `copy nul venv\.health`
-- `:LAUNCH_TOOLNAME` — `call :HEALTH_VENV` + inline `powershell -Command "..."` + `goto MENU`
-
-Copy an existing set of three sections, add a path variable, a menu row, and a dispatch entry. See the Contributing section.
-</details>
-
-<details>
-<summary><strong>Where are credentials stored?</strong></summary>
-
-| Tool | Location |
-|---|---|
-| Instagram (Osintgram) | `C:\OSINT\osintgram\config\credentials.ini` |
-| LinkedIn | `C:\OSINT\linkedin-gatherer\config.py` |
-| HIBP API key (pwnedOrNot) | `%USERPROFILE%\.config\pwnedornot\config.json` |
-
-All credentials are stored **locally on your machine only**. Nothing is sent externally by this launcher.
-</details>
-
----
-
-## 🤝 Contributing
-
-Pull requests are welcome.
-
-**Code style:** Flat `goto`-based pattern throughout — no nested CMD `if/else` blocks containing PowerShell code (CMD counts `(` `)` inside quoted PS strings as block delimiters and breaks parsing).
-
-**Adding a new tool (checklist):**
-1. `set "P_TOOL=C:\OSINT\toolname"` — path variable at the top
-2. `set "S19=%RD%[--] %R%"` — status var + `if exist ... set "S19=..."` detection
-3. Menu display row + dispatch `if /i "%CHO%"=="19" goto LAUNCH_TOOL`
-4. `call :SC_TOOL` in `:STARTUP`
-5. `:SC_TOOL` subroutine
-6. `:INSTALL_TOOL_FUNC` — always end with `copy nul "path\venv\.health"`
-7. `:LAUNCH_TOOL` — inline PS with `title` before/after + `goto MENU`
-
-**Version bump:** Update `:: HOMETOOLS_VERSION:X.Y` (line 14) and `set "HT_VERSION=X.Y"` together — the auto-updater reads both.
-
----
-
-## ⚖️ Legal Notice
-
-These tools are for **authorized security research and educational use only**.
-
-Only test systems you own or have **explicit written permission** to test. Unauthorized access is illegal under the CFAA, UK Computer Misuse Act, and equivalent laws worldwide. The author accepts no responsibility for misuse.
-
-WPScan is free for personal/non-commercial use under the [WPScan Public Source License](https://github.com/wpscanteam/wpscan/blob/master/LICENSE). Commercial use requires a paid subscription.
-
----
-
-## 💙 Credits
-
-Made with love by [vortexdq.com](https://vortexdq.com)
-
----
-
-## 🧪 Tested On
-
-| OS | Python | git |
+| Version | Date | Changes |
 |---|---|---|
-| Windows 10 22H2 | 3.11, 3.12 | 2.44+ |
-| Windows 11 23H2 | 3.11, 3.12 | 2.44+ |
+| **6.2** | June 2026 | Fixed Wireshark multi-path detection and Maltego manual download messaging |
+| **6.1.2** | June 2026 | Added proper menu spacing between tool names and descriptions |
+| **6.1** | June 2026 | Fixed UI formatting, tool install checks, Impacket/Wireshark support |
+| **6.0** | June 2026 | Added 8 new tools (Nmap, RustScan, Trivy, Katana, httpx, Sliver, Impacket, Wireshark); reorganized menu by security discipline |
+| **5.9** | June 2026 | Fixed Amass/Phoneinfoga tar.gz handling, Netexec binary install, CyberChef v11 structure |
+
+---
+
+## 📝 Legal
+
+**Disclaimer:** These tools are for **authorized security research only**. Unauthorized access to computer systems is illegal. Only test systems you own or have explicit written permission to test. The author accepts no responsibility for misuse.
+
+---
+
+## 📜 License
+
+MIT — See [LICENSE](LICENSE)
+
+---
+
+**Made with ❤️ by vortexdq.com**

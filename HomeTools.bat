@@ -11,7 +11,7 @@
 ::  Install locations: C:\OSINT\   and   C:\Tools\exiftool\
 ::  Made with love by vortexdq.com
 :: ============================================================
-:: HOMETOOLS_VERSION:6.1.2
+:: HOMETOOLS_VERSION:6.2
 if "%~1"=="-k" goto :INIT
 cmd /k "%~f0" -k
 exit /b
