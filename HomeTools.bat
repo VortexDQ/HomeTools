@@ -1,6 +1,6 @@
 @echo off
 :: ============================================================
-::  HOME TOOLS  |  OSINT Launcher  |  v6.1
+::  HOME TOOLS  |  OSINT Launcher  |  v6.2
 ::  A self-installing OSINT toolkit launcher for Windows.
 ::
 ::  Tools clone and install automatically on first launch.
@@ -19,7 +19,7 @@ exit /b
 
 setlocal enabledelayedexpansion
 chcp 65001 >nul 2>&1
-title HOME TOOLS v6.1
+title HOME TOOLS v6.2
 
 :: ============================================================
 ::  ANSI COLORS
@@ -44,7 +44,7 @@ set "ORB=%E%[1;33m"
 :: ============================================================
 ::  VERSION
 :: ============================================================
-set "HT_VERSION=5.9"
+set "HT_VERSION=6.2"
 
 :: ============================================================
 ::  TOOL PATHS
@@ -106,7 +106,7 @@ goto STARTUP
 cls
 echo.
 echo  %CB%  =======================================================%R%
-echo  %CB%           HOME TOOLS v6.1  -  First Launch             %R%
+echo  %CB%           HOME TOOLS v6.2  -  First Launch             %R%
 echo  %CB%       Self-installing OSINT Toolkit for Windows         %R%
 echo  %CB%  =======================================================%R%
 echo.
@@ -3366,7 +3366,7 @@ goto :EOF
 if exist "%P_EXIF%\exiftool.exe" (echo  %GN%    Already installed.%R% & goto :EOF)
 if not exist "%P_EXIF%" mkdir "%P_EXIF%"
 echo  %WH%    Downloading ExifTool (latest stable)...%R%
-powershell -NoProfile -ExecutionPolicy Bypass -Command "$ProgressPreference='SilentlyContinue'; $v=(Invoke-WebRequest 'https://exiftool.org/ver.txt' -UseBasicParsing -TimeoutSec 15).Content.Trim(); Write-Host('    Downloading v'+$v+'...'); $z='C:\Tools\exiftool\et.zip'; Invoke-WebRequest('https://exiftool.org/exiftool-'+$v+'_64.zip') -OutFile $z -UseBasicParsing -TimeoutSec 120; Expand-Archive $z 'C:\Tools\exiftool' -Force; $f=Get-ChildItem 'C:\Tools\exiftool' -Recurse -Filter 'exiftool(-k).exe' -EA SilentlyContinue | Select-Object -First 1; if($f){ Copy-Item $f.FullName 'C:\Tools\exiftool\exiftool.exe' -Force; [IO.File]::WriteAllText('C:\Tools\exiftool\.exifver',$v); Write-Host('    ExifTool v'+$v+' installed.') -ForegroundColor Green }else{ Write-Host '    Install failed.' -ForegroundColor Red }; Remove-Item $z -Force -EA SilentlyContinue; Get-ChildItem 'C:\Tools\exiftool' -Directory | Where-Object{$_.Name -like 'exiftool-*'} | Remove-Item -Recurse -Force -EA SilentlyContinue"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$ProgressPreference='SilentlyContinue'; $v=(Invoke-WebRequest 'https://exiftool.org/ver.txt' -UseBasicParsing -TimeoutSec 15).Content.Trim(); Write-Host('    Downloading v'+$v+'...'); $z='C:\Tools\exiftool\et.zip'; Invoke-WebRequest('https://exiftool.org/exiftool-'+$v+'_64.zip') -OutFile $z -UseBasicParsing -TimeoutSec 120; Expand-Archive $z 'C:\Tools\exiftool' -Force; $f=Get-ChildItem 'C:\Tools\exiftool' -Recurse -Filter 'exiftool(-k).exe' -EA SilentlyContinue | Select-Object -First 1; if($f){ Copy-Item $f.FullName 'C:\Tools\exiftool\exiftool.exe' -Force; $ff=Join-Path $f.DirectoryName 'exiftool_files'; if(Test-Path $ff){ Copy-Item $ff 'C:\Tools\exiftool\exiftool_files' -Recurse -Force }; [IO.File]::WriteAllText('C:\Tools\exiftool\.exifver',$v); Write-Host('    ExifTool v'+$v+' installed.') -ForegroundColor Green }else{ Write-Host '    Install failed.' -ForegroundColor Red }; Remove-Item $z -Force -EA SilentlyContinue; Get-ChildItem 'C:\Tools\exiftool' -Directory | Where-Object{$_.Name -like 'exiftool-*'} | Remove-Item -Recurse -Force -EA SilentlyContinue"
 goto :EOF
 
 :INSTALL_SHERL_FUNC
@@ -3393,6 +3393,8 @@ echo  %WH%    Creating venv and installing requirements...%R%
 python -m venv "%P_OGRAM%\venv"
 "%P_OGRAM%\venv\Scripts\python.exe" -m pip install --upgrade pip --quiet
 "%P_OGRAM%\venv\Scripts\python.exe" -m pip install -r "%P_OGRAM%\requirements.txt" --quiet --prefer-binary
+REM requirements.txt pins requests-toolbelt==0.9.1 which imports urllib3.contrib.appengine (removed in urllib3 2.x). Force a compatible build.
+"%P_OGRAM%\venv\Scripts\python.exe" -m pip install -U "requests-toolbelt>=1.0.0" --quiet --prefer-binary 2>nul
 if not exist "%P_OGRAM%\config" mkdir "%P_OGRAM%\config"
 copy nul "%P_OGRAM%\venv\.health" >nul 2>&1
 echo  %GN%    Osintgram installed.%R%
@@ -3512,7 +3514,7 @@ goto :EOF
 :UPDATE_EXIF_FUNC
 if not "!DO_UPDATES!"=="1" goto :EOF
 echo  %DG%    Checking ExifTool version...%R%
-powershell -NoProfile -ExecutionPolicy Bypass -Command "$ProgressPreference='SilentlyContinue'; $vf='C:\Tools\exiftool\.exifver'; $cur=if(Test-Path $vf){(Get-Content $vf -Raw).Trim()}else{try{(& 'C:\Tools\exiftool\exiftool.exe' -ver 2>$null).Trim()}catch{''}}; try{ $latest=(Invoke-WebRequest 'https://exiftool.org/ver.txt' -UseBasicParsing -TimeoutSec 10).Content.Trim(); if($cur -eq $latest){ Write-Host('    ExifTool v'+$cur+' is current.') -ForegroundColor Green }else{ Write-Host('    Updating ExifTool '+$cur+' -> '+$latest+'...') -ForegroundColor Yellow; $zip='C:\Tools\exiftool\update.zip'; Invoke-WebRequest('https://exiftool.org/exiftool-'+$latest+'_64.zip') -OutFile $zip -UseBasicParsing -TimeoutSec 120; Expand-Archive $zip 'C:\Tools\exiftool' -Force; $f=Get-ChildItem 'C:\Tools\exiftool' -Recurse -Filter 'exiftool(-k).exe' -EA SilentlyContinue | Select-Object -First 1; if($f){ Copy-Item $f.FullName 'C:\Tools\exiftool\exiftool.exe' -Force; [IO.File]::WriteAllText($vf,$latest); Write-Host '    ExifTool updated.' -ForegroundColor Green }; Remove-Item $zip -Force -EA SilentlyContinue; Get-ChildItem 'C:\Tools\exiftool' -Directory | Where-Object{$_.Name -like 'exiftool-*'} | Remove-Item -Recurse -Force -EA SilentlyContinue } }catch{ Write-Host '    Version check failed (offline?).' -ForegroundColor Yellow }"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$ProgressPreference='SilentlyContinue'; $vf='C:\Tools\exiftool\.exifver'; $cur=if(Test-Path $vf){(Get-Content $vf -Raw).Trim()}else{try{(& 'C:\Tools\exiftool\exiftool.exe' -ver 2>$null).Trim()}catch{''}}; try{ $latest=(Invoke-WebRequest 'https://exiftool.org/ver.txt' -UseBasicParsing -TimeoutSec 10).Content.Trim(); if($cur -eq $latest){ Write-Host('    ExifTool v'+$cur+' is current.') -ForegroundColor Green }else{ Write-Host('    Updating ExifTool '+$cur+' -> '+$latest+'...') -ForegroundColor Yellow; $zip='C:\Tools\exiftool\update.zip'; Invoke-WebRequest('https://exiftool.org/exiftool-'+$latest+'_64.zip') -OutFile $zip -UseBasicParsing -TimeoutSec 120; Expand-Archive $zip 'C:\Tools\exiftool' -Force; $f=Get-ChildItem 'C:\Tools\exiftool' -Recurse -Filter 'exiftool(-k).exe' -EA SilentlyContinue | Select-Object -First 1; if($f){ Copy-Item $f.FullName 'C:\Tools\exiftool\exiftool.exe' -Force; $ff=Join-Path $f.DirectoryName 'exiftool_files'; if(Test-Path $ff){ Copy-Item $ff 'C:\Tools\exiftool\exiftool_files' -Recurse -Force }; [IO.File]::WriteAllText($vf,$latest); Write-Host '    ExifTool updated.' -ForegroundColor Green }; Remove-Item $zip -Force -EA SilentlyContinue; Get-ChildItem 'C:\Tools\exiftool' -Directory | Where-Object{$_.Name -like 'exiftool-*'} | Remove-Item -Recurse -Force -EA SilentlyContinue } }catch{ Write-Host '    Version check failed (offline?).' -ForegroundColor Yellow }"
 goto :EOF
 
 
